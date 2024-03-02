@@ -13,7 +13,7 @@
 
 
 
-<title>软件测试的艺术01 | 12wj</title>
+<title>软件测试的艺术03 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">软件测试的艺术01</h1>
+            <h1 class="post-title">软件测试的艺术03</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 2, 2024&nbsp;&nbsp;13:56:36</a>
+                        Date: <a href="#">March 2, 2024&nbsp;&nbsp;15:14:40</a>
                         </span>
                     
                     
@@ -214,48 +214,54 @@
         </header>
 
         <div class="post-content">
-            <h1 id="软件测试的艺术：ch01"><a href="#软件测试的艺术：ch01" class="headerlink" title="软件测试的艺术：ch01"></a>软件测试的艺术：ch01</h1><blockquote>
-<p>ch1：有关软件测试你需要知道什么</p>
-<p>ch2：从技术上“如何发现错误”</p>
-<p>ch3：如何编写有效测试用例</p>
-<p>ch4：如何测试单个模块或子程序及测试更夫的对象</p>
-<p>ch5：程序调式</p>
-<p>ch6：极限编程和极限测试</p>
-<p>ch7：将软件测试运用到web编程中</p>
+            <h1 id="软件测试的艺术：03"><a href="#软件测试的艺术：03" class="headerlink" title="软件测试的艺术：03"></a>软件测试的艺术：03</h1><blockquote>
+<p><strong>第四章 测试用例的设计</strong></p>
+<p>前面提到过，穷举的黑盒和白盒测试通常是不可能的，但同时也建议：将这两种测试的要素组合起来得到一种合理的测试策略</p>
 </blockquote>
-<p><strong>“软件测试是为了发现错误而执行程序的过程”</strong></p>
-<blockquote>
-<p>软件测试 不等同于 证明软件不存在错误</p>
-</blockquote>
+<p>本章讨论的测试方法：</p>
+<p><strong>黑盒测试</strong>：</p>
 <ul>
-<li>心理学原因：<u>目标导向行为</u>，目标在于证明程序存在错误，那么设计的测试数据就有可能更多的发现问题</li>
+<li>等价类划分</li>
+<li>边界值分析</li>
+<li>因果图分析</li>
+<li>错误测试</li>
 </ul>
-<p><strong>“软件测试不可能发现所有错误”</strong></p>
+<p><strong>白盒测试</strong>：</p>
 <ul>
-<li>黑盒测试：数据驱动的测试 （穷举输入测试）</li>
-<li>白盒测试：逻辑驱动的测试 &#x3D;&#x3D;&gt; 允许检查程序的内部结构 （穷举路径测试）</li>
+<li>语句覆盖 </li>
+<li>判定覆盖 </li>
+<li>条件覆盖 </li>
+<li>判定&#x2F;条件覆盖</li>
+<li>多重条件覆盖</li>
 </ul>
-<h2 id="软件测试的原则"><a href="#软件测试的原则" class="headerlink" title="软件测试的原则"></a>软件测试的原则</h2><ol>
-<li><p>测试用例中一个必需部分是对预期输出或结果进行定义</p>
+<h2 id="4-1-白盒测试"><a href="#4-1-白盒测试" class="headerlink" title="4.1 白盒测试"></a>4.1 白盒测试</h2><p><img src="/QQ%E6%88%AA%E5%9B%BE20240302160319.jpg"></p>
+<p><strong>语句覆盖</strong>：</p>
+<ul>
+<li>该准则有很大的不足，通常没什么用处</li>
+</ul>
+<p><strong>判定覆盖（分支覆盖）</strong>：</p>
+<ul>
+<li>要求：<u>每一个判断都至少有一个为“真”和为“假”的输出结果</u></li>
+</ul>
+<p><strong>条件覆盖</strong>：</p>
+<ul>
+<li>要求：确保一个<u>判断中的每个条件的所有可能的结果至少执行一次</u></li>
+</ul>
+<p><strong>判定&#x2F;条件覆盖</strong>：</p>
+<ul>
+<li><p>为了解决条件覆盖的测试用例无法涵盖所有判断结果</p>
 </li>
-<li><p>程序员应避免测试自己编写的程序</p>
+<li><p>要求：将<u>每个判断的每个条件的所有可能的结果</u>至少执行一次，将<u>每个判断的所有</u></p>
+<p><u>可能的结果</u>至少执行一次，<u>将每个入口点都至少调用一次</u>。</p>
 </li>
-<li><p>编写软件的组织不应当测试自已编写的软件 &#x3D;&#x3D;&gt; 交给第三方</p>
-</li>
-<li><p>应当彻底检查每个测试的执行结果</p>
-</li>
-<li><p>测试用例的编写不仅应当根据有效和预料到的输入情况，而且也应当根据无效和未预料到的输入情况</p>
-</li>
-<li><p>检查程序是否“未做其应该做的”仅是测试的一半，测试的另一半是检查程序是否“<u>做了其不应该做的</u>”</p>
-</li>
-<li><p>应避免测试用例用后即弃，除非软件本身就是个一次性的软件 &#x3D;&#x3D;&gt; 涉及回归测试</p>
-</li>
-<li><p>计划测试工作时不应默许假定不会发现错误</p>
-</li>
-<li><p>程序某部分存在更多错误的可能性，与该部分已发现错误的数量成正比</p>
-</li>
-<li><p>软件测试是一项极富创造性，极具智力的挑战性的工作</p>
-</li>
+</ul>
+<p><strong>多重条件覆盖测试</strong>：</p>
+<ul>
+<li>要求：将<u>每个判定中的所有可能的条件结果的组合</u>，以及所有的入口点都至少执行一次</li>
+</ul>
+<h2 id="4-2-黑盒测试"><a href="#4-2-黑盒测试" class="headerlink" title="4.2 黑盒测试"></a>4.2 黑盒测试</h2><h3 id="4-2-1-等价类划分"><a href="#4-2-1-等价类划分" class="headerlink" title="4.2.1 等价类划分"></a>4.2.1 等价类划分</h3><ol>
+<li>确定等价类</li>
+<li>生成测试用例</li>
 </ol>
 
         </div>
@@ -271,7 +277,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF01/">https://12wj.github.io/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF01/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF03/">https://12wj.github.io/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF03/</a></span>
                     </p>
                 
                 
@@ -308,10 +314,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF02/">软件测试的艺术02</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/02/hello-world/">Hello World</a>
+            <a class="next" rel="next" href="/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF02/">软件测试的艺术02</a>
             
         </section>
 

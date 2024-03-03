@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lin">
+
+
+
+
+
+<title>接口测试工具postman | 12wj</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">接口测试工具postman</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 2, 2024&nbsp;&nbsp;20:56:48</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Postman"><a href="#Postman" class="headerlink" title="Postman"></a>Postman</h1><blockquote>
+<p>学习资源：<a target="_blank" rel="noopener" href="https://www.zhihu.com/column/c_114768572">接口测试神器 postman - 知乎 (zhihu.com)</a></p>
+</blockquote>
+<ol>
+<li>接口测试的本质：测试接口是否可以正常的交互数据，权限控制以及异常场景</li>
+<li>接口返回数据：<ul>
+<li><code>json</code>格式：<ul>
+<li><code>&#123;code, msg, data&#125;</code></li>
+</ul>
+</li>
+<li>html格式：</li>
+<li>xml格式：</li>
+</ul>
+</li>
+<li>接口测试协议：<ul>
+<li>webservice协议：</li>
+<li>dobbo协议：适用于小量数据的传输，大并发</li>
+<li><strong>http协议</strong><ul>
+<li>http：80端口</li>
+<li>https：http+ssl 443端口</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>企业接口测试的方案？<ul>
+<li>接口文档</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="1-1-变量"><a href="#1-1-变量" class="headerlink" title="1.1 变量"></a>1.1 变量</h3><ol>
+<li><p>集合变量：只对该集合生效</p>
+<img src="D:\Hexo\source\_posts\接口测试工具postman\QQ截图20240303152120.jpg" style="zoom: 50%;" />  
+
+
+</li>
+<li><p>环境变量：需要指定环境 <code>&#123;&#123;变量名&#125;&#125;</code></p>
+<img src="D:\Hexo\source\_posts\接口测试工具postman\微信图片_20240303152430.png" style="zoom:50%;" /> 
+
+<ul>
+<li>需要先创建环境，再添加各自的环境变量</li>
+</ul>
+</li>
+<li><p>全局变量：<code>&#123;&#123;变量名&#125;&#125;</code></p>
+<img src="D:\Hexo\source\_posts\接口测试工具postman\QQ截图20240303151751.jpg" style="zoom:50%;" /></li>
+</ol>
+<h3 id="1-2-接口关联-（使用Tests"><a href="#1-2-接口关联-（使用Tests" class="headerlink" title="1.2 接口关联 （使用Tests"></a>1.2 接口关联 （使用Tests</h3><ol>
+<li><p><strong>josn提取器</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">接口1中：</span><br><span class="line">	在Tests(后置处理器)中编写脚本：提取responsebody中的数据，传递给全局变量</span><br><span class="line">	var result = JSON.parse(responseBody) //</span><br><span class="line">	pm.globals.set(&quot;access_token&quot;, result.access_token);</span><br><span class="line">	</span><br><span class="line">接口二中：</span><br><span class="line">	使用&#123;&#123;全局变量&#125;&#125;</span><br><span class="line">	&#123;&#123;access_token&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>正则表达式提取器</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//接口一：</span><br><span class="line">	var result = responseBody.match(new RegExp(&#x27;&quot;access_token&quot;:&quot;(.*?)&quot;&#x27;));</span><br><span class="line">	pm.globals.set(&quot;access_token&quot;, result[1])</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="1-3-动态参数"><a href="#1-3-动态参数" class="headerlink" title="1.3 动态参数"></a>1.3 动态参数</h3><ol>
+<li><p>postman内置动态参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;$timestamp&#125;&#125; //生成当前时间的时间戳</span><br><span class="line">&#123;&#123;$randomint&#125;&#125; //生成0-1000之间的随机数</span><br><span class="line">&#123;&#123;$guid&#125;&#125; //生成速记GUID字符串</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义动态参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//在接口预置脚本Pre-request Script中，获取当前时间戳并设为全局变量</span><br><span class="line">var times = Date.now();</span><br><span class="line">pm.globals.set(&quot;times&quot;, times);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="1-4-断言Tests"><a href="#1-4-断言Tests" class="headerlink" title="1.4 断言Tests"></a>1.4 断言Tests</h3><blockquote>
+<p>断言的含义：</p>
+<p>​	检验一个测试点是否通过，一般会将心理预期结果与实际结果对比，如果一致则测试通过，不一致则测试不通过。</p>
+</blockquote>
+<img src="D:\Hexo\source\_posts\接口测试工具postman\QQ截图20240303110928.jpg" style="zoom: 80%;" /> 
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//1. 校验接口的状态码</span><br><span class="line">pm.test(&quot;Status code is 200&quot;, function () &#123;</span><br><span class="line">    pm.response.to.have.status(200);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">//2.业务断言：检查是否包含某个string，如access_token</span><br><span class="line">pm.test(&quot;Body matches string&quot;, function () &#123;</span><br><span class="line">    pm.expect(pm.response.text()).to.include(&quot;access_token&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">	//若要断言动态参数：只能通过自定义动态参数，即全局变量</span><br><span class="line">	pm.test(&quot;Body matches string&quot;, function () &#123;</span><br><span class="line">    	pm.expect(pm.response.text()).to.include(globals.times); //或者globals[times]，globals.get(&quot;times&quot;)</span><br><span class="line">	&#125;);</span><br><span class="line"></span><br><span class="line">//3.业务断言：检查某个键值对的值</span><br><span class="line">pm.test(&quot;Your test name&quot;, function () &#123;</span><br><span class="line">    var jsonData = pm.response.json();</span><br><span class="line">    pm.expect(jsonData.value).to.eql(100);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>设置全局断言</code>：例如检查状态码200</li>
+</ul>
+<img src="D:\Hexo\source\_posts\接口测试工具postman\微信图片_20240303154527.png" style="zoom: 50%;" /> 
+
+
+
+
+
+<h3 id="1-5-批量运行测试用例"><a href="#1-5-批量运行测试用例" class="headerlink" title="1.5 批量运行测试用例"></a>1.5 批量运行测试用例</h3><img src="D:\Hexo\source\_posts\接口测试工具postman\QQ截图20240303115327.jpg" style="zoom:67%;" /> 
+
+<blockquote>
+<p>批量运行时包含文件上传接口时：<strong>setting</strong>中进行设置</p>
+<img src="D:\Hexo\source\_posts\接口测试工具postman\QQ截图20240303115851.jpg" style="zoom: 50%;" /> 
+
+<ul>
+<li>开启工作目录</li>
+<li>设置目标文件夹</li>
+</ul>
+</blockquote>
+<h3 id="1-6-数据驱动"><a href="#1-6-数据驱动" class="headerlink" title="1.6 数据驱动"></a>1.6 数据驱动</h3><ol>
+<li>**<code>csv</code>**文件数据驱动</li>
+<li>**<code>json</code>**文件数据驱动</li>
+</ol>
+<h3 id="1-7-测试带请求头接口"><a href="#1-7-测试带请求头接口" class="headerlink" title="1.7 测试带请求头接口"></a>1.7 测试带请求头接口</h3><ul>
+<li><code>请求头</code>：<ul>
+<li>Accept：客户端接收到的数据格式</li>
+<li>Connection：连接方式</li>
+<li>Cookie: </li>
+<li>Host: 请求的地址</li>
+<li>Referer：来源</li>
+<li>User-Agent：客户端的用户类型</li>
+<li>Content-Type：所请求内容的格式</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-8-Mock-Service服务器"><a href="#1-8-Mock-Service服务器" class="headerlink" title="1.8 Mock Service服务器"></a>1.8 Mock Service服务器</h3><blockquote>
+<p>模拟服务器：用于当后端接口还未完成，但前端工作人员需进行测试时</p>
+</blockquote>
+<h3 id="1-9-Cookie的鉴权"><a href="#1-9-Cookie的鉴权" class="headerlink" title="1.9 Cookie的鉴权"></a>1.9 Cookie的鉴权</h3><p><strong>查看cookie &#x3D;&#x3D;&gt; 抓包工具</strong>：</p>
+<p><strong>cookie的分类</strong>：</p>
+<ul>
+<li><p>会话cookie：浏览器关闭时清除</p>
+</li>
+<li><p>持久cookie：保存在硬盘中，失效时间到时才清除</p>
+</li>
+</ul>
+<p><strong>实现鉴权的原理：</strong></p>
+<h3 id="1-10-Postman与Newman"><a href="#1-10-Postman与Newman" class="headerlink" title="1.10 Postman与Newman"></a>1.10 Postman与Newman</h3><blockquote>
+<p><strong>newman</strong>：用于postman进行自动化的命令行工具</p>
+</blockquote>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://12wj.github.io/2024/03/02/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7postman/">https://12wj.github.io/2024/03/02/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7postman/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/postman/"># postman</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/02/%E6%B5%8B%E5%BC%80%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">测开学习路线</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

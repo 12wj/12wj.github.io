@@ -13,7 +13,7 @@
 
 
 
-<title>charles抓包工具的使用 | 12wj</title>
+<title>selenium — 2.页面元素操作及浏览器操作 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">charles抓包工具的使用</h1>
+            <h1 class="post-title">selenium — 2.页面元素操作及浏览器操作</h1>
             
                 <div class="post-meta">
                     
@@ -205,57 +205,57 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 3, 2024&nbsp;&nbsp;21:05:30</a>
+                        Date: <a href="#">March 5, 2024&nbsp;&nbsp;19:27:10</a>
                         </span>
                     
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95selenium/">功能测试selenium</a>
+                            
+                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <h1 id="Charles"><a href="#Charles" class="headerlink" title="Charles"></a>Charles</h1><h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><p>1.1 基于HTTP协议的代理服务器，通过成为浏览器的代理，截取请求和请求分析结果达到抓包的目的</p>
-<img src="https://pic.imgdb.cn/item/65e5b9dd9f345e8d0387618e.png" style="zoom: 67%;" />
-
-<p>1.2 原理：</p>
-<p>​	首先在Charles的配置端口8889，Charles运行时则会在**<u>PC的8889端口开启一个HTTP&#x2F;HTTPS的代理服务</u>**，若要抓包手机APP的数据，则将手机和PC在同一个局域网内，设置手机代理为Charles的代理地址，这样手机访问互联网的数据也会流经Charles。</p>
-<p>​	再由Charles转发这些数据包到真实的服务器，服务器返回的数据包再由 Charles 转发回手机，Charles 就起到中间人的作用，所有流量包都可以捕捉到，因此所有 HTTP 请求和响应都可以捕获到。同时 Charles 还有权力对请求和响应进行修改。</p>
-<h2 id="2-使用"><a href="#2-使用" class="headerlink" title="2.使用"></a>2.使用</h2><p>2.1 **代理设置 <code>Proxy Setting</code>**：</p>
-<p>2.2 <strong>过滤器</strong></p>
-<ul>
-<li><code>Recoding Setting</code> ：控制只抓包哪些host的包 (一般用于做一些唯一的域名抓包)</li>
+            <h1 id="1-浏览器操作"><a href="#1-浏览器操作" class="headerlink" title="1.浏览器操作"></a>1.浏览器操作</h1><h2 id="1-1-浏览器导航操作"><a href="#1-1-浏览器导航操作" class="headerlink" title="1.1 浏览器导航操作"></a>1.1 浏览器导航操作</h2><ul>
+<li>driver.get(‘url’)  &#x3D;&gt; 访问网址</li>
+<li>driver.back()  &#x3D;&gt; 后退</li>
+<li>driver.forward()  &#x3D;&gt; 前进</li>
+<li>driver.refresh()  &#x3D;&gt; 刷新</li>
 </ul>
-<p>  ​    <img src="https://pic.imgdb.cn/item/65e5ba619f345e8d03894ada.jpg" style="zoom: 67%;" />  </p>
-<ul>
-<li><p>**<code>Filter</code>**：可筛选出url中带指定关键字的网络请求（用于封包过滤</p>
-</li>
-<li><p>**<code>Focus</code>**：</p>
-</li>
-</ul>
-<p>2.3 <strong>访问控制</strong><code>Access Control Setting</code>：控制哪些ip可以来访问Charles</p>
-<p>​    	<img src="https://pic.imgdb.cn/item/65e5ba7a9f345e8d0389a6c6.jpg" style="zoom:67%;" />   </p>
-<p>2.4 抓取基于<strong>https协议</strong>的数据报文</p>
-<ul>
-<li><p>安装SSL根证书：help &#x3D;&#x3D;&gt; <u>SSL Proxying</u></p>
-<img src="https://pic.imgdb.cn/item/65e5babf9f345e8d038a933d.png" style="zoom:60%;" /> 
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By  <span class="comment"># 导入by类</span></span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> selenium.common.exceptions <span class="keyword">import</span> NoSuchFrameException  <span class="comment"># 导入异常类</span></span><br><span class="line"></span><br><span class="line">driver = webdriver.Firefox()  <span class="comment"># 启动浏览器</span></span><br><span class="line">driver.get(<span class="string">&#x27;http://localhost/upload/index.php&#x27;</span>)</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.LINK_TEXT, <span class="string">&#x27;查看购物车&#x27;</span>).click()</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.back()  <span class="comment"># 返回</span></span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入框输入806点击搜索</span></span><br><span class="line">driver.find_element(By.XPATH, <span class="string">&#x27;//input[@id=&quot;keyword&quot;]&#x27;</span>).send_keys(<span class="string">&#x27;806&#x27;</span>)</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.XPATH, <span class="string">&#x27;//input[@name=&quot;imageField&quot;]&#x27;</span>).click()</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找不到元素时刷新直至找到</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        driver.find_element(By.LINK_TEXT, <span class="string">&quot;P806&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> NoSuchFrameException:   <span class="comment"># 发生异常时刷新浏览器</span></span><br><span class="line">        driver.refresh()</span><br><span class="line">        sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        driver.find_element(By.LINK_TEXT, <span class="string">&quot;P806&quot;</span>).click()</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
 
 
-</li>
-<li><p>设置<code>HTTPS</code>代理配置：Proxying &#x3D;&#x3D;&gt; <u>SSL Proxying Settings</u></p>
-<img src="https://pic.imgdb.cn/item/65e5ba909f345e8d0389f7fb.jpg" style="zoom: 50%;" /></li>
+
+
+
+<h2 id="1-2-调整浏览器窗口"><a href="#1-2-调整浏览器窗口" class="headerlink" title="1.2 调整浏览器窗口"></a>1.2 调整浏览器窗口</h2><ul>
+<li>driver.minimize_window()</li>
+<li>driver.maxmize_window()</li>
+<li>driver.set_window_size(width, height)</li>
+<li>driver.get_window_size()</li>
+<li>driver.set_window_position(x, y)</li>
+<li>driver.get_window_position()</li>
 </ul>
-<p>2.5 <strong>抓取APP的数据报文</strong></p>
-<ul>
-<li><p>设置手机网络代理</p>
-<img src="https://pic.imgdb.cn/item/65e5bad99f345e8d038ae8d9.png" style="zoom:60%;" /> 
-</li>
-<li><p>获取证书</p>
-</li>
+<h2 id="1-3-获取网页信息"><a href="#1-3-获取网页信息" class="headerlink" title="1.3 获取网页信息"></a>1.3 获取网页信息</h2><ul>
+<li>str &#x3D; driver.title  &#x3D;&gt; 获取网页标题</li>
+<li>str &#x3D; driver.current_url  &#x3D;&gt; 获取当前url</li>
+<li>str &#x3D; driver.page_source  &#x3D;&gt; 获取网页源码</li>
 </ul>
-<p>2.6 <strong>网络挟持和篡改</strong>：设置断点</p>
-<p>2.7 <strong>弱网测试</strong></p>
-<ul>
-<li>模拟弱网的原因：需要测试网络条件差的环境下数据的响应时间</li>
+<h1 id="2-页面元素操作"><a href="#2-页面元素操作" class="headerlink" title="2.页面元素操作"></a>2.页面元素操作</h1><ul>
+<li>click()</li>
+<li>send_keys()</li>
+<li>clear()</li>
+<li>submit()  &#x3D;&gt; 提交，作用与click一致，但click范围更广</li>
+<li>size  &#x3D;&gt; 获取元素大小</li>
+<li>text  &#x3D;&gt; 获取元素文本</li>
+<li>get_attribute(“属性”)  &#x3D;&gt; 获取元素的某个属性值</li>
+<li>is_display()  &#x3D;&gt; 元素是否可见</li>
+<li>is_enabled()  &#x3D;&gt; 元素是否可用</li>
 </ul>
 
         </div>
@@ -271,7 +271,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/03/charles%E6%8A%93%E5%8C%85%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/">https://12wj.github.io/2024/03/03/charles%E6%8A%93%E5%8C%85%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/05/selenium-%E2%80%94-2.%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C%E5%8F%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C/">https://12wj.github.io/2024/03/05/selenium-%E2%80%94-2.%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C%E5%8F%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C/</a></span>
                     </p>
                 
                 
@@ -294,10 +294,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/Charles/"># Charles</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -308,10 +304,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/04/selenium%20%E2%80%94%201.%E5%AE%9A%E4%BD%8D%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0/">selenium — 1.定位页面元素</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/02/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7postman/">接口测试工具postman</a>
+            <a class="next" rel="next" href="/2024/03/04/selenium%20%E2%80%94%201.%E5%AE%9A%E4%BD%8D%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0/">selenium — 1.定位页面元素</a>
             
         </section>
 

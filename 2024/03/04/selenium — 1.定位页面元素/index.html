@@ -221,19 +221,23 @@
         </header>
 
         <div class="post-content">
-            <h1 id="Selenium-—-1-定位页面元素"><a href="#Selenium-—-1-定位页面元素" class="headerlink" title="Selenium — 1.定位页面元素"></a>Selenium — 1.定位页面元素</h1><blockquote>
+            <blockquote>
 <p>该系列用于记录《软件测试》课程相关学习知识</p>
 <ul>
 <li>被测系统：ECShop（开启前需要先启动wampserver</li>
 <li>利用selenium+python实现功能测试</li>
 </ul>
 </blockquote>
-<h2 id="1-webDriver基本操作"><a href="#1-webDriver基本操作" class="headerlink" title="1.webDriver基本操作"></a>1.webDriver基本操作</h2><p><code>实现</code>：打开ECShop网站，测试输入框输入‘806’后点击搜索</p>
+<h1 id="1-webDriver基本操作"><a href="#1-webDriver基本操作" class="headerlink" title="1.webDriver基本操作"></a>1.webDriver基本操作</h1><p><code>实现</code>：打开ECShop网站，测试输入框输入‘806’后点击搜索</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By  <span class="comment"># 导入by类</span></span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"></span><br><span class="line">driver = webdriver.Firefox()  <span class="comment"># 启动浏览器</span></span><br><span class="line">driver.implicitly_wait(<span class="number">5</span>)  <span class="comment"># 隐式调用，元素在规定时间找不到时报错</span></span><br><span class="line">driver.maxmize_window()</span><br><span class="line">driver.get(<span class="string">&#x27;http://localhost/upload/index.php&#x27;</span>)</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.ID, <span class="string">&#x27;keyword&#x27;</span>).send_keys(<span class="string">&#x27;806&#x27;</span>)  <span class="comment"># 根据id寻找元素</span></span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.NAME, <span class="string">&#x27;imageField&#x27;</span>).click()	<span class="comment"># 根据name寻找元素</span></span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="2-selenium定位-—-利用By类"><a href="#2-selenium定位-—-利用By类" class="headerlink" title="2.selenium定位 — 利用By类"></a>2.selenium定位 — 利用By类</h2><h3 id="2-1-利用ID-NAME属性定位方法"><a href="#2-1-利用ID-NAME属性定位方法" class="headerlink" title="2.1 利用ID&amp;NAME属性定位方法"></a>2.1 利用<code>ID&amp;NAME</code>属性定位方法</h3><ol>
+
+
+
+
+<h1 id="2-selenium定位-—-利用By类"><a href="#2-selenium定位-—-利用By类" class="headerlink" title="2.selenium定位 — 利用By类"></a>2.selenium定位 — 利用By类</h1><h2 id="2-1-利用ID-NAME属性定位方法"><a href="#2-1-利用ID-NAME属性定位方法" class="headerlink" title="2.1 利用ID&amp;NAME属性定位方法"></a>2.1 利用<code>ID&amp;NAME</code>属性定位方法</h2><ol>
 <li><p><code>ID</code> ：利用id属性定位元素</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = driver.find_element(By.ID, <span class="string">&#x27;keyword&#x27;</span>)</span><br><span class="line">a.send_keys(<span class="string">&#x27;806&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
@@ -242,7 +246,7 @@
 <li><p><code>Name</code>：用name属性值定位元素</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b = driver.find_element(By.NAME, <span class="string">&#x27;imageField&#x27;</span>)</span><br><span class="line">b.click()</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h3 id="2-2-超链接标签的定位方法"><a href="#2-2-超链接标签的定位方法" class="headerlink" title="2.2 超链接标签的定位方法"></a>2.2 超链接标签的定位方法</h3><ol>
+<h2 id="2-2-超链接标签的定位方法"><a href="#2-2-超链接标签的定位方法" class="headerlink" title="2.2 超链接标签的定位方法"></a>2.2 超链接标签的定位方法</h2><ol>
 <li><code>LINK_TEXT</code>：适用于定位超链接文本较短时</li>
 <li><code>PARTIAL_LINK_TEXT</code>：使用于超链接文本很长时，利用模糊匹配进行定位</li>
 </ol>
@@ -250,21 +254,21 @@
 
 
 
-<h3 id="2-3-利用其余属性定位"><a href="#2-3-利用其余属性定位" class="headerlink" title="2.3 利用其余属性定位"></a>2.3 利用其余属性定位</h3><blockquote>
+<h2 id="2-3-利用其余属性定位"><a href="#2-3-利用其余属性定位" class="headerlink" title="2.3 利用其余属性定位"></a>2.3 利用其余属性定位</h2><blockquote>
 <p>当元素没有id值和name值时才考虑使用</p>
 </blockquote>
 <ol>
 <li><code>CLASS_NAME</code>：利用类名来定义</li>
 <li><code>TAG_NAME</code>：利用标签名来定义（需要确保该页面<u>该标签名的元素只有一个</u></li>
 </ol>
-<h2 id="3-XPath定位"><a href="#3-XPath定位" class="headerlink" title="3.XPath定位"></a>3.XPath定位</h2><blockquote>
+<h1 id="3-XPath定位"><a href="#3-XPath定位" class="headerlink" title="3.XPath定位"></a>3.XPath定位</h1><blockquote>
 <p> 语法：<code>driver.find_element(By.XPATH , &#39;&#39;)</code></p>
 </blockquote>
-<h3 id="3-1-选取节点："><a href="#3-1-选取节点：" class="headerlink" title="3.1 选取节点："></a>3.1 选取节点：</h3><figure class="highlight xpath"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">绝对路径：/开头</span><br><span class="line">	/html/body/div[<span class="number">4</span>]/form/input[<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">相对路径：//开头</span><br><span class="line">    //标记名： //textarea 选取页面中的所有textarea元素</span><br><span class="line"></span><br><span class="line">    //父标记名/子标记名：//form/a 寻找当前页面form元素的a子元素</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+<h2 id="3-1-选取节点："><a href="#3-1-选取节点：" class="headerlink" title="3.1 选取节点："></a>3.1 选取节点：</h2><figure class="highlight xpath"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">绝对路径：/开头</span><br><span class="line">	/html/body/div[<span class="number">4</span>]/form/input[<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">相对路径：//开头</span><br><span class="line">    //标记名： //textarea 选取页面中的所有textarea元素</span><br><span class="line"></span><br><span class="line">    //父标记名/子标记名：//form/a 寻找当前页面form元素的a子元素</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="3-2-谓语（筛选条件"><a href="#3-2-谓语（筛选条件" class="headerlink" title="3.2 谓语（筛选条件"></a>3.2 谓语（筛选条件</h3><p>（1）标签名[索引号]：从1开始</p>
+<h2 id="3-2-谓语（筛选条件"><a href="#3-2-谓语（筛选条件" class="headerlink" title="3.2 谓语（筛选条件"></a>3.2 谓语（筛选条件</h2><p>（1）标签名[索引号]：从1开始</p>
 <p>（2）标签名[@属性名&#x3D;“属性值”]：任何属性都可以匹配，id、title、href等</p>
 <p>（3）标签名[text()&#x3D;””]：text的值为两个标签之间的文本 <code>&lt;a&gt;……&lt;/a&gt;</code></p>
 <p>（4）标签名[contains(text(), “字符串”)] &#x2F; [contains(@属性名, “字符串”)] ：表示包含关系，用于<u>当获取的元素属性值或者文本较长时</u>，可以使用字符串来模糊匹配</p>
@@ -274,13 +278,13 @@
 
 
 
-<h2 id="4-CSS选择器"><a href="#4-CSS选择器" class="headerlink" title="4.CSS选择器"></a>4.CSS选择器</h2><blockquote>
+<h1 id="4-CSS选择器"><a href="#4-CSS选择器" class="headerlink" title="4.CSS选择器"></a>4.CSS选择器</h1><blockquote>
 <p>语法：<code>driver.find_element(By.CSS_SELECTOR, &#39;&#39;)</code></p>
 <ul>
 <li>与XPath的比较：CSS选择器的速度更快</li>
 </ul>
 </blockquote>
-<h3 id="4-1-通过属性定位"><a href="#4-1-通过属性定位" class="headerlink" title="4.1 通过属性定位"></a>4.1 通过属性定位</h3><ol>
+<h2 id="4-1-通过属性定位"><a href="#4-1-通过属性定位" class="headerlink" title="4.1 通过属性定位"></a>4.1 通过属性定位</h2><ol>
 <li><p><code>id</code>属性：<code>#</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &lt;input name=&quot;keywords&quot; type=&quot;text&quot; id=&quot;keyword&quot; value=&quot;&quot; class=&quot;B_input&quot; style=&quot;width:110px;&quot;&gt;</span></span><br><span class="line">driver.find_element(By.CSS_SELECTOR, <span class="string">&#x27;#keyword&#x27;</span>)</span><br></pre></td></tr></table></figure>
 </li>
@@ -290,14 +294,14 @@
 <li><p>其他属性：<code>[属性名=&quot;属性值&quot;]</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &lt;a href=&quot;flow.php&quot;&gt;查看购物车&lt;/a&gt;</span></span><br><span class="line">driver.find_element(By.CSS_SELECTOR, <span class="string">&#x27;[href=&quot;flow.php&quot;]&#x27;</span>)</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h3 id="4-2-通过标签名定位"><a href="#4-2-通过标签名定位" class="headerlink" title="4.2 通过标签名定位"></a>4.2 通过标签名定位</h3><ol>
+<h2 id="4-2-通过标签名定位"><a href="#4-2-通过标签名定位" class="headerlink" title="4.2 通过标签名定位"></a>4.2 通过标签名定位</h2><ol>
 <li><p>标签名</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">driver.find_element(By.CSS_SELECTOR, <span class="string">&#x27;textarea&#x27;</span>).send_keys(<span class="string">&#x27;111&#x27;</span>)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>标签名+属性名组合定位：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &lt;input name=&quot;user_email&quot; type=&quot;text&quot; class=&quot;inputBg&quot; size=&quot;20&quot; value=&quot;&quot;&gt;</span></span><br><span class="line">driver.find_element(By.CSS_SELECTOR, <span class="string">&#x27;input.inputBg[name=&quot;user_email&quot;]&#x27;</span>)</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h3 id="4-3-通过层级关系和索引定位"><a href="#4-3-通过层级关系和索引定位" class="headerlink" title="4.3 通过层级关系和索引定位"></a>4.3 通过层级关系和索引定位</h3><ul>
+<h2 id="4-3-通过层级关系和索引定位"><a href="#4-3-通过层级关系和索引定位" class="headerlink" title="4.3 通过层级关系和索引定位"></a>4.3 通过层级关系和索引定位</h2><ul>
 <li><p><code>父 &gt; 子</code>：<u>form&gt;a</u></p>
   <img src="https://img2.imgtp.com/2024/03/05/0XzitEy5.png" style="zoom: 67%;" />  
 
@@ -311,7 +315,7 @@
 <li><p><code>标记名:nth-child(索引号)</code>：<u>option:nth-child(3)</u>  &#x3D;&gt; 第三个option节点</p>
 <img src="https://img2.imgtp.com/2024/03/05/MlwkrGfM.png" style="zoom:67%;" /></li>
 </ul>
-<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h2><ul>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h1><ul>
 <li><p>driver.find_element(By.ID,’id属性值’)</p>
 </li>
 <li><p>driver.find_element(By.NAME,’name属性值’)</p>

@@ -13,7 +13,7 @@
 
 
 
-<title>selenium — 2.页面元素操作及浏览器操作 | 12wj</title>
+<title>160.相交链表 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">selenium — 2.页面元素操作及浏览器操作</h1>
+            <h1 class="post-title">160.相交链表</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 5, 2024&nbsp;&nbsp;19:27:10</a>
+                        Date: <a href="#">March 5, 2024&nbsp;&nbsp;20:55:35</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95selenium/">功能测试selenium</a>
+                                <a href="/categories/leetcode-hot100/">leetcode-hot100</a>
                             
                         </span>
                     
@@ -221,42 +221,32 @@
         </header>
 
         <div class="post-content">
-            <h1 id="1-浏览器操作"><a href="#1-浏览器操作" class="headerlink" title="1.浏览器操作"></a>1.浏览器操作</h1><h2 id="1-1-浏览器导航操作"><a href="#1-1-浏览器导航操作" class="headerlink" title="1.1 浏览器导航操作"></a>1.1 浏览器导航操作</h2><ul>
-<li>driver.get(‘url’)  &#x3D;&gt; 访问网址</li>
-<li>driver.back()  &#x3D;&gt; 后退</li>
-<li>driver.forward()  &#x3D;&gt; 前进</li>
-<li>driver.refresh()  &#x3D;&gt; 刷新</li>
+            <blockquote>
+<p>刷题计划：</p>
+<ul>
+<li>链表 &#x3D;&gt; 数组 &#x3D;&gt; 二叉树 &#x3D;&gt; 图</li>
+<li>一天两道</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By  <span class="comment"># 导入by类</span></span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> selenium.common.exceptions <span class="keyword">import</span> NoSuchFrameException  <span class="comment"># 导入异常类</span></span><br><span class="line"></span><br><span class="line">driver = webdriver.Firefox()  <span class="comment"># 启动浏览器</span></span><br><span class="line">driver.get(<span class="string">&#x27;http://localhost/upload/index.php&#x27;</span>)</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.LINK_TEXT, <span class="string">&#x27;查看购物车&#x27;</span>).click()</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.back()  <span class="comment"># 返回</span></span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入框输入806点击搜索</span></span><br><span class="line">driver.find_element(By.XPATH, <span class="string">&#x27;//input[@id=&quot;keyword&quot;]&#x27;</span>).send_keys(<span class="string">&#x27;806&#x27;</span>)</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.XPATH, <span class="string">&#x27;//input[@name=&quot;imageField&quot;]&#x27;</span>).click()</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找不到元素时刷新直至找到</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        driver.find_element(By.LINK_TEXT, <span class="string">&quot;P806&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> NoSuchFrameException:   <span class="comment"># 发生异常时刷新浏览器</span></span><br><span class="line">        driver.refresh()</span><br><span class="line">        sleep(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        driver.find_element(By.LINK_TEXT, <span class="string">&quot;P806&quot;</span>).click()</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="1-2-调整浏览器窗口"><a href="#1-2-调整浏览器窗口" class="headerlink" title="1.2 调整浏览器窗口"></a>1.2 调整浏览器窗口</h2><ul>
-<li>driver.minimize_window()</li>
-<li>driver.maxmize_window()</li>
-<li>driver.set_window_size(width, height)</li>
-<li>driver.get_window_size()</li>
-<li>driver.set_window_position(x, y)</li>
-<li>driver.get_window_position()</li>
+</blockquote>
+<h1 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h1><p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 <code>null</code> 。</p>
+<p>图示两个链表在节点 <code>c1</code> 开始相交<strong>：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png" alt="img" style="zoom:67%;" /></a></p>
+<p>题目数据 <strong>保证</strong> 整个链式结构中不存在环。</p>
+<p><strong>注意</strong>，函数返回结果后，链表必须 <strong>保持其原始结构</strong> 。</p>
+<h1 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h1><ol>
+<li>两个头节点 &#x3D;&gt; 双指针问题</li>
+<li>判断是否相交 &#x3D;&gt; 两个指针在遍历时是否遇到同一个节点？ &#x3D;&gt; <u>怎么控制两个指针同时达到相交的节点</u>？</li>
+<li><strong>让指针p1遍历完链表A后开始遍历链表B，p2遍历完链表B后开始遍历链表A，这样p1、p2可以同时到达结尾处</strong><ul>
+<li>循环终止条件：<ul>
+<li>相交 &#x3D;&gt; 返回p1</li>
+<li>不相交 &#x3D;&gt; 同时指向null，返回null</li>
 </ul>
-<h2 id="1-3-获取网页信息"><a href="#1-3-获取网页信息" class="headerlink" title="1.3 获取网页信息"></a>1.3 获取网页信息</h2><ul>
-<li>str &#x3D; driver.title  &#x3D;&gt; 获取网页标题</li>
-<li>str &#x3D; driver.current_url  &#x3D;&gt; 获取当前url</li>
-<li>str &#x3D; driver.page_source  &#x3D;&gt; 获取网页源码</li>
+</li>
 </ul>
-<h1 id="2-页面元素操作"><a href="#2-页面元素操作" class="headerlink" title="2.页面元素操作"></a>2.页面元素操作</h1><ul>
-<li>click()</li>
-<li>send_keys()</li>
-<li>clear()</li>
-<li>submit()  &#x3D;&gt; 提交，作用与click一致，但click范围更广</li>
-<li>size  &#x3D;&gt; 获取元素大小</li>
-<li>text  &#x3D;&gt; 获取元素文本</li>
-<li>get_attribute(“属性”)  &#x3D;&gt; 获取元素的某个属性值</li>
-<li>is_display()  &#x3D;&gt; 元素是否可见</li>
-<li>is_enabled()  &#x3D;&gt; 元素是否可用</li>
-</ul>
+</li>
+</ol>
+<h1 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    ListNode next;</span><br><span class="line"></span><br><span class="line">    ListNode(<span class="type">int</span> x) &#123;</span><br><span class="line">        val = x;</span><br><span class="line">        next = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode <span class="title function_">getIntersectionNode</span><span class="params">(ListNode headA, ListNode headB)</span> &#123;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">p1</span> <span class="operator">=</span> headA;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">p2</span> <span class="operator">=</span> headB;</span><br><span class="line">        <span class="keyword">while</span> (p1 != p2) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p1 != <span class="literal">null</span>) &#123;</span><br><span class="line">                p1 = p1.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                p1 = headB;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (p2 != <span class="literal">null</span>) &#123;</span><br><span class="line">                p2 = p2.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                p2 = headA;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
         </div>
 
@@ -271,7 +261,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/05/selenium-%E2%80%94-2.%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C%E5%8F%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C/">https://12wj.github.io/2024/03/05/selenium-%E2%80%94-2.%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C%E5%8F%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/05/160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/">https://12wj.github.io/2024/03/05/160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</a></span>
                     </p>
                 
                 
@@ -294,6 +284,10 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
+                    
+                        <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"># 双指针</a>
+                    
+                        
                 </span>
             </div>
             <div>
@@ -304,10 +298,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/05/160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/">160.相交链表</a>
+                <a class="prev" rel="prev" href="/2024/03/06/206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/">206.反转链表</a>
             
             
-            <a class="next" rel="next" href="/2024/03/04/selenium%20%E2%80%94%201.%E5%AE%9A%E4%BD%8D%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0/">selenium — 1.定位页面元素</a>
+            <a class="next" rel="next" href="/2024/03/05/selenium-%E2%80%94-2.%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C%E5%8F%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C/">selenium — 2.页面元素操作及浏览器操作</a>
             
         </section>
 

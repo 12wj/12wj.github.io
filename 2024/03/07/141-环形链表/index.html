@@ -13,7 +13,7 @@
 
 
 
-<title>160.相交链表 | 12wj</title>
+<title>141.环形链表 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">160.相交链表</h1>
+            <h1 class="post-title">141.环形链表</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 5, 2024&nbsp;&nbsp;20:55:35</a>
+                        Date: <a href="#">March 7, 2024&nbsp;&nbsp;22:28:26</a>
                         </span>
                     
                     
@@ -221,31 +221,41 @@
         </header>
 
         <div class="post-content">
-            <blockquote>
-<p>刷题计划：</p>
+            <h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><p>给你一个链表的头节点 <code>head</code> ，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 <code>next</code> 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 <code>pos</code> 来表示链表尾连接到链表中的位置（索引从 0 开始）。<strong>注意：<code>pos</code> 不作为参数进行传递</strong> 。仅仅是为了标识链表的实际情况。</p>
+<p><em>如果链表中存在环</em> ，则返回 <code>true</code> 。 否则，返回 <code>false</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png" alt="img" style="zoom:50%;" />
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [3,2,0,-4], pos = 1</span><br><span class="line">输出：true</span><br><span class="line">解释：链表中有一个环，其尾部连接到第二个节点。</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<br>
+
+<br>
+
+<h1 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h1><ul>
+<li><p>环问题：<u>快慢指针</u></p>
 <ul>
-<li>链表 &#x3D;&gt; 数组 &#x3D;&gt; 二叉树 &#x3D;&gt; 图</li>
-<li>一天两道</li>
+<li>有环：就类似龟兔赛跑，快指针最终多绕几圈就可以与慢指针会和</li>
+<li>无环：快指针一定会先到达null值</li>
 </ul>
-</blockquote>
-<h1 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h1><p>给你两个单链表的头节点 <code>headA</code> 和 <code>headB</code> ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 <code>null</code> 。</p>
-<p>图示两个链表在节点 <code>c1</code> 开始相交<strong>：</strong></p>
-<p><a target="_blank" rel="noopener" href="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png"><img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png" alt="img" style="zoom:67%;" /></a></p>
-<p>题目数据 <strong>保证</strong> 整个链式结构中不存在环。</p>
-<p><strong>注意</strong>，函数返回结果后，链表必须 <strong>保持其原始结构</strong> 。<br /><br /><br /></p>
-<h1 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h1><ol>
-<li>两个头节点 &#x3D;&gt; 双指针问题</li>
-<li>判断是否相交 &#x3D;&gt; 两个指针在遍历时是否遇到同一个节点？ &#x3D;&gt; <u>怎么控制两个指针同时达到相交的节点</u>？</li>
-<li><strong>让指针p1遍历完链表A后开始遍历链表B，p2遍历完链表B后开始遍历链表A，这样p1、p2可以同时到达结尾处</strong><ul>
-<li>循环终止条件：<ul>
-<li>相交 &#x3D;&gt; 返回p1</li>
-<li>不相交 &#x3D;&gt; 同时指向null，返回null<br /><br /><br /></li>
+</li>
+<li><p>循环临界条件：</p>
+<ul>
+<li>fast &#x3D;&#x3D; null，fast &#x3D;&#x3D; slow</li>
+<li>额外条件： fast.next &#x3D;&#x3D; null ，避免出现空指针异常</li>
 </ul>
 </li>
 </ul>
-</li>
-</ol>
-<h1 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    ListNode next;</span><br><span class="line"></span><br><span class="line">    ListNode(<span class="type">int</span> x) &#123;</span><br><span class="line">        val = x;</span><br><span class="line">        next = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode <span class="title function_">getIntersectionNode</span><span class="params">(ListNode headA, ListNode headB)</span> &#123;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">p1</span> <span class="operator">=</span> headA;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">p2</span> <span class="operator">=</span> headB;</span><br><span class="line">        <span class="keyword">while</span> (p1 != p2) &#123;</span><br><span class="line">            <span class="keyword">if</span> (p1 != <span class="literal">null</span>) &#123;</span><br><span class="line">                p1 = p1.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                p1 = headB;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (p2 != <span class="literal">null</span>) &#123;</span><br><span class="line">                p2 = p2.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                p2 = headA;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<br>
+
+<br>
+
+<br>
+
+<h1 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ListNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    ListNode next;</span><br><span class="line">    ListNode(<span class="type">int</span> x) &#123;</span><br><span class="line">        val = x;</span><br><span class="line">        next = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasCycle</span><span class="params">(ListNode head)</span> &#123;</span><br><span class="line">        <span class="comment">// 老快慢指针问题了</span></span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">fast</span> <span class="operator">=</span> head;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">slow</span> <span class="operator">=</span> head;</span><br><span class="line">        <span class="keyword">while</span> (fast != <span class="literal">null</span> &amp;&amp; fast.next != <span class="literal">null</span>) &#123;</span><br><span class="line">            fast = fast.next.next;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            <span class="keyword">if</span> (fast == slow) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
         </div>
@@ -261,7 +271,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/05/160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/">https://12wj.github.io/2024/03/05/160-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/07/141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/">https://12wj.github.io/2024/03/07/141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/</a></span>
                     </p>
                 
                 
@@ -298,10 +308,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/06/206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/">206.反转链表</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/05/selenium-%E2%80%94-2.%E9%A1%B5%E9%9D%A2%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C%E5%8F%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E6%93%8D%E4%BD%9C/">selenium — 2.页面元素操作及浏览器操作</a>
+            <a class="next" rel="next" href="/2024/03/06/234-%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/">234.回文链表</a>
             
         </section>
 

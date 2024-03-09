@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lin">
+
+
+
+
+
+<title>linux01常用命令 — 文件操作 | 12wj</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">linux01常用命令 — 文件操作</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">March 9, 2024&nbsp;&nbsp;14:45:13</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%B5%8B%E8%AF%95-%E2%80%94%E2%80%94-Linux%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/">测试 —— Linux基本操作</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <br>
+
+<blockquote>
+<p>Linux命令：</p>
+<p><a target="_blank" rel="noopener" href="https://www.linuxcool.com/">Linux命令大全(手册) – 真正好用的Linux命令在线查询网站 (linuxcool.com)</a></p>
+</blockquote>
+<br>
+
+<h1 id="1-Linux目录结构"><a href="#1-Linux目录结构" class="headerlink" title="1.Linux目录结构"></a>1.Linux目录结构</h1><img src="https://pic.imgdb.cn/item/65ec0b219f345e8d03d2bc69.jpg" style="zoom: 80%;" /> 
+
+<ul>
+<li>根目录：<code>/</code></li>
+<li>常见目录：<ul>
+<li><code>/bin</code>：可执行二进制文件的目录</li>
+<li><code>/etc</code>：系统配置文件存放的目录</li>
+<li><code>/home</code>：系统默认的用户主目录</li>
+<li><code>/root</code>：root用户的主目录</li>
+<li><code>~</code>：当前用户的主目录</li>
+</ul>
+</li>
+</ul>
+<br>
+
+<br>
+
+<h1 id="2-常用命令-—-文件管理"><a href="#2-常用命令-—-文件管理" class="headerlink" title="2.常用命令 — 文件管理"></a>2.常用命令 — 文件管理</h1><br>
+
+<ul>
+<li><h2 id="ls：查看当前文件夹的内容"><a href="#ls：查看当前文件夹的内容" class="headerlink" title="ls：查看当前文件夹的内容"></a>ls：查看当前文件夹的内容</h2><ul>
+<li><code>./a.txt</code>：当前目录的txt文件</li>
+<li><code>../a.txt</code>：上一级目录的txt文件</li>
+</ul>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ls 参数</span><br><span class="line">-a  # 显示所有文件及目录 （包括隐藏文件 .xxx）</span><br><span class="line">-l  # 显示文件的详细属性信息</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>ls -l</code>返回结果说明：</p>
+<img src="https://pic.imgdb.cn/item/65ec13b09f345e8d03ed1a60.jpg" style="zoom:67%;" /> 
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x 2 lin lin 4096 10月 9 15:39 Desktop </span><br><span class="line">d：文件类型</span><br><span class="line">rwxr-xr-x：权限 r可读 w可写 x可执行</span><br><span class="line">lin：文件属主</span><br><span class="line">lin：文件所属的组</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># ls 通配符</span><br><span class="line">ls a*  #查看a开头的文件或者目录的内容 *表示任意个字符</span><br><span class="line">ls a?  #查看a开头且后面只有一个字符 ?表示一个字符</span><br><span class="line">ls ?? </span><br><span class="line">ls [a-f]* # 查看a-f开头的文件或目录内容</span><br><span class="line">ls [a,b]?</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+</li>
+<li><h2 id="pwd：查看当前目录"><a href="#pwd：查看当前目录" class="headerlink" title="pwd：查看当前目录"></a>pwd：查看当前目录</h2></li>
+</ul>
+<br>
+
+<br>
+
+<br>
+
+<ul>
+<li><h2 id="chmod：改变文件或目录权限"><a href="#chmod：改变文件或目录权限" class="headerlink" title="chmod：改变文件或目录权限"></a>chmod：改变文件或目录权限</h2><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chmod 参数</span></span><br><span class="line">u：user 文件所属用户</span><br><span class="line">g：group 文件所属组</span><br><span class="line">o：other 其他用户</span><br><span class="line">a：all 所有用户</span><br><span class="line">+：赋权</span><br><span class="line">-：去权</span><br><span class="line">=：等于哪些权力</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">chmod a+rwx a.txt # a.txt文件给所有用户加上rwx权限</span><br><span class="line">chmod a=rw a.txt</span><br><span class="line">chmod <span class="number">777</span> a.txt # a.txt文件所有用户都有rwx的权限</span><br><span class="line">	#r <span class="number">4</span>  w <span class="number">2</span>  x <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+
+</li>
+<li><h2 id="cd：切换目录"><a href="#cd：切换目录" class="headerlink" title="cd：切换目录"></a>cd：切换目录</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> / #进入根目录</span><br><span class="line"><span class="built_in">cd</span> #进入用户主目录 /home/lin 等同于 <span class="built_in">cd</span> ~</span><br><span class="line"><span class="built_in">cd</span> .. #进入上一级目录</span><br><span class="line"><span class="built_in">cd</span> -  #回到切换前的目录</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+</li>
+<li><h2 id="touch：创建空的文本文件或者修改已存在文件的时间戳"><a href="#touch：创建空的文本文件或者修改已存在文件的时间戳" class="headerlink" title="touch：创建空的文本文件或者修改已存在文件的时间戳"></a>touch：创建<u>空的文本文件</u>或者修改已存在文件的时间戳</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch file.txt</span><br></pre></td></tr></table></figure></li>
+</ul>
+<br>
+
+<br>
+
+<ul>
+<li><h2 id="mkdir：创建目录文件"><a href="#mkdir：创建目录文件" class="headerlink" title="mkdir：创建目录文件"></a>mkdir：创建目录文件</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 创建一个目录a</span><br><span class="line"><span class="built_in">mkdir</span> a</span><br><span class="line"></span><br><span class="line"># 创建一个有嵌套关系的多级目录</span><br><span class="line"><span class="built_in">mkdir</span> -p a/b/c</span><br></pre></td></tr></table></figure></li>
+</ul>
+<br>
+
+<br>
+
+<ul>
+<li><h2 id="rm：删除文件或者目录"><a href="#rm：删除文件或者目录" class="headerlink" title="rm：删除文件或者目录"></a>rm：删除文件或者目录</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># rm -参数 文件名</span><br><span class="line">-r  # 递归删除目录及其内全部子文件</span><br><span class="line">-f  # 强制删除文件而不询问</span><br><span class="line">rm -rf a</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+</li>
+<li><h2 id="cp：复制文件或目录"><a href="#cp：复制文件或目录" class="headerlink" title="cp：复制文件或目录"></a>cp：复制文件或目录</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># cp 参数 源文件名 目标文件名</span><br><span class="line">-r  # 递归操作，复制目录时必须添加</span><br><span class="line">-f  # 目标文件已存在时会直接覆盖而不再询问</span><br><span class="line">cp a.txt abc/a.txt  # 复制当前目录的a.txt到abc目录下</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+</li>
+<li><h2 id="mv：移动和改名文件"><a href="#mv：移动和改名文件" class="headerlink" title="mv：移动和改名文件"></a>mv：移动和改名文件</h2><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mv 参数 源文件名 目标文件名</span><br><span class="line">mv a.txt abc/a.txt  # 移动当前目录的a.txt文件到abc目录下，剪切操作</span><br><span class="line">mv a.txt b.txt  # 将当前目录下的a.txt文件改名为b.txt</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://12wj.github.io/2024/03/09/linux01/">https://12wj.github.io/2024/03/09/linux01/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/07/142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II/">142.环形链表II</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

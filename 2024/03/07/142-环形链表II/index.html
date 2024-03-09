@@ -13,7 +13,7 @@
 
 
 
-<title>软件测试的艺术03 | 12wj</title>
+<title>142.环形链表II | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">软件测试的艺术03</h1>
+            <h1 class="post-title">142.环形链表II</h1>
             
                 <div class="post-meta">
                     
@@ -205,93 +205,38 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 2, 2024&nbsp;&nbsp;15:14:40</a>
+                        Date: <a href="#">March 7, 2024&nbsp;&nbsp;22:56:21</a>
                         </span>
                     
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/leetcode-hot100/">leetcode-hot100</a>
+                            
+                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <blockquote>
-<p><strong>第四章 测试用例的设计</strong></p>
-<p>前面提到过，穷举的黑盒和白盒测试通常是不可能的，但同时也建议：将这两种测试的要素组合起来得到一种合理的测试策略</p>
-</blockquote>
-<p>本章讨论的测试方法：</p>
-<p><strong>黑盒测试</strong>：</p>
-<ul>
-<li>等价类划分</li>
-<li>边界值分析</li>
-<li>因果图分析</li>
-<li>错误测试</li>
-</ul>
-<p><strong>白盒测试</strong>：</p>
-<ul>
-<li>语句覆盖 </li>
-<li>判定覆盖 </li>
-<li>条件覆盖 </li>
-<li>判定&#x2F;条件覆盖</li>
-<li>多重条件覆盖</li>
-</ul>
-<h1 id="4-1-白盒测试"><a href="#4-1-白盒测试" class="headerlink" title="4.1 白盒测试"></a>4.1 白盒测试</h1><p><img src="/QQ%E6%88%AA%E5%9B%BE20240302160319.jpg"></p>
-<p><strong>语句覆盖</strong>：</p>
-<ul>
-<li>该准则有很大的不足，通常没什么用处</li>
-</ul>
-<p><strong>判定覆盖（分支覆盖）</strong>：</p>
-<ul>
-<li>要求：<u>每一个判断都至少有一个为“真”和为“假”的输出结果</u></li>
-</ul>
-<p><strong>条件覆盖</strong>：</p>
-<ul>
-<li>要求：确保一个<u>判断中的每个条件的所有可能的结果至少执行一次</u></li>
-</ul>
-<p><strong>判定&#x2F;条件覆盖</strong>：</p>
-<ul>
-<li><p>为了解决条件覆盖的测试用例无法涵盖所有判断结果</p>
-</li>
-<li><p>要求：将<u>每个判断的每个条件的所有可能的结果</u>至少执行一次，将<u>每个判断的所有</u></p>
-<p><u>可能的结果</u>至少执行一次，<u>将每个入口点都至少调用一次</u>。</p>
-</li>
-</ul>
-<p><strong>多重条件覆盖测试</strong>：</p>
-<ul>
-<li>要求：将<u>每个判定中的所有可能的条件结果的组合</u>，以及所有的入口点都至少执行一次</li>
-</ul>
-<br>
+            <h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><p>给定一个链表的头节点  <code>head</code> ，返回链表开始入环的第一个节点。 <em>如果链表无环，则返回 <code>null</code>。</em></p>
+<p>如果链表中有某个节点，可以通过连续跟踪 <code>next</code> 指针再次到达，则链表中存在环。 <strong>不允许修改</strong> 链表。</p>
+<p><strong>示例 1：</strong></p>
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png" alt="img" style="zoom:67%;" />
 
-<br>
-
-<br>
-
-<h1 id="4-2-黑盒测试"><a href="#4-2-黑盒测试" class="headerlink" title="4.2 黑盒测试"></a>4.2 黑盒测试</h1><h2 id="4-2-1-等价类划分"><a href="#4-2-1-等价类划分" class="headerlink" title="4.2.1 等价类划分"></a>4.2.1 等价类划分</h2><ol>
-<li><p>确定等价类：</p>
-<ul>
-<li>选取<u>每一个输入条件</u>并将其划分为<u>两个或更多的组</u></li>
-<li><strong>输入条件</strong>：“数量可以是从1到99”</li>
-<li><strong>有效等价类</strong>：1 &lt; 数量 &lt; 99</li>
-<li><strong>无效等价类：</strong><ul>
-<li>数量 &lt; 1</li>
-<li>数量 &gt; 99</li>
-</ul>
-</li>
-</ul>
-<img src="https://pic.imgdb.cn/item/65eab3da9f345e8d039209e7.jpg" style="zoom:67%;" />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [3,2,0,-4], pos = 1</span><br><span class="line">输出：返回索引为 1 的链表节点</span><br><span class="line">解释：链表中有一个环，其尾部连接到第二个节点</span><br></pre></td></tr></table></figure>
 
 
-</li>
-<li><p>生成测试用例：</p>
-<ul>
-<li>为每一个等价类设置一个不同的编号</li>
-<li>编写新的测试用例，<u>尽可能多地覆盖那些尚未被涵盖的有效等价类</u>，直到所有的有效等价类都被测试用例所覆盖（包含进去）</li>
-<li>编写新的用例，<u>覆盖一个且仅一个尚未被覆盖的无效等价类</u>，直到所有的无效等价类都被测试用例所覆盖（意思就是一个测试用例仅只覆盖一个无效等价类）</li>
+
+
+
+<h1 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h1><ul>
+<li>141.环形链表的2.0版本，找出环的起点</li>
+<li>先找到</li>
 </ul>
-</li>
-<li><p>案例：</p>
-</li>
-</ol>
-<h2 id="边界值分析"><a href="#边界值分析" class="headerlink" title="边界值分析"></a>边界值分析</h2><h2 id="因果图"><a href="#因果图" class="headerlink" title="因果图"></a>因果图</h2>
+
         </div>
 
         
@@ -305,7 +250,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF03/">https://12wj.github.io/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF03/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/07/142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II/">https://12wj.github.io/2024/03/07/142-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II/</a></span>
                     </p>
                 
                 
@@ -329,7 +274,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8A%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF%E3%80%8B/"># 读书笔记《软件测试的艺术》</a>
+                        <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"># 双指针</a>
                     
                         
                 </span>
@@ -342,10 +287,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/02/%E6%B5%8B%E5%BC%80%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/">测开学习路线</a>
+                <a class="prev" rel="prev" href="/2024/03/09/linux01/">linux01常用命令 — 文件操作</a>
             
             
-            <a class="next" rel="next" href="/2024/03/02/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E7%9A%84%E8%89%BA%E6%9C%AF02/">软件测试的艺术02</a>
+            <a class="next" rel="next" href="/2024/03/07/141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8/">141.环形链表</a>
             
         </section>
 

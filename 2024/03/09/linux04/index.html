@@ -221,7 +221,95 @@
         </header>
 
         <div class="post-content">
-            <h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+            <h1 id="1-gzip-—-压缩和解压文件"><a href="#1-gzip-—-压缩和解压文件" class="headerlink" title="1. gzip — 压缩和解压文件"></a>1. gzip — 压缩和解压文件</h1><ul>
+<li><p>功能：压缩和解压文件，压缩后以<code>.gz</code>后缀结尾，由<strong>参数</strong>来决定<u>解压还是压缩</u></p>
+</li>
+<li><p>格式：</p>
+<ul>
+<li><code>gzip 参数 文件名</code></li>
+</ul>
+</li>
+<li><p>参数：</p>
+<img src="https://pic.imgdb.cn/item/65ed70d19f345e8d033154a5.jpg" style="zoom:80%;" /></li>
+</ul>
+<br>
+
+<p>参考：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 压缩</span><br><span class="line">gzip a.txt</span><br><span class="line"></span><br><span class="line"># 解压</span><br><span class="line">gzip -d a.txt.gz</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+
+<br>
+
+<h1 id="2-zip-unzip-—-解压缩文件"><a href="#2-zip-unzip-—-解压缩文件" class="headerlink" title="2. zip&#x2F;unzip — 解压缩文件"></a>2. zip&#x2F;unzip — 解压缩文件</h1><ul>
+<li><p>功能：</p>
+<ul>
+<li><code>zip</code>：压缩文件，将文件打包成zip格式的压缩包</li>
+<li><code>unzip</code>：解压文件，并保存到当前工作目录</li>
+</ul>
+</li>
+<li><p>格式：</p>
+<ul>
+<li><code>zip  参数 目标文件名.zip 源文件或目录名</code>  （必须指出压缩后的文件名</li>
+<li><code>unzip 参数 压缩包名</code></li>
+</ul>
+</li>
+</ul>
+<br>
+
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 压缩，把a.txt压缩成a.zip</span><br><span class="line">zip a.zip a.txt</span><br><span class="line"></span><br><span class="line"># 解压</span><br><span class="line">unzip a.zip</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+
+<br>
+
+<h1 id="3-tar-—-打包文件"><a href="#3-tar-—-打包文件" class="headerlink" title="3.tar — 打包文件"></a>3.tar — 打包文件</h1><ul>
+<li><p>功能：可以打包和解压缩文件，压缩式可以指定压缩包文件</p>
+</li>
+<li><p>格式：</p>
+<ul>
+<li><code>tar 参数 压缩包名 (文件或目录名)</code></li>
+</ul>
+</li>
+<li><p>参数：</p>
+<img src="https://pic.imgdb.cn/item/65ed7c749f345e8d0373637e.jpg" style="zoom:80%;" /></li>
+</ul>
+<br>
+
+<p>参考：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 将abc目录进行打包</span><br><span class="line">tar -cvf abc.tar abc</span><br><span class="line"></span><br><span class="line"># 查看abc.tar的内容</span><br><span class="line">tar -tvf abc.tar</span><br><span class="line"></span><br><span class="line"># 将abc.tar还原</span><br><span class="line">tar -xvf abc.tar</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<hr>
+
+<blockquote>
+<p>tar跟gzip结合使用：</p>
+</blockquote>
+<img src="https://pic.imgdb.cn/item/65ed838c9f345e8d0399680a.jpg" style="zoom:80%;" /> 
+
+<ul>
+<li><p><code>abc.tar.gz</code>：表示gzip格式压缩的abc.tar文件</p>
+</li>
+<li><p>将该压缩文件进行还原：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 先解压</span><br><span class="line">gzip -d abc.tar.gz</span><br><span class="line"></span><br><span class="line"># 后还原</span><br><span class="line">tar -xvf abc.tar</span><br></pre></td></tr></table></figure>
+
+<img src="https://pic.imgdb.cn/item/65ed84af9f345e8d03a0384b.jpg" style="zoom:80%;" /> 
+
+<br>
+</li>
+<li><p>上述命令可以用 <strong>tar命令的参数<code>-z</code>实现打包时压缩</strong>，<strong>解包时解压缩</strong></p>
+</li>
+<li><p>参考：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 打包abc目录并且进行压缩</span><br><span class="line">tar -zcvf abc.tar.gz abc</span><br><span class="line"></span><br><span class="line"># 查看</span><br><span class="line">ls -l</span><br><span class="line">total <span class="number">76</span></span><br><span class="line">lrwxrwxrwx <span class="number">1</span> lin lin     <span class="number">5</span>  <span class="number">3</span>月 <span class="number">10</span> <span class="number">16</span>:<span class="number">13</span> a -&gt; a.txt</span><br><span class="line">drwxrwxr-x <span class="number">2</span> lin lin  <span class="number">4096</span>  <span class="number">3</span>月 <span class="number">10</span> <span class="number">17</span>:<span class="number">29</span> abc</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> lin lin   <span class="number">150</span>  <span class="number">3</span>月 <span class="number">10</span> <span class="number">18</span>:<span class="number">03</span> abc.tar.gz</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 解压缩，并解包</span><br><span class="line">tar -zxvf abc.tar.gz</span><br></pre></td></tr></table></figure></li>
+</ul>
+
         </div>
 
         

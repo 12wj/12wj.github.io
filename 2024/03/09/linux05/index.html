@@ -127,6 +127,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -156,7 +221,27 @@
         </header>
 
         <div class="post-content">
-            
+            <h1 id="1-ping-—-测试主机间网络连通性"><a href="#1-ping-—-测试主机间网络连通性" class="headerlink" title="1. ping — 测试主机间网络连通性"></a>1. ping — 测试主机间网络连通性</h1><ul>
+<li><p>功能：发出基于ICMP协议的数据包，来测试主机间的网络连通性</p>
+</li>
+<li><p>格式：<code>ping 参数 域名/IP地址</code></p>
+</li>
+<li><p>示例：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ping</span> <span class="number">10</span>.<span class="number">252</span>.<span class="number">57</span>.<span class="number">219</span></span><br><span class="line"><span class="built_in">PING</span> <span class="number">10</span>.<span class="number">252</span>.<span class="number">57</span>.<span class="number">219</span> (<span class="number">10</span>.<span class="number">252</span>.<span class="number">57</span>.<span class="number">219</span>) <span class="number">56</span>(<span class="number">84</span>) bytes of data.</span><br><span class="line"><span class="number">64</span> bytes from <span class="number">10</span>.<span class="number">252</span>.<span class="number">57</span>.<span class="number">219</span>: icmp_seq=<span class="number">1</span> ttl=<span class="number">128</span> <span class="built_in">time</span>=<span class="number">0</span>.<span class="number">684</span> ms</span><br><span class="line"><span class="number">64</span> bytes from <span class="number">10</span>.<span class="number">252</span>.<span class="number">57</span>.<span class="number">219</span>: icmp_seq=<span class="number">2</span> ttl=<span class="number">128</span> <span class="built_in">time</span>=<span class="number">0</span>.<span class="number">498</span> ms</span><br><span class="line"><span class="number">64</span> bytes from <span class="number">10</span>.<span class="number">252</span>.<span class="number">57</span>.<span class="number">219</span>: icmp_seq=<span class="number">3</span> ttl=<span class="number">128</span> <span class="built_in">time</span>=<span class="number">1</span>.<span class="number">21</span> ms</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<br>
+
+<br>
+
+<br>
+
+<h1 id="2-ifconfig-—-显示系统的网络设备信息"><a href="#2-ifconfig-—-显示系统的网络设备信息" class="headerlink" title="2. ifconfig — 显示系统的网络设备信息"></a>2. ifconfig — 显示系统的网络设备信息</h1><ul>
+<li><p>功能：显示或设置网络设备参数信息。</p>
+</li>
+<li><p>示例：</p>
+<img src="https://pic.imgdb.cn/item/65edaf989f345e8d03ba79b7.jpg" style="zoom:80%;" /></li>
+</ul>
+
         </div>
 
         

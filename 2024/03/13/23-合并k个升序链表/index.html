@@ -13,7 +13,7 @@
 
 
 
-<title>25.k个一组翻转链表 | 12wj</title>
+<title>23.合并k个升序链表 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">25.k个一组翻转链表</h1>
+            <h1 class="post-title">23.合并k个升序链表</h1>
             
                 <div class="post-meta">
                     
@@ -205,7 +205,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 11, 2024&nbsp;&nbsp;19:20:43</a>
+                        Date: <a href="#">March 13, 2024&nbsp;&nbsp;10:26:44</a>
                         </span>
                     
                     
@@ -221,13 +221,10 @@
         </header>
 
         <div class="post-content">
-            <h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><p>给你链表的头节点 <code>head</code> ，每 <code>k</code> 个节点一组进行翻转，请你返回修改后的链表。</p>
-<p><code>k</code> 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 <code>k</code> 的整数倍，那么请将最后剩余的节点保持原有顺序。</p>
-<p>你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。</p>
+            <h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><p>给你一个链表数组，每个链表都已经按升序排列。</p>
+<p>请你将所有链表合并到一个升序链表中，返回合并后的链表。</p>
 <p><strong>示例 1：</strong></p>
-<img src="https://assets.leetcode.com/uploads/2020/10/03/reverse_ex1.jpg" alt="img" style="zoom:80%;" />
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [1,2,3,4,5], k = 2</span><br><span class="line">输出：[2,1,4,3,5]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">输入：lists = [[1,4,5],[1,3,4],[2,6]]</span><br><span class="line">输出：[1,1,2,3,4,4,5,6]</span><br><span class="line">解释：链表数组如下：</span><br><span class="line">[</span><br><span class="line">  1-&gt;4-&gt;5,</span><br><span class="line">  1-&gt;3-&gt;4,</span><br><span class="line">  2-&gt;6</span><br><span class="line">]</span><br><span class="line">将它们合并到一个有序链表中得到。</span><br><span class="line">1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6</span><br></pre></td></tr></table></figure>
 
 <br>
 
@@ -236,22 +233,50 @@
 <br>
 
 <h1 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h1><ul>
-<li><strong>k个一组翻转链表</strong>  &#x3D;&gt; 类似于<u>24.两两交换链表节点</u></li>
-<li>采用<strong>递归法</strong>：<ul>
-<li>终止条件：剩余不足k个节点时</li>
-<li>k个一组进行翻转  &#x3D;&gt; 参考<u>206.反转链表</u></li>
-<li>进行递归</li>
+<li><strong>21.合并两个升序链表</strong>的plus版，关键在于怎么在k个节点中寻找最小节点</li>
+<li>利用<strong>优先级队列</strong>（二叉堆）数据结构，把k个链表的节点放入一个最小堆中，这样就可以获取k个节点的最小值</li>
+</ul>
+<hr>
+
+<p><strong>优先级队列：</strong></p>
+<ul>
+<li><p>PriorityQueue：按照<strong>元素优先级</strong>进行排序的队列，底层原理是依靠<strong>堆</strong>实现的（默认是小根堆</p>
+</li>
+<li><p>构造方法：</p>
+<img src="https://pic.imgdb.cn/item/65f117e99f345e8d03a43d97.png" style="zoom:80%;" />
+
+
+</li>
+<li><p>其他常用方法：</p>
+<ul>
+<li><pre><code class="cmd"># 插入元素
+add() =&gt; 插入失败时抛出异常
+offer() =&gt; 失败时返回null
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```cmd</span><br><span class="line">  # 获取队首元素</span><br><span class="line">  element()	失败时抛出异常</span><br><span class="line">  peek()		失败时返回null</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+<li><pre><code class="cmd"># 获取并删除队首元素
+remove()
+poll()
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;br&gt;</span><br><span class="line"></span><br><span class="line">&lt;br&gt;</span><br><span class="line"></span><br><span class="line">&lt;br&gt;</span><br><span class="line"></span><br><span class="line"># 代码：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">import java.util.PriorityQueue;</span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">    </span><br><span class="line">    public ListNode mergeKLists(ListNode[] lists) &#123;</span><br><span class="line">        if (lists.length == 0) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        //新链表的虚拟头节点</span><br><span class="line">        ListNode dummy = new ListNode();</span><br><span class="line">        ListNode p = dummy;</span><br><span class="line"></span><br><span class="line">        PriorityQueue&lt;ListNode&gt; queue = new PriorityQueue&lt;&gt;(lists.length, (a, b) -&gt; (a.val - b.val));</span><br><span class="line">        for (ListNode head : lists) &#123;</span><br><span class="line">            if (head != null) &#123;</span><br><span class="line">                queue.offer(head);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        while (!queue.isEmpty()) &#123;</span><br><span class="line">            ListNode node = queue.poll();</span><br><span class="line">            p.next = node;</span><br><span class="line"></span><br><span class="line">            if (node.next != null) &#123;</span><br><span class="line">                queue.offer(node.next);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            p = p.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return dummy.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
 </ul>
 </li>
 </ul>
-<br>
+<blockquote>
+<p><strong>PriorityQueue</strong>的构造方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PriorityQueue&lt;ListNode&gt; queue = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;(</span><br><span class="line">	lists.length, (a, b) -&gt; (a.val - b.val));</span><br></pre></td></tr></table></figure>
 
-<br>
+<ul>
+<li><p>首先在<ListNode>中指定插入元素类型，从而可以在比较器中指定比较<strong>node.val</strong>属性</p>
+</li>
+<li><p>(a, b) -&gt; (a.val - b.val) 使用lambda表达式，等价于以下方法：</p>
+</li>
+</ul>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">compare</span><span class="params">(ListNode a, ListNode b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a.val - b.val;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<br>
-
-<h1 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归法：</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> ListNode <span class="title function_">reverseKGroup</span><span class="params">(ListNode head, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="comment">// 结合24.两两交换链表中的节点进行思考</span></span><br><span class="line">        <span class="keyword">if</span> (head == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> head;	<span class="comment">//base case</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">tail</span> <span class="operator">=</span> head;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; k; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (tail == <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> head;	<span class="comment">//base case</span></span><br><span class="line">            &#125;</span><br><span class="line">            tail = tail.next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//先处理</span></span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">newhead</span> <span class="operator">=</span> reverse(head, tail);</span><br><span class="line">        <span class="comment">//再递归</span></span><br><span class="line">        head.next = reverseKGroup(tail, k);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> newhead;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 参考206.反转链表</span></span><br><span class="line">    <span class="keyword">public</span> ListNode <span class="title function_">reverse</span><span class="params">(ListNode node1, ListNode node2)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (node1 == <span class="literal">null</span> || node1.next == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> node1;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">pre</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">cur</span> <span class="operator">=</span> node1;</span><br><span class="line">        <span class="comment">// ListNode p2 = head.next;</span></span><br><span class="line">        <span class="keyword">while</span> (cur != node2) &#123;</span><br><span class="line">            <span class="type">ListNode</span> <span class="variable">temp</span> <span class="operator">=</span> cur.next; <span class="comment">// 临时节点，需要cur.next才设置，避免出现null.next</span></span><br><span class="line">            cur.next = pre;</span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = temp;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pre;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+</blockquote>
 
         </div>
 
@@ -266,7 +291,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/11/25-k%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/">https://12wj.github.io/2024/03/11/25-k%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/13/23-%E5%90%88%E5%B9%B6k%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/">https://12wj.github.io/2024/03/13/23-%E5%90%88%E5%B9%B6k%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</a></span>
                     </p>
                 
                 
@@ -290,7 +315,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E9%80%92%E5%BD%92/"># 递归</a>
+                        <a href="/tags/%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97/"># 优先级队列</a>
                     
                         
                 </span>
@@ -303,10 +328,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/11/redis01%EF%BC%9A%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/">redis01：基本命令</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/11/24-%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9/">24.两两交换链表中的节点</a>
+            <a class="next" rel="next" href="/2024/03/12/spring/">Mybatis</a>
             
         </section>
 

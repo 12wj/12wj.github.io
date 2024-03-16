@@ -13,7 +13,7 @@
 
 
 
-<title>34.在排序数组中查找元素的第一个和最后一个位置 | 12wj</title>
+<title>记录coding中遇到的bug | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">34.在排序数组中查找元素的第一个和最后一个位置</h1>
+            <h1 class="post-title">记录coding中遇到的bug</h1>
             
                 <div class="post-meta">
                     
@@ -205,16 +205,9 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 14, 2024&nbsp;&nbsp;17:19:00</a>
+                        Date: <a href="#">March 14, 2024&nbsp;&nbsp;22:36:34</a>
                         </span>
                     
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/leetcode-hot100/">leetcode-hot100</a>
-                            
-                        </span>
                     
                 </div>
             
@@ -223,21 +216,25 @@
         <div class="post-content">
             <br>
 
-<h1 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h1><p>给你一个按照非递减顺序排列的整数数组 <code>nums</code>，和一个目标值 <code>target</code>。请你找出给定目标值在数组中的开始位置和结束位置。</p>
-<p>如果数组中不存在目标值 <code>target</code>，返回 <code>[-1, -1]</code>。</p>
-<p>你必须设计并实现时间复杂度为 <code>O(log n)</code> 的算法解决此问题。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [5,7,7,8,8,10], target = 8</span><br><span class="line">输出：[3,4]</span><br></pre></td></tr></table></figure>
+<h1 id="1-首页"><a href="#1-首页" class="headerlink" title="1. 首页"></a>1. 首页</h1><h3 id="1-1-分页展示帖子功能"><a href="#1-1-分页展示帖子功能" class="headerlink" title="1.1 分页展示帖子功能"></a>1.1 分页展示帖子功能</h3><br>
 
-<br>
+<p><strong>报错1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Circular view path [index]: would dispatch back to the current handler URL [/index] again. Check your ViewResolver setup! (Hint: This may be the result of an unspecified view, due to default view name generation.)</span><br></pre></td></tr></table></figure>
 
-<br>
-
-<br>
-
-<h1 id="思考："><a href="#思考：" class="headerlink" title="思考："></a>思考：</h1><ul>
-<li>有序数组  &#x3D;&#x3D;&gt; 寻找某个target值的左右边界</li>
-<li>二分查找</li>
+<ul>
+<li><p>前端报500</p>
+</li>
+<li><p>解决方法：</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18813615/how-to-avoid-the-circular-view-path-exception-with-spring-mvc-test">https://stackoverflow.com/questions/18813615/how-to-avoid-the-circular-view-path-exception-with-spring-mvc-test</a></p>
+<ul>
+<li><p>参考其中一个回答，然后<strong>把<code>pom</code>文件里<code>thymleaf</code> 和 <code>web</code>依赖调换一下顺序</strong>就解决了！好神奇，不过我也没搞懂这是为什么?</p>
+</li>
+<li><p>调换后的顺序：</p>
+<img src="https://pic.imgdb.cn/item/65f30d979f345e8d032768f1.png" style="zoom:80%;" /></li>
+</ul>
+</li>
+<li><p>解决过程中尝试了很多方法，把访问接口修改了报错404，但是控制器方法可以正常访问，so amazing!!!</p>
+</li>
 </ul>
 <br>
 
@@ -245,9 +242,36 @@
 
 <br>
 
+<p><strong>报错2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.lang.Long cannot be cast to java.lang.Integer</span><br></pre></td></tr></table></figure>
 
+<ul>
+<li>出现原因：service将读到的page信息通过map包装传递回controller时，controller通过<code>(Integer) map1.get(&quot;pageNo&quot;)</code>读取时报错</li>
+<li>控制层读取修改为：<code>((Number) map1.get(&quot;pageNo&quot;)).intValue()</code><ul>
+<li>先转换为Number再用value提取</li>
+</ul>
+</li>
+<li>参考链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/SELECT_BIN/article/details/81746320">解决java.lang.Long cannot be cast to java.lang.Integer问题_long cannot be cast to integer-CSDN博客</a></li>
+</ul>
+<br>
 
-<h1 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h1>
+<br>
+
+<br>
+
+<p><strong>报错3：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invalid value type for attribute &#x27;factoryBeanObjectType&#x27;: java.lang.String</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>原因：springboot版本跟mybatisplus版本之间的问题</p>
+</li>
+<li><p>解决方案：降低springboot版本为2</p>
+<img src="https://pic.imgdb.cn/item/65f311399f345e8d033eef3f.png" style="zoom:80%;" /> 
+</li>
+<li><p>或者修改mp的版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mybatis-plus-spring-boot3-starter&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.5.5&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
         </div>
 
         
@@ -261,7 +285,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/14/34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/">https://12wj.github.io/2024/03/14/34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/14/%E8%AE%B0%E5%BD%95coding%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84bug/">https://12wj.github.io/2024/03/14/%E8%AE%B0%E5%BD%95coding%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84bug/</a></span>
                     </p>
                 
                 
@@ -284,10 +308,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"># 二分查找</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -298,10 +318,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/14/%E8%AE%B0%E5%BD%95coding%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84bug/">记录coding中遇到的bug</a>
+                <a class="prev" rel="prev" href="/2024/03/15/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-%E7%99%BB%E9%99%86%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD/">仿牛客社区 — 02发送邮件验证码注册功能</a>
             
             
-            <a class="next" rel="next" href="/2024/03/14/704-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/">704.二分查找</a>
+            <a class="next" rel="next" href="/2024/03/14/34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/">34.在排序数组中查找元素的第一个和最后一个位置</a>
             
         </section>
 

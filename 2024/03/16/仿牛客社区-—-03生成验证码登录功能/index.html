@@ -13,7 +13,7 @@
 
 
 
-<title>selenium — 3.模拟键盘操作 | 12wj</title>
+<title>仿牛客社区 — 03生成验证码登录功能 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">selenium — 3.模拟键盘操作</h1>
+            <h1 class="post-title">仿牛客社区 — 03生成验证码登录功能</h1>
             
                 <div class="post-meta">
                     
@@ -205,56 +205,82 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 11, 2024&nbsp;&nbsp;11:20:12</a>
+                        Date: <a href="#">March 16, 2024&nbsp;&nbsp;17:17:56</a>
                         </span>
                     
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95selenium/">功能测试selenium</a>
-                            
-                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <h1 id="1-模拟键盘操作的语法"><a href="#1-模拟键盘操作的语法" class="headerlink" title="1. 模拟键盘操作的语法"></a>1. 模拟键盘操作的语法</h1><ul>
-<li><p>首先导入键盘操作类<code>Keys</code>：</p>
-<p><code>from selenium.webdriver.common.keys import Keys</code></p>
+            <h1 id="功能3-生成验证码登录"><a href="#功能3-生成验证码登录" class="headerlink" title="功能3 - 生成验证码登录"></a>功能3 - 生成验证码登录</h1><p>功能描述：</p>
+<ul>
+<li>生成登录图片验证码</li>
+<li>登录</li>
+</ul>
+<h2 id="1-会话管理"><a href="#1-会话管理" class="headerlink" title="1. 会话管理"></a>1. 会话管理</h2><h4 id="1-1-为什么会有cookie？"><a href="#1-1-为什么会有cookie？" class="headerlink" title="1.1 为什么会有cookie？"></a>1.1 为什么会有cookie？</h4><ul>
+<li>由于<strong>HTTP是无状态的</strong>，即同一个客户端多次访问同一个浏览器之间的请求是没有关系的。</li>
+<li>使用HTTP的头部扩展 <code>HTTP Cookies</code>就可以解决这个问题，将cookie添加到头部中，创建一个会话后让每次请求都能共享相同的上下文信息，达成相同的状态</li>
+</ul>
+<br>
+
+<h4 id="1-2-cookie工作原理"><a href="#1-2-cookie工作原理" class="headerlink" title="1.2 cookie工作原理"></a>1.2 cookie工作原理</h4><ul>
+<li>用户首次访问一个网站时，会提供<strong>包括用户名在内的个人信息并提交到服务器</strong>；</li>
+<li>接着<strong>服务器</strong>向客户端传回相应的超文本的同时也会在<strong>响应头Response Header中存放cookie信息</strong>，客户端接收到了之后，会将这些信息存放在一个统一的位置（内存 or 硬盘）</li>
+<li>此后客户端对其发起的请求就会携带该cookie（放在请求头Request Header）</li>
+</ul>
+<img src="https://pic.imgdb.cn/item/65f68aab9f345e8d036c7549.png" style="zoom:80%;" />
+
+<ul>
+<li>cookie的<strong>有效期</strong>：<ul>
+<li>如果不设置有效期，那么cookie的生命期为浏览器会话期间，此时cookie保存在<strong>内存</strong>中，浏览器窗口关闭后cookie就消失</li>
+<li>设置了过期时间，浏览器就会把cookie保存到<strong>硬盘</strong>上，关闭后再次打开浏览器，这些cookie仍然有效，直到超过设定的过期时间。</li>
+</ul>
+</li>
+</ul>
+<br>
+
+<br>
+
+<h4 id="1-3-有了cookie为什么还要产生session"><a href="#1-3-有了cookie为什么还要产生session" class="headerlink" title="1.3 有了cookie为什么还要产生session"></a>1.3 有了cookie为什么还要产生session</h4><ul>
+<li><strong>cookie的缺点：</strong><ul>
+<li>用户数据保存在<u>客户端</u>，安全性较差！</li>
+<li>客户发起请求时都会携带cookie信息，对网络流量的要求较大，影响性能</li>
+</ul>
 </li>
 </ul>
 <br>
 
 <ul>
-<li><p>模拟按键操作：</p>
-<p><code>元素对象.send_keys(Keys.常量)</code>（多个参数时即用<code>,</code>分隔）</p>
-<img src="https://pic.imgdb.cn/item/65f83ae89f345e8d035d508e.png" style="zoom:80%;" /></li>
+<li><strong>session：</strong><ul>
+<li>JavaEE的标准，将客户端信息记录在服务器中，安全性较高</li>
+<li>依赖于cookie</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-4-session的工作原理"><a href="#1-4-session的工作原理" class="headerlink" title="1.4 session的工作原理"></a>1.4 session的工作原理</h4><img src="https://pic.imgdb.cn/item/65f68f869f345e8d03870fb5.jpg" style="zoom: 67%;" /> 
+
+<ul>
+<li>session的创建：<ul>
+<li>客户端第一次请求服务端时，服务器会为客户端创建一个session，并通过特殊算法算出一个session的ID，用来标识该session的对象</li>
+<li>session存储在服务器的内存中，也可以持久化到file、数据库中</li>
+<li>而客户端只会保存sessionid到cookie中</li>
+</ul>
+</li>
 </ul>
 <br>
 
 <ul>
-<li><p>Keys类的<strong>常量含义</strong>：</p>
-<img src="https://pic.imgdb.cn/item/65f83b8c9f345e8d0361bb50.png" style="zoom: 67%;" /></li>
+<li>特点：<ul>
+<li>好处：数据存储在服务器，比较安全</li>
+<li>缺点：对服务器的内存压力增大</li>
+</ul>
+</li>
 </ul>
 <br>
 
-<br>
-
-<h1 id="2-操作案例："><a href="#2-操作案例：" class="headerlink" title="2. 操作案例："></a>2. 操作案例：</h1><blockquote>
-<p>以ECShop系统为例</p>
-<ul>
-<li>测试登录页：全选复制粘贴</li>
-<li>测试留言板页：复制一部分文本选中三个字符进行复制粘贴</li>
-</ul>
-</blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入登录页</span></span><br><span class="line"><span class="comment"># 获取用户名输入框</span></span><br><span class="line">usernameInput = driver.find_element(By.NAME, <span class="string">&#x27;username&#x27;</span>)</span><br><span class="line">usernameInput.send_keys(<span class="string">&quot;vip&quot;</span>)</span><br><span class="line">usernameInput.send_keys(Keys.CONTROL, <span class="string">&quot;a&quot;</span>)	<span class="comment"># 全选</span></span><br><span class="line">usernameInput.send_keys(Keys.CONTROL, <span class="string">&quot;c&quot;</span>)	<span class="comment"># 复制</span></span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取密码输入框</span></span><br><span class="line">passwordInput = driver.find_element(By.NAME, <span class="string">&#x27;password&#x27;</span>)</span><br><span class="line">passwordInput.send_keys(Keys.CONTROL, <span class="string">&quot;v&quot;</span>)	<span class="comment"># 粘贴</span></span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element(By.NAME, <span class="string">&#x27;submit&#x27;</span>).click()</span><br><span class="line">sleep(<span class="number">3</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入留言板页</span></span><br><span class="line"><span class="comment"># 获取邮箱元素</span></span><br><span class="line">usermail = driver.find_element(By.NAME, <span class="string">&#x27;user_email&#x27;</span>)</span><br><span class="line">usermail.send_keys(Keys.HOME)	<span class="comment"># 键入HOME，光标移至行首</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">    usermail.send_keys(Keys.CONTROL, Keys.ARROW_RIGHT)	<span class="comment">#ctrl -&gt; 光标向右移动三次</span></span><br><span class="line"></span><br><span class="line">usermail.send_keys(Keys.CONTROL, <span class="string">&quot;c&quot;</span>)	<span class="comment"># 复制</span></span><br><span class="line">sleep(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">msgtitle = driver.find_element(By.NAME, <span class="string">&#x27;msg_title&#x27;</span>)</span><br><span class="line">msgtitle.send_keys(Keys.CONTROL, <span class="string">&quot;v&quot;</span>)	<span class="comment"># 粘贴</span></span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">msgcontent = driver.find_element(By.NAME, <span class="string">&#x27;msg_content&#x27;</span>)</span><br><span class="line">msgcontent.send_keys(<span class="string">&#x27;我是&#x27;</span>)</span><br><span class="line">msgcontent.send_keys(Keys.CONTROL, <span class="string">&quot;v&quot;</span>)	<span class="comment"># 粘贴vip	</span></span><br><span class="line">sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">msgcontent.send_keys(Keys.ENTER)	<span class="comment"># 回车</span></span><br><span class="line">msgcontent.send_keys(<span class="string">&quot;请问有优惠码嘛？&quot;</span>)</span><br><span class="line">sleep(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">msgtitle.send_keys(Keys.ENTER)	<span class="comment"># 回车表单提交</span></span><br><span class="line">sleep(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-
-
+<h4 id="1-5-分布式session的实现方案"><a href="#1-5-分布式session的实现方案" class="headerlink" title="1.5 分布式session的实现方案"></a>1.5 分布式session的实现方案</h4><h2 id="2-kaptcha生成验证码"><a href="#2-kaptcha生成验证码" class="headerlink" title="2.kaptcha生成验证码"></a>2.kaptcha生成验证码</h2><h2 id="3-登录实现"><a href="#3-登录实现" class="headerlink" title="3. 登录实现"></a>3. 登录实现</h2><h4 id="3-1-版本一-将用户信息保存在数据库"><a href="#3-1-版本一-将用户信息保存在数据库" class="headerlink" title="3.1 版本一 -  将用户信息保存在数据库"></a>3.1 版本一 -  将用户信息保存在数据库</h4>
         </div>
 
         
@@ -268,7 +294,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/11/selenium-%E2%80%94-3-%E6%A8%A1%E6%8B%9F%E9%94%AE%E7%9B%98%E6%93%8D%E4%BD%9C/">https://12wj.github.io/2024/03/11/selenium-%E2%80%94-3-%E6%A8%A1%E6%8B%9F%E9%94%AE%E7%9B%98%E6%93%8D%E4%BD%9C/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/16/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-03%E7%94%9F%E6%88%90%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD/">https://12wj.github.io/2024/03/16/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-03%E7%94%9F%E6%88%90%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD/</a></span>
                     </p>
                 
                 
@@ -301,10 +327,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/11/19-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%ACn%E4%B8%AA%E8%8A%82%E7%82%B9/">19.删除链表的倒数第n个节点</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/10/vsc%E5%AE%89%E8%A3%85leetcode%E6%8F%92%E4%BB%B6%E6%89%80%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/">记录vsc安装leetcode插件遇到的问题</a>
+            <a class="next" rel="next" href="/2024/03/15/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-%E7%99%BB%E9%99%86%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD/">仿牛客社区 — 02发送邮件验证码注册功能</a>
             
         </section>
 

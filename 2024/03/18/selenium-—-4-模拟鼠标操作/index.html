@@ -13,7 +13,7 @@
 
 
 
-<title>仿牛客社区 — 03生成验证码登录功能 | 12wj</title>
+<title>selenium — 4.模拟鼠标操作 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">仿牛客社区 — 03生成验证码登录功能</h1>
+            <h1 class="post-title">selenium — 4.模拟鼠标操作</h1>
             
                 <div class="post-meta">
                     
@@ -205,82 +205,66 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 16, 2024&nbsp;&nbsp;17:17:56</a>
+                        Date: <a href="#">March 18, 2024&nbsp;&nbsp;21:20:28</a>
                         </span>
                     
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95selenium/">功能测试selenium</a>
+                            
+                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <h1 id="功能3-生成验证码登录"><a href="#功能3-生成验证码登录" class="headerlink" title="功能3 - 生成验证码登录"></a>功能3 - 生成验证码登录</h1><p>功能描述：</p>
+            <h1 id="1-Mouse操作"><a href="#1-Mouse操作" class="headerlink" title="1. Mouse操作"></a>1. Mouse操作</h1><ul>
+<li><p>一个鼠标可以完成的操作：<strong>按住按钮、松开按钮、移动光标</strong></p>
+</li>
+<li><p><strong>ActionChains</strong>类：动作链，用来处理鼠标操作事件</p>
 <ul>
-<li>生成登录图片验证码</li>
-<li>登录</li>
-</ul>
-<h2 id="1-会话管理"><a href="#1-会话管理" class="headerlink" title="1. 会话管理"></a>1. 会话管理</h2><h4 id="1-1-为什么会有cookie？"><a href="#1-1-为什么会有cookie？" class="headerlink" title="1.1 为什么会有cookie？"></a>1.1 为什么会有cookie？</h4><ul>
-<li>由于<strong>HTTP是无状态的</strong>，即同一个客户端多次访问同一个浏览器之间的请求是没有关系的。</li>
-<li>使用HTTP的头部扩展 <code>HTTP Cookies</code>就可以解决这个问题，将cookie添加到头部中，创建一个会话后让每次请求都能共享相同的上下文信息，达成相同的状态</li>
-</ul>
-<br>
-
-<h4 id="1-2-cookie工作原理"><a href="#1-2-cookie工作原理" class="headerlink" title="1.2 cookie工作原理"></a>1.2 cookie工作原理</h4><ul>
-<li>用户首次访问一个网站时，会提供<strong>包括用户名在内的个人信息并提交到服务器</strong>；</li>
-<li>接着<strong>服务器</strong>向客户端传回相应的超文本的同时也会在<strong>响应头Response Header中存放cookie信息</strong>，客户端接收到了之后，会将这些信息存放在一个统一的位置（内存 or 硬盘）</li>
-<li>此后客户端对其发起的请求就会携带该cookie（放在请求头Request Header）</li>
-</ul>
-<img src="https://pic.imgdb.cn/item/65f68aab9f345e8d036c7549.png" style="zoom:80%;" />
-
-<ul>
-<li>cookie的<strong>有效期</strong>：<ul>
-<li>如果不设置有效期，那么cookie的生命期为浏览器会话期间，此时cookie保存在<strong>内存</strong>中，浏览器窗口关闭后cookie就消失</li>
-<li>设置了过期时间，浏览器就会把cookie保存到<strong>硬盘</strong>上，关闭后再次打开浏览器，这些cookie仍然有效，直到超过设定的过期时间。</li>
+<li><p>当调用ActionChains的方法时，不会立即执行，而是会将<u>所有的操作按顺序存放在一个队列里，当你调用perform()方法时，队列中的时间会依次执行</u>。</p>
+</li>
+<li><p>导入类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium.webdriver.common.action_chains <span class="keyword">import</span> ActionChains</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 也可用链式写法</span></span><br><span class="line">变量 = ActionChains(driver)</span><br><span class="line">变量.方法<span class="number">1</span>()</span><br><span class="line">……</span><br><span class="line">变量.perform()</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
 </ul>
 <br>
 
-<br>
-
-<h4 id="1-3-有了cookie为什么还要产生session"><a href="#1-3-有了cookie为什么还要产生session" class="headerlink" title="1.3 有了cookie为什么还要产生session"></a>1.3 有了cookie为什么还要产生session</h4><ul>
-<li><strong>cookie的缺点：</strong><ul>
-<li>用户数据保存在<u>客户端</u>，安全性较差！</li>
-<li>客户发起请求时都会携带cookie信息，对网络流量的要求较大，影响性能</li>
-</ul>
-</li>
-</ul>
-<br>
-
+<p><strong>常用鼠标操作：</strong></p>
 <ul>
-<li><strong>session：</strong><ul>
-<li>JavaEE的标准，将客户端信息记录在服务器中，安全性较高</li>
-<li>依赖于cookie</li>
-</ul>
+<li><p>点击鼠标左键</p>
+<p><code>click()</code></p>
+</li>
+<li><p>双击鼠标左键：</p>
+<p><code>double_click()</code></p>
+</li>
+<li><p>按下鼠标左键，不松开：</p>
+<p><code>click_and_hold()</code></p>
+</li>
+<li><p>点击鼠标右键：</p>
+<p><code>context_click()</code></p>
+</li>
+<li><p>拖放元素：源元素时按下鼠标左键，移动到目标元素时释放左键</p>
+<p><code>drag_and_drop(source, target)</code></p>
+</li>
+<li><p>鼠标移动到某个元素：</p>
+<p><code>move_to_element()</code></p>
+</li>
+<li><p>鼠标在某个位置释放左键：</p>
+<p><code>release()</code></p>
 </li>
 </ul>
-<h4 id="1-4-session的工作原理"><a href="#1-4-session的工作原理" class="headerlink" title="1.4 session的工作原理"></a>1.4 session的工作原理</h4><img src="https://pic.imgdb.cn/item/65f68f869f345e8d03870fb5.jpg" style="zoom: 67%;" /> 
+<h1 id="2-案例"><a href="#2-案例" class="headerlink" title="2. 案例"></a>2. 案例</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取登录元素</span></span><br><span class="line">login = driver.find_element(By.XPATH, <span class="string">&#x27;//img[contains(@src, &quot;bnt_log&quot;)]&#x27;</span>)</span><br><span class="line"><span class="comment"># 执行单击</span></span><br><span class="line">ActionChains(driver).click(login).perform()</span><br><span class="line">sleep(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取用户名输入框元素</span></span><br><span class="line">usernameInput = driver.find_element(By.NAME, <span class="string">&#x27;username&#x27;</span>)</span><br><span class="line"><span class="comment"># 鼠标移动到输入框，单击，输入&#x27;vip&#x27;，点击键盘TAB</span></span><br><span class="line">ActionChains(driver).move_to_element(usernameInput).click().send_keys(<span class="string">&#x27;vip&#x27;</span>).send_keys(Keys.TAB).perform()</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前焦点输入vip，再点击键盘TAB按钮</span></span><br><span class="line">ActionChains(driver).send_keys(<span class="string">&#x27;vip&#x27;</span>).send_keys(Keys.TAB).perform()</span><br><span class="line">sleep(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当前焦点回车键提交</span></span><br><span class="line">ActionChains(driver).send_keys(Keys.ENTER).perform()</span><br><span class="line">sleep(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>session的创建：<ul>
-<li>客户端第一次请求服务端时，服务器会为客户端创建一个session，并通过特殊算法算出一个session的ID，用来标识该session的对象</li>
-<li>session存储在服务器的内存中，也可以持久化到file、数据库中</li>
-<li>而客户端只会保存sessionid到cookie中</li>
-</ul>
-</li>
-</ul>
-<br>
 
-<ul>
-<li>特点：<ul>
-<li>好处：数据存储在服务器，比较安全</li>
-<li>缺点：对服务器的内存压力增大</li>
-</ul>
-</li>
-</ul>
-<br>
-
-<h4 id="1-5-分布式session的实现方案"><a href="#1-5-分布式session的实现方案" class="headerlink" title="1.5 分布式session的实现方案"></a>1.5 分布式session的实现方案</h4><h2 id="2-kaptcha生成验证码"><a href="#2-kaptcha生成验证码" class="headerlink" title="2.kaptcha生成验证码"></a>2.kaptcha生成验证码</h2><h2 id="3-登录实现"><a href="#3-登录实现" class="headerlink" title="3. 登录实现"></a>3. 登录实现</h2><h4 id="3-1-版本一-将用户信息保存在数据库"><a href="#3-1-版本一-将用户信息保存在数据库" class="headerlink" title="3.1 版本一 -  将用户信息保存在数据库"></a>3.1 版本一 -  将用户信息保存在数据库</h4>
         </div>
 
         
@@ -294,7 +278,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/16/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-03%E7%94%9F%E6%88%90%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD/">https://12wj.github.io/2024/03/16/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-03%E7%94%9F%E6%88%90%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/18/selenium-%E2%80%94-4-%E6%A8%A1%E6%8B%9F%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C/">https://12wj.github.io/2024/03/18/selenium-%E2%80%94-4-%E6%A8%A1%E6%8B%9F%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C/</a></span>
                     </p>
                 
                 
@@ -327,10 +311,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/18/selenium-%E2%80%94-4-%E6%A8%A1%E6%8B%9F%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C/">selenium — 4.模拟鼠标操作</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/15/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-%E7%99%BB%E9%99%86%E6%B3%A8%E5%86%8C%E5%8A%9F%E8%83%BD/">仿牛客社区 — 02发送邮件验证码注册功能</a>
+            <a class="next" rel="next" href="/2024/03/16/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA-%E2%80%94-03%E7%94%9F%E6%88%90%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD/">仿牛客社区 — 03生成验证码登录功能</a>
             
         </section>
 

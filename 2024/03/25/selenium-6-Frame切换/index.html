@@ -13,7 +13,7 @@
 
 
 
-<title>287.寻找重复数 | 12wj</title>
+<title>selenium - 6.切换Frame和下拉列表的操作 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">287.寻找重复数</h1>
+            <h1 class="post-title">selenium - 6.切换Frame和下拉列表的操作</h1>
             
                 <div class="post-meta">
                     
@@ -205,14 +205,14 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">March 19, 2024&nbsp;&nbsp;14:45:31</a>
+                        Date: <a href="#">March 25, 2024&nbsp;&nbsp;11:10:27</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/leetcode-hot100/">leetcode-hot100</a>
+                                <a href="/categories/%E5%8A%9F%E8%83%BD%E6%B5%8B%E8%AF%95selenium/">功能测试selenium</a>
                             
                         </span>
                     
@@ -221,72 +221,63 @@
         </header>
 
         <div class="post-content">
-            <h1 id="1-问题："><a href="#1-问题：" class="headerlink" title="1. 问题："></a>1. 问题：</h1><p>给定一个包含 <code>n + 1</code> 个整数的数组 <code>nums</code> ，其数字都在 <code>[1, n]</code> 范围内（包括 <code>1</code> 和 <code>n</code>），可知至少存在一个重复的整数。</p>
-<p>假设 <code>nums</code> 只有 <strong>一个重复的整数</strong> ，返回 <strong>这个重复的数</strong> 。</p>
-<p>你设计的解决方案必须 <strong>不修改</strong> 数组 <code>nums</code> 且只用常量级 <code>O(1)</code> 的额外空间。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,3,4,2,2]</span><br><span class="line">输出：2</span><br></pre></td></tr></table></figure>
+            <h1 id="1、Frame"><a href="#1、Frame" class="headerlink" title="1、Frame"></a>1、Frame</h1><h3 id="1-1-示例HTML"><a href="#1-1-示例HTML" class="headerlink" title="1.1 示例HTML"></a>1.1 示例HTML</h3><img src="https://pic.imgdb.cn/item/6600ed489f345e8d03c1a13d.png" style="zoom: 50%;" /> 
 
-<br>
-
-<br>
-
-<br>
-
-<h1 id="2-思路："><a href="#2-思路：" class="headerlink" title="2. 思路："></a>2. 思路：</h1><ul>
-<li><p>一个长度为<code>1+n</code>的数组，其元素大小范围在<code>[1, n]</code> ，在其中寻找一个重复的整数</p>
-</li>
-<li><p>使用【二分查找】的原因：</p>
 <ul>
-<li><p><u>需要寻找一个整数，并且这个整数有明确的范围</u></p>
-</li>
-<li><p>需注意：<strong>二分查找只能在有序数组中</strong></p>
-</li>
-<li><p>查找方法：</p>
-<ul>
-<li>在**[1, n]**获取<code>mid</code>值</li>
-<li>在数组中统计<strong>小于等于mid值</strong>的<strong>数量count</strong>：<ul>
-<li>若count值小于等于mid值，则重复元素在[mid+1, right]</li>
-<li>若count值大于mid值，则重复元素在[left, mid]</li>
+<li><p>html文件：由多个<code>frame</code> 框架组成</p>
+<img src="https://pic.imgdb.cn/item/6600ee3c9f345e8d03c57d5c.png" style="zoom: 67%;" /></li>
+</ul>
+<p>​	但是，selenium只知道顶层文档的元素，无法与框架中的元素交互。因此需要切换到框架中，才可以进行交互</p>
+<h3 id="1-2-进入和离开Frame"><a href="#1-2-进入和离开Frame" class="headerlink" title="1.2 进入和离开Frame"></a>1.2 进入和离开Frame</h3><ul>
+<li><code>driver.switch_to.frame(标识信息)</code><ul>
+<li>标志信息支持：<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li>索引</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-<br>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入frame</span></span><br><span class="line">driver.switch_to.frame(<span class="string">&quot;menu-frame&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 离开frame</span></span><br><span class="line">driver.switch_to.default_content()</span><br></pre></td></tr></table></figure>
 
-<p><strong>示例 1：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,3,4,2,2]</span><br><span class="line">输出：2</span><br></pre></td></tr></table></figure>
 
-<img src="https://pic.imgdb.cn/item/65f943119f345e8d03aa5643.png" style="zoom:67%;" /> 
 
 <blockquote>
-<p><strong>抽屉原理</strong>：[1, n]之间的数要存放到数组nums[n+1]之中，那必然有一个数是重复的</p>
+<p>注意：</p>
+<ul>
+<li>同一个窗口，但是执行页面跳转时，selenium不会自动离开原框架，需手动返回</li>
+<li>进入一个新窗口，默认进入他的主页面</li>
+</ul>
 </blockquote>
+<br>
+
+<br>
+
+
+
+<h1 id="2、下拉列表操作"><a href="#2、下拉列表操作" class="headerlink" title="2、下拉列表操作"></a>2、下拉列表操作</h1><blockquote>
+<p>Selenium提供Select类来操作<select><option>元素</p>
 <ul>
-<li>若没有数是重复的，那么一定是符合：</li>
+<li>通过<code>div</code>或<code>li</code>设计的下拉列表无法使用该类</li>
 </ul>
-<p>$$<br>cnt[i]≤i<br>$$</p>
-<ul>
-<li>若出现<em>cnt</em>[<em>i</em>]&gt;<em>i</em>，那么重复元素的数一定是在<code>i</code>或者<code>i</code>之前</li>
-</ul>
+</blockquote>
+<h3 id="2-1-构建select对象"><a href="#2-1-构建select对象" class="headerlink" title="2.1 构建select对象"></a>2.1 构建select对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入Select类</span></span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.select <span class="keyword">import</span> Select</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取列表元素</span></span><br><span class="line">select_element = driver.find_element(By.XPATH, <span class="string">&quot;//select[@id=&#x27;all_menu_list&#x27;]&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建Select对象</span></span><br><span class="line">s1 = Select(select_element)</span><br></pre></td></tr></table></figure>
+
 <br>
 
 <br>
 
 <br>
 
-<h1 id="3-实现："><a href="#3-实现：" class="headerlink" title="3. 实现："></a>3. 实现：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findDuplicate</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> nums.length;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> len - <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> n;</span><br><span class="line">        <span class="type">int</span> <span class="variable">answer</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i : nums) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &lt;= mid) &#123;</span><br><span class="line">                    count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (count &lt;= mid) &#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">                answer = mid;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> answer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-Select对象操作方法"><a href="#2-2-Select对象操作方法" class="headerlink" title="2.2 Select对象操作方法"></a>2.2 Select对象操作方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.根据索引定位option</span></span><br><span class="line">s1.select_by_index(i)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.根据&lt;option&gt;之间文本定位</span></span><br><span class="line">s1.select_by_visible_text(<span class="string">&quot;商品管理&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.根据&lt;option&gt;的value值定位</span></span><br><span class="line">s1.select_by_value(<span class="string">&quot;comment_manage.php?act=list&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以下仅适用于多选的下拉列表</span></span><br><span class="line">deselect_all() <span class="comment"># 取消所有选项</span></span><br><span class="line">deselect_by_index() <span class="comment"># 取消对应的选项</span></span><br><span class="line">deselect_by_visible_text() <span class="comment"># 取消对应文本的选项</span></span><br><span class="line">deselect_by_value() <span class="comment"># 取消对应value的选项</span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>时间复杂度：O(<em>n</em>log<em>n</em>)  <ul>
-<li>如果不采用二分查找则要O(<em>n</em>^2)</li>
-</ul>
-</li>
-<li>空间复杂度：O(1)</li>
-</ul>
+<br>
+
+<br>
+
+<h3 id="2-3-Select对象属性"><a href="#2-3-Select对象属性" class="headerlink" title="2.3 Select对象属性"></a>2.3 Select对象属性</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 所有选项</span></span><br><span class="line">options</span><br><span class="line"></span><br><span class="line"><span class="comment"># 所有被选中的选项</span></span><br><span class="line">all_selected_options</span><br><span class="line"></span><br><span class="line"><span class="comment"># 被选中的选项中的第一个</span></span><br><span class="line">first_selected_option</span><br></pre></td></tr></table></figure>
+
 
         </div>
 
@@ -301,7 +292,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="https://12wj.github.io/2024/03/19/287-%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/">https://12wj.github.io/2024/03/19/287-%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/</a></span>
+                        <span><a href="https://12wj.github.io/2024/03/25/selenium-6-Frame%E5%88%87%E6%8D%A2/">https://12wj.github.io/2024/03/25/selenium-6-Frame%E5%88%87%E6%8D%A2/</a></span>
                     </p>
                 
                 
@@ -324,12 +315,6 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
-                    
-                        <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"># 二分查找</a>
-                    
-                        <a href="/tags/%E6%95%B0%E7%BB%84/"># 数组</a>
-                    
-                        
                 </span>
             </div>
             <div>
@@ -340,10 +325,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/25/selenium-6-Frame%E5%88%87%E6%8D%A2/">selenium - 6.切换Frame和下拉列表的操作</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/19/240-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5II/">240.搜索二维矩阵II</a>
+            <a class="next" rel="next" href="/2024/03/19/287-%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/">287.寻找重复数</a>
             
         </section>
 

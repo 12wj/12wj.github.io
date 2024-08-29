@@ -13,7 +13,7 @@
 
 
 
-<title>仿牛客社区 — 03生成验证码登录功能 | 12wj</title>
+<title>仿牛客社区02 — 登录注册模块 | 12wj</title>
 
 
 
@@ -196,7 +196,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">仿牛客社区 — 03生成验证码登录功能</h1>
+            <h1 class="post-title">仿牛客社区02 — 登录注册模块</h1>
             
                 <div class="post-meta">
                     
@@ -209,17 +209,98 @@
                         </span>
                     
                     
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
                 </div>
             
         </header>
 
         <div class="post-content">
-            <h1 id="功能3-生成验证码登录"><a href="#功能3-生成验证码登录" class="headerlink" title="功能3 - 生成验证码登录"></a>功能3 - 生成验证码登录</h1><p>功能描述：</p>
+            <h1 id="02-登陆注册模块"><a href="#02-登陆注册模块" class="headerlink" title="02 - 登陆注册模块"></a>02 - 登陆注册模块</h1><p><strong>本章功能描述：</strong></p>
 <ul>
-<li>生成登录图片验证码</li>
-<li>登录</li>
+<li>注册：<ul>
+<li>开发注册功能</li>
+<li>利用spring email发送邮件激活账号</li>
 </ul>
-<h2 id="1-会话管理"><a href="#1-会话管理" class="headerlink" title="1. 会话管理"></a>1. 会话管理</h2><h4 id="1-1-为什么会有cookie？"><a href="#1-1-为什么会有cookie？" class="headerlink" title="1.1 为什么会有cookie？"></a>1.1 为什么会有cookie？</h4><ul>
+</li>
+<li>登录：<ul>
+<li>开发登录功能：验证<strong>账号、密码、验证码</strong></li>
+<li>会话管理：<strong>登陆凭证</strong></li>
+<li>显示登录信息：利用<strong>拦截器</strong></li>
+<li>检查未登录用户的请求：利用<del>拦截器</del>（后期统一用<strong>spring security</strong>）</li>
+</ul>
+</li>
+<li>账号设置：<ul>
+<li>修改头像：上传至云服务器（异步请求）</li>
+<li>修改密码</li>
+</ul>
+</li>
+</ul>
+<h2 id="一、注册功能开发"><a href="#一、注册功能开发" class="headerlink" title="一、注册功能开发"></a>一、注册功能开发</h2><h4 id="1-用户注册逻辑"><a href="#1-用户注册逻辑" class="headerlink" title="1.  用户注册逻辑"></a>1.  用户注册逻辑</h4><blockquote>
+<ul>
+<li>填写账号名、密码、邮箱等基本信息，完成注册。</li>
+<li>给用户邮箱发送邮件，提醒用户点击链接激活</li>
+</ul>
+</blockquote>
+<h4 id="2-Spring-Email的配置与使用"><a href="#2-Spring-Email的配置与使用" class="headerlink" title="2. Spring Email的配置与使用"></a>2. Spring Email的配置与使用</h4><blockquote>
+<p>QQ邮箱客户端记得开启SMTP服务</p>
+</blockquote>
+<h5 id="2-1-引入依赖"><a href="#2-1-引入依赖" class="headerlink" title="2.1 引入依赖"></a>2.1 引入依赖</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-2-配置属性"><a href="#2-2-配置属性" class="headerlink" title="2.2 配置属性"></a>2.2 配置属性</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.mail.host</span>=<span class="string">smtp.qq.com</span></span><br><span class="line"><span class="attr">spring.mail.port</span>=<span class="string">465</span></span><br><span class="line"><span class="attr">spring.mail.username</span>=<span class="string">846770449@qq.com</span></span><br><span class="line"><span class="comment"># 授权码</span></span><br><span class="line"><span class="attr">spring.mail.password</span>=<span class="string">akvassodynecbeaj	</span></span><br><span class="line"><span class="attr">spring.mail.protocol</span>=<span class="string">smtps</span></span><br><span class="line"><span class="attr">spring.mail.properties.mail.smtp.ssl.enable</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-3-创建一个发送邮件工具类MailClient"><a href="#2-3-创建一个发送邮件工具类MailClient" class="headerlink" title="2.3 创建一个发送邮件工具类MailClient"></a>2.3 创建一个发送邮件工具类<code>MailClient</code></h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MailClient</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(MailClient.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> JavaMailSender mailSender;	<span class="comment">// 该组件用于发送邮件</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.mail.username&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String from;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendMail</span><span class="params">(String to, String subject, String content)</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建邮件消息</span></span><br><span class="line">            <span class="type">MimeMessage</span> <span class="variable">message</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">            <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(message);</span><br><span class="line">            helper.setFrom(from);	<span class="comment">//发件人</span></span><br><span class="line">            helper.setTo(to);	<span class="comment">//收件人</span></span><br><span class="line">            helper.setSubject(subject);	<span class="comment">//邮件标题</span></span><br><span class="line">            helper.setText(content, <span class="literal">true</span>);	<span class="comment">// 邮件正文</span></span><br><span class="line">            mailSender.send(helper.getMimeMessage());</span><br><span class="line">        &#125;<span class="keyword">catch</span> (MessagingException e) &#123;</span><br><span class="line">            logger.error(<span class="string">&quot;发送邮件失败：&quot;</span>+e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3-完成注册开发："><a href="#3-完成注册开发：" class="headerlink" title="3. 完成注册开发："></a>3. 完成注册开发：</h4><h5 id="3-1-注册功能："><a href="#3-1-注册功能：" class="headerlink" title="3.1 注册功能："></a>3.1 注册功能：</h5><ul>
+<li>业务层：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> MailClient mailClient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">register</span><span class="params">(User user)</span>&#123;</span><br><span class="line">   Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">   <span class="comment">// 空值处理</span></span><br><span class="line">   	......</span><br><span class="line">   </span><br><span class="line">   <span class="comment">// 检查是否已存在</span></span><br><span class="line">   ......</span><br><span class="line">        </span><br><span class="line">    <span class="comment">// 注册用户</span></span><br><span class="line">    user.setSalt(LinBlogUtil.generateUUID().substring(<span class="number">0</span>, <span class="number">5</span>));</span><br><span class="line">    user.setPassword(LinBlogUtil.md5(user.getPassword()+user.getSalt()));</span><br><span class="line">    user.setType(<span class="number">0</span>);</span><br><span class="line">    user.setStatus(<span class="number">0</span>);</span><br><span class="line">    user.setCreateTime(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    user.setActivationCode(LinBlogUtil.generateUUID().substring(<span class="number">0</span>,<span class="number">5</span>));</span><br><span class="line">    user.setHeaderUrl(String.format(<span class="string">&quot;http://images.nowcoder.com/head/%dt.png&quot;</span>, <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt(<span class="number">100</span>)));</span><br><span class="line">    userMapper.insert(user);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//发送激活邮件</span></span><br><span class="line">    <span class="type">Context</span> <span class="variable">context</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Context</span>();</span><br><span class="line">    context.setVariable(<span class="string">&quot;email&quot;</span>, user.getEmail());</span><br><span class="line">    <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> domain + contextPath + <span class="string">&quot;/activation/&quot;</span> + user.getId() + <span class="string">&quot;/&quot;</span> + user.getActivationCode();</span><br><span class="line">    context.setVariable(<span class="string">&quot;url&quot;</span>, url);</span><br><span class="line">    <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> templateEngine.process(<span class="string">&quot;mail/activation&quot;</span>, context);</span><br><span class="line">    mailClient.sendMail(user.getEmail(), <span class="string">&quot;激活账号&quot;</span>, content);</span><br><span class="line">    <span class="keyword">return</span> map;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>表现层</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">register</span><span class="params">(Model model, User user)</span>&#123;</span><br><span class="line">    Map&lt;String, Object&gt; registerMap = userService.register(user);</span><br><span class="line">    <span class="keyword">if</span>(registerMap == <span class="literal">null</span> || registerMap.isEmpty())&#123;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;注册成功，我们已成功发送一封注册邮件, 请尽快激活&quot;</span>);</span><br><span class="line">        model.addAttribute(<span class="string">&quot;target&quot;</span>,<span class="string">&quot;/index&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;site/operate-result&quot;</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;usernameMsg&quot;</span>, registerMap.get(<span class="string">&quot;usernameMsg&quot;</span>));</span><br><span class="line">        model.addAttribute(<span class="string">&quot;passwordMsg&quot;</span>, registerMap.get(<span class="string">&quot;passwordMsg&quot;</span>));</span><br><span class="line">        model.addAttribute(<span class="string">&quot;emailMsg&quot;</span>, registerMap.get(<span class="string">&quot;emailMsg&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;site/register&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-2-账号激活功能："><a href="#3-2-账号激活功能：" class="headerlink" title="3.2 账号激活功能："></a>3.2 账号激活功能：</h5><ul>
+<li><p>处理<code>激活连接</code>点击事件：</p>
+<ul>
+<li>业务层：<ul>
+<li>检查是否为未激活用户</li>
+<li>检查激活码是否正确</li>
+<li>将用户状态修改为已激活</li>
+</ul>
+</li>
+<li>表现层：<ul>
+<li>根据不同结果返回不同提示信息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>业务层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">activation</span><span class="params">(<span class="type">int</span> userId, String code)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userMapper.selectById(userId);</span><br><span class="line">    <span class="keyword">if</span>(user.getStatus() == <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> ACTIVATION_REPEAT;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (user.getActivationCode().equals(code)) &#123;</span><br><span class="line">        UpdateWrapper&lt;User&gt; userUpdateWrapper = <span class="keyword">new</span> <span class="title class_">UpdateWrapper</span>&lt;&gt;();</span><br><span class="line">        userUpdateWrapper.set(<span class="string">&quot;status&quot;</span>, <span class="number">1</span>).eq(<span class="string">&quot;id&quot;</span>, userId);</span><br><span class="line">        userMapper.update(userUpdateWrapper);</span><br><span class="line">        clearCache(userId);</span><br><span class="line">        <span class="keyword">return</span> ACTIVATION_SUCCESS;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ACTIVATION_FAILURE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>表现层：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/activation/&#123;userId&#125;/&#123;code&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">activation</span><span class="params">(Model model, <span class="meta">@PathVariable</span> <span class="type">int</span> userId, <span class="meta">@PathVariable</span> String code)</span>&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">activation</span> <span class="operator">=</span> userService.activation(userId, code);</span><br><span class="line">    <span class="keyword">if</span>(activation == ACTIVATION_SUCCESS)&#123;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;您已成功激活！&quot;</span>);</span><br><span class="line">        model.addAttribute(<span class="string">&quot;target&quot;</span>,<span class="string">&quot;/login&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (activation == ACTIVATION_REPEAT) &#123;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;该账号已激活，请勿重复操作！&quot;</span>);</span><br><span class="line">        model.addAttribute(<span class="string">&quot;target&quot;</span>,<span class="string">&quot;/index&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;激活失败，您提供的激活码已失效！&quot;</span>);</span><br><span class="line">        model.addAttribute(<span class="string">&quot;target&quot;</span>,<span class="string">&quot;/index&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回操作提示页</span></span><br><span class="line">    <span class="keyword">return</span>  <span class="string">&quot;site/operate-result&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="二、登录功能开发"><a href="#二、登录功能开发" class="headerlink" title="二、登录功能开发"></a>二、登录功能开发</h2><h3 id="1-会话管理"><a href="#1-会话管理" class="headerlink" title="1. 会话管理"></a>1. 会话管理</h3><blockquote>
+<p>会话保持能够确保用户在整个交互过程拥有一致的体验。通过会话保持技术，网站可以在用户与服务器之间的多次请求和响应中<strong>保持一致的会话信息</strong>，使用户能够在登录状态下持续地浏览和与网站进行交互，而不需要在<strong>每次请求时重新进行身份验证</strong>。</p>
+</blockquote>
+<h4 id="1-1-为什么要有cookie？"><a href="#1-1-为什么要有cookie？" class="headerlink" title="1.1 为什么要有cookie？"></a>1.1 为什么要有cookie？</h4><ul>
 <li>由于<strong>HTTP是无状态的</strong>，即同一个客户端多次访问同一个浏览器之间的请求是没有关系的。</li>
 <li>使用HTTP的头部扩展 <code>HTTP Cookies</code>就可以解决这个问题，将cookie添加到头部中，创建一个会话后让每次请求都能共享相同的上下文信息，达成相同的状态</li>
 </ul>
@@ -227,8 +308,8 @@
 
 <h4 id="1-2-cookie工作原理"><a href="#1-2-cookie工作原理" class="headerlink" title="1.2 cookie工作原理"></a>1.2 cookie工作原理</h4><ul>
 <li>用户首次访问一个网站时，会提供<strong>包括用户名在内的个人信息并提交到服务器</strong>；</li>
-<li>接着<strong>服务器</strong>向客户端传回相应的超文本的同时也会在<strong>响应头Response Header中存放cookie信息</strong>，客户端接收到了之后，会将这些信息存放在一个统一的位置（内存 or 硬盘）</li>
-<li>此后客户端对其发起的请求就会携带该cookie（放在请求头Request Header）</li>
+<li>接着<strong>服务器</strong>向客户端传回相应的超文本的同时也会在<strong>响应头Response Header中存放所创建的cookie</strong>，<u>cookie包含用户信息</u>。客户端接收到了之后，会将这些信息存放在一个统一的位置（内存 or 硬盘，一般是浏览器或者是本地）</li>
+<li>此后客户端对其发起的请求就会携带该<strong>cookie</strong>（放在请求头Request Header），服务器就可以判断出当前用户是哪个了</li>
 </ul>
 <img src="https://pic.imgdb.cn/item/65f68aab9f345e8d036c7549.png" style="zoom:80%;" />
 
@@ -243,9 +324,9 @@
 
 <br>
 
-<h4 id="1-3-有了cookie为什么还要产生session"><a href="#1-3-有了cookie为什么还要产生session" class="headerlink" title="1.3 有了cookie为什么还要产生session"></a>1.3 有了cookie为什么还要产生session</h4><ul>
+<h4 id="1-3-有了cookie为什么还要产生session？"><a href="#1-3-有了cookie为什么还要产生session？" class="headerlink" title="1.3 有了cookie为什么还要产生session？"></a>1.3 有了cookie为什么还要产生session？</h4><ul>
 <li><strong>cookie的缺点：</strong><ul>
-<li>用户数据保存在<u>客户端</u>，安全性较差！</li>
+<li>用户数据保存在<u>客户端</u>，<strong>安全性</strong>较差！</li>
 <li>客户发起请求时都会携带cookie信息，对网络流量的要求较大，影响性能</li>
 </ul>
 </li>
@@ -253,18 +334,23 @@
 <br>
 
 <ul>
-<li><strong>session：</strong><ul>
-<li>JavaEE的标准，将客户端信息记录在服务器中，安全性较高</li>
+<li><p><strong>session：</strong></p>
+<ul>
+<li>JavaEE的标准，将客户端信息记录在<strong>服务器</strong>中，安全性较高</li>
 <li>依赖于cookie</li>
 </ul>
 </li>
 </ul>
-<h4 id="1-4-session的工作原理"><a href="#1-4-session的工作原理" class="headerlink" title="1.4 session的工作原理"></a>1.4 session的工作原理</h4><img src="https://pic.imgdb.cn/item/65f68f869f345e8d03870fb5.jpg" style="zoom: 67%;" /> 
+<h4 id="1-4-session的工作原理"><a href="#1-4-session的工作原理" class="headerlink" title="1.4 session的工作原理"></a>1.4 session的工作原理</h4><ul>
+<li>浏览器提交用户名密码等，服务器生成并存储session，并将<strong>sessionId</strong>通过cookie返回给浏览器，此后浏览器再次访问时携带此ID，服务器通过<strong>该ID找到对应的session</strong>进行鉴权，并返回用户所需的数据。</li>
+<li>此过程中</li>
+</ul>
+<img src="https://pic.imgdb.cn/item/65f68f869f345e8d03870fb5.jpg" style="zoom: 67%;" /> 
 
 <ul>
 <li>session的创建：<ul>
 <li>客户端第一次请求服务端时，服务器会为客户端创建一个session，并通过特殊算法算出一个session的ID，用来标识该session的对象</li>
-<li>session存储在服务器的内存中，也可以持久化到file、数据库中</li>
+<li>session存储在<strong>服务器的内存中</strong>，也可以持久化到file、数据库中</li>
 <li>而客户端只会保存sessionid到cookie中</li>
 </ul>
 </li>
@@ -274,13 +360,100 @@
 <ul>
 <li>特点：<ul>
 <li>好处：数据存储在服务器，比较安全</li>
-<li>缺点：对服务器的内存压力增大</li>
+<li>缺点：<ul>
+<li>session存储在服务器，对服务器的内存压力增大。</li>
+<li>不利于<strong>分布式管理</strong></li>
 </ul>
 </li>
 </ul>
-<br>
+</li>
+</ul>
+<blockquote>
+<p>相比之下，cookie更易受到安全性攻击。</p>
+</blockquote>
+<h4 id="1-5-分布式session的实现方案"><a href="#1-5-分布式session的实现方案" class="headerlink" title="1.5 分布式session的实现方案"></a>1.5 分布式session的实现方案</h4><h5 id="方案一：session复制"><a href="#方案一：session复制" class="headerlink" title="方案一：session复制"></a>方案一：session复制</h5><h5 id="方案二：session绑定"><a href="#方案二：session绑定" class="headerlink" title="方案二：session绑定"></a>方案二：session绑定</h5><h4 id="1-6-本项目：基于redis存储的cookie方案"><a href="#1-6-本项目：基于redis存储的cookie方案" class="headerlink" title="1.6 本项目：基于redis存储的cookie方案"></a>1.6 本项目：基于redis存储的cookie方案</h4><h4 id="1-redis配置"><a href="#1-redis配置" class="headerlink" title="1. redis配置"></a>1. redis配置</h4><blockquote>
+<p>参考第四章</p>
+</blockquote>
+<h5 id="2-创建LoginTicket对象存储用户登录凭证"><a href="#2-创建LoginTicket对象存储用户登录凭证" class="headerlink" title="2. 创建LoginTicket对象存储用户登录凭证"></a>2. 创建LoginTicket对象存储用户登录凭证</h5><blockquote>
+<p>每次登录时生成该凭证</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginTicket</span> &#123;</span><br><span class="line">    <span class="meta">@TableId(value=&quot;id&quot;, type = IdType.AUTO)</span></span><br><span class="line">    <span class="keyword">private</span> Integer id;	</span><br><span class="line">    <span class="keyword">private</span> Integer userId;	<span class="comment">// 用户ID</span></span><br><span class="line">    <span class="keyword">private</span> String ticket;	<span class="comment">// 登录凭证字符串 =&gt; 相当于sessionID</span></span><br><span class="line">    <span class="keyword">private</span> Integer status;	<span class="comment">// 凭证状态</span></span><br><span class="line">    <span class="keyword">private</span> Date expired;	<span class="comment">// 过期时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="1-5-分布式session的实现方案"><a href="#1-5-分布式session的实现方案" class="headerlink" title="1.5 分布式session的实现方案"></a>1.5 分布式session的实现方案</h4><h2 id="2-kaptcha生成验证码"><a href="#2-kaptcha生成验证码" class="headerlink" title="2.kaptcha生成验证码"></a>2.kaptcha生成验证码</h2><h2 id="3-登录实现"><a href="#3-登录实现" class="headerlink" title="3. 登录实现"></a>3. 登录实现</h2><h4 id="3-1-版本一-将用户信息保存在数据库"><a href="#3-1-版本一-将用户信息保存在数据库" class="headerlink" title="3.1 版本一 -  将用户信息保存在数据库"></a>3.1 版本一 -  将用户信息保存在数据库</h4>
+
+
+<h5 id="3-登录验证逻辑"><a href="#3-登录验证逻辑" class="headerlink" title="3. 登录验证逻辑"></a>3. 登录验证逻辑</h5><ul>
+<li>业务层</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">login</span><span class="params">(String username, String password, <span class="type">int</span> expiredSeconds)</span> &#123;</span><br><span class="line">    Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 一系列username和password的判断逻辑</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 生成登陆凭证存储用户信息</span></span><br><span class="line">    <span class="type">LoginTicket</span> <span class="variable">loginTicket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LoginTicket</span>();</span><br><span class="line">    loginTicket.setUserId(u.getId());</span><br><span class="line">    loginTicket.setTicket(LinBlogUtil.generateUUID());</span><br><span class="line">    loginTicket.setStatus(<span class="number">0</span>);</span><br><span class="line">    loginTicket.setExpired(<span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + expiredSeconds * <span class="number">1000</span>));</span><br><span class="line">    <span class="comment">// redis存储</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getTicketKey(loginTicket.getTicket());  <span class="comment">//key</span></span><br><span class="line">    redisTemplate.opsForValue().set(key, loginTicket);		<span class="comment">// value</span></span><br><span class="line"></span><br><span class="line">    map.put(<span class="string">&quot;ticket&quot;</span>, loginTicket.getTicket());</span><br><span class="line">    <span class="keyword">return</span> map;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>表现层</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">login</span><span class="params">(Model model, String username, String password, String code, <span class="type">boolean</span> rememberMe,</span></span><br><span class="line"><span class="params">                   <span class="meta">@CookieValue(&quot;captchaOwner&quot;)</span> String captchaOwner, HttpServletResponse response)</span>&#123;</span><br><span class="line">   <span class="comment">// ... 此处检查验证码</span></span><br><span class="line">   </span><br><span class="line">   <span class="type">int</span> <span class="variable">expiredSeconds</span> <span class="operator">=</span> rememberMe ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;</span><br><span class="line">   Map&lt;String, Object&gt; loginMap =  userService.login(username, password, expiredSeconds);</span><br><span class="line">   <span class="keyword">if</span>(loginMap.containsKey(<span class="string">&quot;ticket&quot;</span>))&#123;</span><br><span class="line">       <span class="comment">// 验证成功，将ticket通过cookie传递给客户端保存</span></span><br><span class="line">       <span class="type">Cookie</span> <span class="variable">cookie</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Cookie</span>(<span class="string">&quot;ticket&quot;</span>, loginMap.get(<span class="string">&quot;ticket&quot;</span>).toString());</span><br><span class="line">       cookie.setPath(contextPath);</span><br><span class="line">       cookie.setMaxAge(expiredSeconds);</span><br><span class="line">       response.addCookie(cookie);</span><br><span class="line">       </span><br><span class="line">       <span class="keyword">return</span> <span class="string">&quot;redirect:/index&quot;</span>;</span><br><span class="line">   &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">       model.addAttribute(<span class="string">&quot;usernameMsg&quot;</span>, loginMap.get(<span class="string">&quot;usernameMsg&quot;</span>));</span><br><span class="line">       model.addAttribute(<span class="string">&quot;passwordMsg&quot;</span>, loginMap.get(<span class="string">&quot;passwordMsg&quot;</span>));</span><br><span class="line">       <span class="keyword">return</span> <span class="string">&quot;site/login&quot;</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2-验证码的生成、存储及验证"><a href="#2-验证码的生成、存储及验证" class="headerlink" title="2. 验证码的生成、存储及验证"></a>2. 验证码的生成、存储及验证</h3><blockquote>
+<p>关心的问题：</p>
+<ul>
+<li>验证码怎么存储才安全？</li>
+<li>多个用户访问时怎么区分验证码归属？</li>
+</ul>
+</blockquote>
+<h4 id="2-1-验证码的生成"><a href="#2-1-验证码的生成" class="headerlink" title="2.1 验证码的生成"></a>2.1 验证码的生成</h4><ul>
+<li>利用hutool工具类中的captcha类</li>
+</ul>
+<h4 id="2-2-验证码的存储验证"><a href="#2-2-验证码的存储验证" class="headerlink" title="2.2 验证码的存储验证"></a>2.2 验证码的存储验证</h4><ul>
+<li>首先为了标志各个客户端的验证码，需要生成一个key值<code>captchaOwner</code>来对应每一个验证码</li>
+<li>存储时利用redis进行存储：<ul>
+<li>key:  <code>captchaOwner</code>对应的字符串</li>
+<li>value:  对应的验证码字符串</li>
+</ul>
+</li>
+<li>标志客户端即采用访问登录页时返回一个cookie：<ul>
+<li>key：<code>captchaOwner</code></li>
+<li>value：<code>captchaOwner</code>对应的字符串</li>
+</ul>
+</li>
+<li>用户验证时即可通过该cookie获得redis中对应该客户端的验证码进行验证逻辑。</li>
+</ul>
+<p>代码实现：</p>
+<ul>
+<li>表现层：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生成验证码</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> response 将image放到response一起返回</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@GetMapping(&quot;/getCaptcha&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">getCaptcha</span><span class="params">(HttpServletResponse response)</span>&#123;</span><br><span class="line">    <span class="type">LineCaptcha</span> <span class="variable">lineCaptcha</span> <span class="operator">=</span> CaptchaUtil.createLineCaptcha(LinBlogConstant.CAPTCHA_WIDTH, LinBlogConstant.CAPTCHA_HEIGH</span><br><span class="line">    <span class="comment">// 设置返回类型</span></span><br><span class="line">    response.setContentType(<span class="string">&quot;image/jpeg&quot;</span>);</span><br><span class="line">    response.setHeader(<span class="string">&quot;Pragma&quot;</span>, <span class="string">&quot;No-cache&quot;</span>);</span><br><span class="line">    logger.info(lineCaptcha.getCode());</span><br><span class="line">    <span class="comment">// 某个客户端的验证码标识</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">captchaOwner</span> <span class="operator">=</span> LinBlogUtil.generateUUID();</span><br><span class="line">    <span class="type">Cookie</span> <span class="variable">cookie</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Cookie</span>(<span class="string">&quot;captchaOwner&quot;</span>, captchaOwner);</span><br><span class="line">    cookie.setMaxAge(<span class="number">60</span>);</span><br><span class="line">    cookie.setPath(contextPath);</span><br><span class="line">    response.addCookie(cookie);</span><br><span class="line">    <span class="comment">// 验证码存入redis</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">captchaKey</span> <span class="operator">=</span> RedisKeyUtil.getCaptchaKey(captchaOwner);</span><br><span class="line">    redisTemplate.opsForValue().set(captchaKey, lineCaptcha.getCode(), <span class="number">60</span>, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">out</span> <span class="operator">=</span> response.getOutputStream();</span><br><span class="line">        <span class="comment">// 输出验证码</span></span><br><span class="line">        lineCaptcha.write(out);</span><br><span class="line">        out.close();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        logger.error(<span class="string">&quot;响应验证码失败&quot;</span>+e.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 登录中的验证码验证逻辑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">login</span><span class="params">(Model model, String username, String password, String code, <span class="type">boolean</span> rememberMe,</span></span><br><span class="line"><span class="params">                    <span class="meta">@CookieValue(&quot;captchaOwner&quot;)</span> String captchaOwner, HttpServletResponse response)</span>&#123;</span><br><span class="line">    <span class="comment">// 检查验证码</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">captcha</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span>(StringUtils.isNotBlank(captchaOwner))&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getCaptchaKey(captchaOwner);</span><br><span class="line">        <span class="comment">// 从redis拿出验证码进行匹配</span></span><br><span class="line">        captcha = (String) redisTemplate.opsForValue().get(key); </span><br><span class="line">        logger.info(captcha);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(StringUtils.isBlank(captcha) || StringUtils.isBlank(code) || !code.equalsIgnoreCase(captcha))&#123;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;codeMsg&quot;</span>, <span class="string">&quot;验证码不正确&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;site/login&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ......</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="3-会话保持-拦截器"><a href="#3-会话保持-拦截器" class="headerlink" title="3. 会话保持 - 拦截器"></a>3. 会话保持 - 拦截器</h3><h4 id="3-1-介绍"><a href="#3-1-介绍" class="headerlink" title="3.1 介绍"></a>3.1 介绍</h4><p>拦截器和过滤器一样都是面向切面编程AOP的具体实现，当请求访问controller前，会先被拦截器拦截。开发人员可以在拦截器中做一些通用性的操作，比如检查用户登陆状态等。</p>
+<img src="https://i-blog.csdnimg.cn/blog_migrate/58f3e5548f4bb4a579227d45fed9cc5c.png" alt="img" style="zoom:67%;" />
+
+<h4 id="3-2-拦截器的使用步骤"><a href="#3-2-拦截器的使用步骤" class="headerlink" title="3.2 拦截器的使用步骤"></a>3.2 拦截器的使用步骤</h4><h5 id="1-定义拦截器："><a href="#1-定义拦截器：" class="headerlink" title="1. 定义拦截器："></a>1. 定义拦截器：</h5><ul>
+<li>实现<code>HandlerInterceptor</code>接口</li>
+<li>重现三个方法：<ul>
+<li><code>preHandle()</code>：目标方法执行前执行。返回true则放行，false则终端后续操作</li>
+<li><code>postHandle()</code>：目标方法执行后执行。</li>
+<li><code>afterCompletion()</code>：视图渲染完毕后执行。</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-注册拦截器"><a href="#2-注册拦截器" class="headerlink" title="2. 注册拦截器"></a>2. 注册拦截器</h5><ul>
+<li>创建配置类：<code>WebMvcConfig</code>，实现自<code> WebMvcConfigurer</code>接口</li>
+<li>重写方法<code>addInterceptors</code>完成拦截器注册</li>
+</ul>
+<h4 id="3-3-应用：检查登陆状态，若有则获取本次请求用户信息"><a href="#3-3-应用：检查登陆状态，若有则获取本次请求用户信息" class="headerlink" title="3.3 应用：检查登陆状态，若有则获取本次请求用户信息"></a><strong>3.3 应用</strong>：检查登陆状态，若有则获取本次请求用户信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 登录功能拦截器：</span></span><br><span class="line"><span class="comment"> *  请求执行前：</span></span><br><span class="line"><span class="comment"> *      1. 根据请求中的cookie判断出用户身份</span></span><br><span class="line"><span class="comment"> *      2. 在本次请求保存用户</span></span><br><span class="line"><span class="comment"> *  请求执行后：</span></span><br><span class="line"><span class="comment"> *      将保存的user传递到model中</span></span><br><span class="line"><span class="comment"> *  结束后：</span></span><br><span class="line"><span class="comment"> *      分别清空</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginTicketInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> HostHolder hostHolder;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 获取cookie value值</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">ticket</span> <span class="operator">=</span> CookieUtil.getValue(request, <span class="string">&quot;ticket&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(ticket != <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getTicketKey(ticket);</span><br><span class="line">            <span class="comment">// 拿出用户信息</span></span><br><span class="line">            <span class="type">LoginTicket</span> <span class="variable">loginTicket</span> <span class="operator">=</span> (LoginTicket) redisTemplate.opsForValue().get(key);</span><br><span class="line">            <span class="comment">// 检查是否有效</span></span><br><span class="line">            <span class="keyword">if</span>( loginTicket!= <span class="literal">null</span> &amp;&amp; loginTicket.getStatus() == <span class="number">0</span> &amp;&amp; loginTicket.getExpired().after(<span class="keyword">new</span> <span class="title class_">Date</span>()))&#123;</span><br><span class="line">                <span class="comment">// 根据凭证查询用户</span></span><br><span class="line">                <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userService.selectById(loginTicket.getUserId());</span><br><span class="line">                <span class="comment">// 在本次请求中持有用户</span></span><br><span class="line">                hostHolder.setUser(user);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> hostHolder.getUser();</span><br><span class="line">        <span class="keyword">if</span>(user != <span class="literal">null</span> &amp;&amp; modelAndView != <span class="literal">null</span>)&#123;</span><br><span class="line">            modelAndView.addObject(<span class="string">&quot;loginUser&quot;</span>, user);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        hostHolder.clear();</span><br><span class="line">        <span class="comment">//SecurityContextHolder.clearContext();</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebMvcConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> LoginTicketInterceptor loginTicketInterceptor;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        registry.addInterceptor(loginTicketInterceptor)</span><br><span class="line">                .excludePathPatterns(<span class="string">&quot;/**/*.css&quot;</span>, <span class="string">&quot;/**/*.js&quot;</span>, <span class="string">&quot;/**/*.png&quot;</span>, <span class="string">&quot;/**/*.jpg&quot;</span>, <span class="string">&quot;/**/*.jpeg&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、修改用户头像"><a href="#三、修改用户头像" class="headerlink" title="三、修改用户头像"></a>三、修改用户头像</h2>
         </div>
 
         

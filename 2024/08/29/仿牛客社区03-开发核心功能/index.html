@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lin">
+
+
+
+
+
+<title>仿牛客社区03 -- 开发核心功能 | 12wj</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">仿牛客社区03 -- 开发核心功能</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 29, 2024&nbsp;&nbsp;21:43:13</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p><strong>本章需求：</strong></p>
+<ul>
+<li>发布帖子：<ul>
+<li>过滤敏感词</li>
+</ul>
+</li>
+<li>查看帖子详情</li>
+<li>查看评论</li>
+<li>添加评论：<ul>
+<li>事务管理</li>
+</ul>
+</li>
+<li>查看私信列表</li>
+<li>发送私信</li>
+<li>统一异常处理</li>
+<li>统一日志管理</li>
+</ul>
+</blockquote>
+<h1 id="一、帖子管理模块"><a href="#一、帖子管理模块" class="headerlink" title="一、帖子管理模块"></a>一、帖子管理模块</h1><h2 id="1-过滤敏感词"><a href="#1-过滤敏感词" class="headerlink" title="1. 过滤敏感词"></a>1. 过滤敏感词</h2><p>怎么实现对帖子的敏感词过滤？</p>
+<ol>
+<li>创建敏感词文本文件<code>sensitive-words.txt</code></li>
+<li></li>
+</ol>
+<h2 id="2-发布文章"><a href="#2-发布文章" class="headerlink" title="2. 发布文章"></a>2. 发布文章</h2><h3 id="2-1-功能分析："><a href="#2-1-功能分析：" class="headerlink" title="2.1 功能分析："></a><strong>2.1 功能分析：</strong></h3><ul>
+<li>业务层：<ul>
+<li>检查参数是否为空</li>
+<li>对文章标题、内容进行敏感词过滤和转义HTML标记</li>
+<li>将文章插入数据库</li>
+</ul>
+</li>
+<li>表现层：<ul>
+<li>检查用户是否登录</li>
+<li>完善post对象</li>
+<li>传递给业务层</li>
+<li><strong>生产者生产发帖消息，等待消费者将文章同步到elasticsearch服务器上</strong></li>
+<li>将文章ID存入redis，等待定时计算热度任务</li>
+</ul>
+</li>
+</ul>
+<p><code>同步任务和定时计算任务见第三章&amp;第四章</code></p>
+<h3 id="2-2-代码实现"><a href="#2-2-代码实现" class="headerlink" title="2.2 代码实现"></a>2.2 代码实现</h3><ul>
+<li>业务层：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 新增帖子</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">addDiscussPost</span><span class="params">(DiscussPost discussPost)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(discussPost == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;参数不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 转义HTML标记</span></span><br><span class="line">    discussPost.setTitle(HtmlUtils.htmlEscape(discussPost.getTitle()));</span><br><span class="line">    discussPost.setContent(HtmlUtils.htmlEscape(discussPost.getContent()));</span><br><span class="line">    <span class="comment">// 过滤敏感词</span></span><br><span class="line">    discussPost.setTitle( sensitiveFilter.filter(discussPost.getTitle()));</span><br><span class="line">    discussPost.setContent(sensitiveFilter.filter(discussPost.getContent()));</span><br><span class="line">    <span class="keyword">return</span> discussPostMapper.insert(discussPost);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>表现层：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 发布帖子</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@PostMapping(&quot;/add&quot;)</span></span><br><span class="line"><span class="meta">@ResponseBody</span>	<span class="comment">// 该方法为异步请求</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">addDiscussPost</span><span class="params">(String title, String content)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> hostHolder.getUser();</span><br><span class="line">    <span class="keyword">if</span>(user == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="comment">// 错误提示</span></span><br><span class="line">        <span class="keyword">return</span> LinBlogUtil.getJSONString(<span class="number">403</span>, <span class="string">&quot;您还未登录&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 完善实体对象</span></span><br><span class="line">    <span class="type">DiscussPost</span> <span class="variable">discussPost</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DiscussPost</span>();</span><br><span class="line">    discussPost.setUserId(user.getId());</span><br><span class="line">    discussPost.setTitle(title);</span><br><span class="line">    discussPost.setContent(content);</span><br><span class="line">    discussPost.setCreateTime(LocalDate.now());</span><br><span class="line">    discussPostService.addDiscussPost(discussPost);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 触发发布事件：</span></span><br><span class="line">    <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Event</span>()</span><br><span class="line">            .setTopic(TOPIC_PUBLISH)</span><br><span class="line">            .setUserId(user.getId())</span><br><span class="line">            .setEntityType(ENTITY_TYPE_POST)</span><br><span class="line">            .setEntityId(discussPost.getId());</span><br><span class="line">    <span class="comment">// 生产者生产消息</span></span><br><span class="line">    eventProducer.fireEvent(event);</span><br><span class="line">    <span class="comment">// 发帖时，存入缓存定时计算热度</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getPostScoreKey();</span><br><span class="line">    redisTemplate.opsForSet().add(key, discussPost.getId());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> LinBlogUtil.getJSONString(<span class="number">0</span>, <span class="string">&quot;发布成功&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-查看帖子详情"><a href="#3-查看帖子详情" class="headerlink" title="3. 查看帖子详情"></a>3. 查看帖子详情</h2><h3 id="3-1-功能分析"><a href="#3-1-功能分析" class="headerlink" title="3.1 功能分析"></a>3.1 功能分析</h3><p>请求参数：帖子ID</p>
+<p>响应参数：</p>
+<pre><code>- **该帖子对象 post**
+- **帖子作者对象 user**
+</code></pre>
+<ul>
+<li><strong>该帖子评论数据列表：List<CommentVo></strong><br>- 评论对象 comment<br>- 该评论的作者 user<br>- 该评论的点赞数 likeCount<ul>
+<li>该评论的回复数据列表：List<ReplyVo><br>- 回复对象 reply<br>- 该回复的作者 user<br>- 该回复的点赞数 likeCount<br>- 当前用户对该回复的点赞状态 status（若登录）<ul>
+<li>当前用户对该评论的点赞状态 status（若登录）</li>
+</ul>
+</li>
+<li><strong>该帖子点赞数 likeCount</strong></li>
+<li><strong>当前用户对帖子的点赞状态  status （若登录）</strong></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>上述响应数据除了点赞数和点赞状态等高并发功能需要从redis中获取之外，其他从数据库获取即可。</p>
+</blockquote>
+<p><strong>业务层需要实现：</strong></p>
+<ul>
+<li>根据ID查询帖子对象    <code>DiscussPostService</code></li>
+<li>根据userId查询用户对象  <code>UserService</code></li>
+<li>统计某个实体所获点赞数  <code>LikeService</code></li>
+<li>统计某个用户对某实体的点赞状态  <code>LikeService</code></li>
+<li>根据实体类型和实体ID获取该实体的所有评论对象  <code>CommentService</code></li>
+<li>根据实体类型和实体ID获取该实体的评论总数  <code>CommentService</code></li>
+</ul>
+<p><strong>表现层需要实现：</strong><code>DiscussPostController</code></p>
+<ul>
+<li>封装前端展示数据</li>
+<li>实现评论分页</li>
+</ul>
+<h3 id="3-2-关键点代码实现"><a href="#3-2-关键点代码实现" class="headerlink" title="3.2  关键点代码实现"></a>3.2  关键点代码实现</h3><h4 id="3-2-1-统计点赞数："><a href="#3-2-1-统计点赞数：" class="headerlink" title="3.2.1  统计点赞数："></a>3.2.1  统计点赞数：</h4><ol>
+<li><p><strong>实现原理</strong>：使用Redis存储点赞某个实体的所有userID，这样便可以通过size()得出该实体的点赞数</p>
+<ul>
+<li>数据类型：Set</li>
+<li>key：该实体的标志（实体类型:实体ID）</li>
+<li>value：一系列用户ID</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 统计某个实体点赞数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">findEntityLikeCount</span><span class="params">(<span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getEntityLikeKey(entityType, entityId);</span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForSet().size(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="3-2-2-查看某个用户对某个实体的点赞状态"><a href="#3-2-2-查看某个用户对某个实体的点赞状态" class="headerlink" title="3.2.2 查看某个用户对某个实体的点赞状态"></a>3.2.2 查看某个用户对某个实体的点赞状态</h4><ol>
+<li><p><strong>实现原理：</strong>使用Redis存储点赞某个实体的所有点赞userID，通过<code>isMember(key, value)</code>即可判断该用户是否点赞</p>
+<ul>
+<li>数据类型：Set</li>
+<li>key：该实体的标志（实体类型:实体ID）</li>
+<li>value：一系列用户ID</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询某用户对某实体是否点赞</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findEntityLikeStatus</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getEntityLikeKey(entityType, entityId);</span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForSet().isMember(key, userId) ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="二、评论管理模块"><a href="#二、评论管理模块" class="headerlink" title="二、评论管理模块"></a>二、评论管理模块</h1><h2 id="1-显示评论"><a href="#1-显示评论" class="headerlink" title="1. 显示评论"></a>1. 显示评论</h2><blockquote>
+<p>见上述【查看帖子详情】</p>
+</blockquote>
+<h2 id="2-添加评论"><a href="#2-添加评论" class="headerlink" title="2. 添加评论"></a>2. 添加评论</h2><p>完成这一功能有两步：</p>
+<ul>
+<li>添加评论对象</li>
+<li>修改对应帖子对象的commentCount参数</li>
+</ul>
+<p>所以我们需要用到<strong>事务管理</strong>！</p>
+<h3 id="2-1-事务管理"><a href="#2-1-事务管理" class="headerlink" title="2.1 事务管理"></a>2.1 事务管理</h3><ul>
+<li><p>什么是事务？</p>
+<ul>
+<li>事务是由n步数据库操作序列组成的逻辑执行单元，这系列操作要么全执行，要么全放弃执行</li>
+</ul>
+</li>
+<li><p>事务的特性：</p>
+<ul>
+<li><u>原子性、一致性、持久性</u></li>
+<li><u>隔离性</u>：针对<strong>多事务并发</strong>，各个事务的执行互不干扰<ul>
+<li><strong>常见并发异常</strong>：<ul>
+<li><strong>更新</strong>操作：第一类丢失更新、第二类丢失更新<ul>
+<li>第一类：某一个事务的回滚，导致另一个事务的更新丢失</li>
+<li>第二类：某一个事务的提交，导致另一个事务的更新丢失</li>
+</ul>
+</li>
+<li><strong>读取</strong>操作：脏读、不可重复读、幻读<ul>
+<li>脏读：一个事务读到另一个事务未提交的数据</li>
+<li>不可重复读：一个事务，对同一个数据前后读取的结果不一致</li>
+<li>幻读：一个事务，对用一个表前后查询到的行数不一致</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>怎么解决？ &#x3D;&#x3D;&gt; 事务隔离级别</p>
+<ul>
+<li>Read Uncommitted：读取未提交的数据。</li>
+<li>Read Committed：读取已提交的数据。</li>
+<li>Repeatable Read：可重复读。</li>
+<li>Serializable：串行化。</li>
+</ul>
+</li>
+<li><p>实现机制：【参考笔记<a target="_blank" rel="noopener" href="https://www.yuque.com/u25838002/kb/yu8dy3ft66x0ffrx#O01Ii">【期末复习】数据库提纲 (yuque.com)</a>】</p>
+<ul>
+<li>悲观锁（数据库）</li>
+<li>乐观锁</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-2-spring事务管理"><a href="#2-2-spring事务管理" class="headerlink" title="2.2 spring事务管理"></a>2.2 spring事务管理</h3><h4 id="2-2-1-声明式事务管理"><a href="#2-2-1-声明式事务管理" class="headerlink" title="2.2.1  声明式事务管理"></a>2.2.1  声明式事务管理</h4><ul>
+<li>利用注解@Transactional进行事务管理</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">save1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUsername(<span class="string">&quot;test1&quot;</span>);</span><br><span class="line">        user.setEmail(<span class="string">&quot;test1@qq.com&quot;</span>);</span><br><span class="line">        user.setHeaderUrl(<span class="string">&quot;https://www.baidu.com&quot;</span>);</span><br><span class="line">        user.setSalt(LinBlogUtil.generateUUID().substring(<span class="number">0</span>, <span class="number">5</span>));</span><br><span class="line">        user.setPassword(LinBlogUtil.md5(<span class="string">&quot;123&quot;</span>+user.getSalt()));</span><br><span class="line">        user.setCreateTime(LocalDate.now());</span><br><span class="line">        userMapper.insert(user);</span><br><span class="line"></span><br><span class="line">        <span class="type">DiscussPost</span> <span class="variable">discussPost</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DiscussPost</span>();</span><br><span class="line">        discussPost.setTitle(<span class="string">&quot;测试一&quot;</span>);</span><br><span class="line">        discussPost.setContent(<span class="string">&quot;测试来了&quot;</span>);</span><br><span class="line">        discussPost.setCreateTime(LocalDate.now());</span><br><span class="line">        discussPostMapper.insert(discussPost);</span><br><span class="line"></span><br><span class="line">        Integer.valueOf(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Transactional</code> 常用配置参数：</p>
+<ul>
+<li><p><code>isolation</code> 事务的隔离级别：</p>
+<ul>
+<li><pre><code>public enum Isolation &#123;
+    DEFAULT(-1),
+    READ_UNCOMMITTED(1), // 最低的隔离级别，可能会导致脏读、幻读或不可重复读
+    READ_COMMITTED(2),	//允许读取并发事务已经提交的数据，可以阻止脏读，但是幻读或不可重复读仍有可能发生
+    REPEATABLE_READ(4),	//对同一字段的多次读取结果都是一致的，可以阻止脏读和不可重复读，但幻读仍有可能发生。
+    SERIALIZABLE(8);	// 最高的隔离级别，所有事务依次逐个执行，但是严重影响性能
+    ……
+&#125;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">- `propagation`  事务的传播行为：</span><br><span class="line"></span><br><span class="line">  - ```</span><br><span class="line">    public enum Propagation &#123;</span><br><span class="line">        REQUIRED(0),</span><br><span class="line">        SUPPORTS(1),</span><br><span class="line">        MANDATORY(2),</span><br><span class="line">        REQUIRES_NEW(3),</span><br><span class="line">        NOT_SUPPORTED(4),</span><br><span class="line">        NEVER(5),</span><br><span class="line">        NESTED(6);</span><br><span class="line">        ……</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-2-2-编程式事务管理"><a href="#2-2-2-编程式事务管理" class="headerlink" title="2.2.2 编程式事务管理"></a>2.2.2 编程式事务管理</h4><ul>
+<li>利用TransactionTemplate类进行事务管理</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> TransactionTemplate transactionTemplate;</span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">save2</span><span class="params">()</span>&#123;</span><br><span class="line">    transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);</span><br><span class="line">    transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> <span class="title class_">TransactionCallback</span>&lt;Object&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Object <span class="title function_">doInTransaction</span><span class="params">(TransactionStatus status)</span> &#123;</span><br><span class="line">            <span class="comment">// 在此处实现所需事务管理的业务逻辑</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-3-事务管理在添加评论中的应用"><a href="#2-3-事务管理在添加评论中的应用" class="headerlink" title="2.3 事务管理在添加评论中的应用"></a>2.3 事务管理在添加评论中的应用</h3><h4 id="2-3-1-功能分析"><a href="#2-3-1-功能分析" class="headerlink" title="2.3.1 功能分析"></a>2.3.1 功能分析</h4><p>业务层：</p>
+<ul>
+<li>检查comment对象是否为空值</li>
+<li>对评论内容进行敏感词过滤和HTML转义处理</li>
+<li><strong>插入数据库</strong></li>
+<li><strong>更新对应帖子commentCount数量</strong></li>
+</ul>
+<p>表现层：</p>
+<ul>
+<li>完善comment对象</li>
+<li>调用业务方法</li>
+<li><span color="red"><strong>生产者生产通知消息，等待消费者通知被评论用户</strong></span></li>
+<li><strong>生产者生产修改帖子实体消息，等待消费者将文章同步到elasticsearch服务器上</strong></li>
+<li>将文章ID存入redis，等待定时计算热度任务</li>
+</ul>
+<h4 id="2-3-2-关键代码实现"><a href="#2-3-2-关键代码实现" class="headerlink" title="2.3.2 关键代码实现"></a>2.3.2 关键代码实现</h4><ol>
+<li><strong>业务层：</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 新增评论(该方法内的所有操作要么执行，要么都不执行)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertComment</span><span class="params">(Comment comment)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(comment == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;参数不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 过滤评论</span></span><br><span class="line">    comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));</span><br><span class="line">    comment.setContent(sensitiveFilter.filter(comment.getContent()));</span><br><span class="line">    commentMapper.insert(comment);</span><br><span class="line">    <span class="comment">// 更新帖子评论数量</span></span><br><span class="line">    <span class="keyword">if</span>(comment.getEntityType() == ENTITY_TYPE_POST)&#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">count</span> <span class="operator">=</span> selectCount(comment.getEntityType(), comment.getEntityId());</span><br><span class="line">        discussPostService.updateCommentCount(comment.getEntityId(), count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li><strong>表现层：</strong></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加评论</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@PostMapping(&quot;/insert/&#123;discussPostId&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">insertComment</span><span class="params">(<span class="meta">@PathVariable</span> <span class="type">int</span> discussPostId, Comment comment)</span>&#123;</span><br><span class="line">    <span class="comment">// 完善comment对象</span></span><br><span class="line">    comment.setUserId(hostHolder.getUser().getId());</span><br><span class="line">    comment.setStatus(<span class="number">0</span>);</span><br><span class="line">    comment.setCreateTime(LocalDate.now());</span><br><span class="line">    commentService.insertComment(comment);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 触发评论事件 =&gt; 封装发送给被评论者的通知</span></span><br><span class="line">    <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Event</span>()</span><br><span class="line">            .setTopic(TOPIC_COMMENT)	<span class="comment">// 监听主题</span></span><br><span class="line">            .setUserId(hostHolder.getUser().getId()) <span class="comment">// 评论者</span></span><br><span class="line">            .setEntityType(comment.getEntityType()) <span class="comment">// 评论类型</span></span><br><span class="line">            .setEntityId(comment.getId())	<span class="comment">// 评论ID</span></span><br><span class="line">            .setData(<span class="string">&quot;postId&quot;</span>, discussPostId);	<span class="comment">// 该评论所属帖子ID</span></span><br><span class="line">    <span class="keyword">if</span>(comment.getEntityType() == ENTITY_TYPE_POST)&#123;</span><br><span class="line">        <span class="type">DiscussPost</span> <span class="variable">target</span> <span class="operator">=</span> discussPostService.selectPostById(comment.getEntityId());</span><br><span class="line">        event.setEntityUserId(target.getUserId());	<span class="comment">// 被评论者</span></span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(comment.getEntityType() == ENTITY_TYPE_COMMENT)&#123;</span><br><span class="line">        <span class="type">Comment</span> <span class="variable">target</span> <span class="operator">=</span> commentService.selectCommentById(comment.getEntityId());</span><br><span class="line">        event.setEntityUserId(target.getUserId());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//触发事件：通知被评论的用户</span></span><br><span class="line">    eventProducer.fireEvent(event);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 触发修改ES中帖子事件 =&gt; 封装被评论的帖子ID</span></span><br><span class="line">    <span class="keyword">if</span>(comment.getEntityType() == ENTITY_TYPE_POST)&#123;</span><br><span class="line">        event = <span class="keyword">new</span> <span class="title class_">Event</span>()</span><br><span class="line">                .setTopic(TOPIC_PUBLISH)</span><br><span class="line">                .setUserId(comment.getUserId())</span><br><span class="line">                .setEntityType(ENTITY_TYPE_POST)</span><br><span class="line">                .setEntityId(discussPostId);</span><br><span class="line">        eventProducer.fireEvent(event);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 评论增加 存入缓存等待计算分数</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getPostScoreKey();</span><br><span class="line">        redisTemplate.opsForSet().add(key, discussPostId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;redirect:/discuss/detail/&quot;</span>+discussPostId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="三、私信管理模块"><a href="#三、私信管理模块" class="headerlink" title="三、私信管理模块"></a>三、私信管理模块</h1><h1 id="四、统一异常处理"><a href="#四、统一异常处理" class="headerlink" title="四、统一异常处理"></a>四、统一异常处理</h1><h1 id="五、统一记录日志"><a href="#五、统一记录日志" class="headerlink" title="五、统一记录日志"></a>五、统一记录日志</h1>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://12wj.github.io/2024/08/29/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA03-%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/">https://12wj.github.io/2024/08/29/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA03-%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/25/selenium-6-Frame%E5%88%87%E6%8D%A2/">selenium - 6.切换Frame和下拉列表的操作</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

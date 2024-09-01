@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lin">
+
+
+
+
+
+<title>仿牛客社区04 —— Redis应用 | 12wj</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">仿牛客社区04 —— Redis应用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 30, 2024&nbsp;&nbsp;18:19:27</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>本章需求：</p>
+<ul>
+<li>将<strong>高并发的功能</strong>利用redis实现：<ul>
+<li>点赞</li>
+<li>关注</li>
+</ul>
+</li>
+<li>将<strong>经常需要访问的数据</strong>利用redis存储：<ul>
+<li><strong>user对象</strong> &#x3D;&gt; 缓存思路？</li>
+</ul>
+</li>
+<li>优化<strong>登录</strong>功能：<ul>
+<li>登陆凭证的存储</li>
+<li>验证码的存储</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h1 id="一、Redis介绍"><a href="#一、Redis介绍" class="headerlink" title="一、Redis介绍"></a>一、Redis介绍</h1><ul>
+<li>redis是一款基于<strong>键值对</strong>的NoSQL数据库，支持多种数据类型：<strong>String、hashes、lists、sets、sorted sets</strong></li>
+<li>典型应用：缓存、排行榜、计数器、社交网络、消息队列</li>
+<li>常用命令：<ul>
+<li>见【redis&#x2F;redis01】文章</li>
+</ul>
+</li>
+</ul>
+<h1 id="二、Spring整合redis"><a href="#二、Spring整合redis" class="headerlink" title="二、Spring整合redis"></a>二、Spring整合redis</h1><ol>
+<li>引入依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>配置Redis</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># redis</span></span><br><span class="line"><span class="comment"># 指定当前redis数据库索引</span></span><br><span class="line"><span class="attr">spring.data.redis.database</span>=<span class="string">11</span></span><br><span class="line"><span class="attr">spring.data.redis.host</span>=<span class="string">localhost</span></span><br><span class="line"><span class="attr">spring.data.redis.port</span>=<span class="string">6379</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>创建redis配置类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title function_">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span>&#123;</span><br><span class="line">        <span class="comment">// 实例化bean =&gt; redisTemplate</span></span><br><span class="line">        RedisTemplate&lt;String, Object&gt; redisTemplate = <span class="keyword">new</span> <span class="title class_">RedisTemplate</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">// 利用连接工厂factory连接数据库</span></span><br><span class="line">        redisTemplate.setConnectionFactory(factory);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置key的序列化方式</span></span><br><span class="line">        redisTemplate.setKeySerializer(RedisSerializer.string());</span><br><span class="line">        <span class="comment">// 设置value的序列化方式</span></span><br><span class="line">        redisTemplate.setValueSerializer(RedisSerializer.json());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置hash的key的序列化方式</span></span><br><span class="line">        redisTemplate.setHashKeySerializer(RedisSerializer.string());</span><br><span class="line">        <span class="comment">// 设置hash的value的序列化方式</span></span><br><span class="line">        redisTemplate.setHashValueSerializer(RedisSerializer.json());</span><br><span class="line"></span><br><span class="line">        redisTemplate.afterPropertiesSet();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="4">
+<li><p>使用<code>redisTemplate</code>操作redis</p>
+<p>在Spring Boot应用中，注入<code>redisTemplate</code>即可操作redis</p>
+</li>
+<li><p>测试类：</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisTest</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testStrings</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">// 测试String数据类型</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">redisKey</span> <span class="operator">=</span> <span class="string">&quot;test:count&quot;</span>;</span><br><span class="line">        redisTemplate.opsForValue().set(redisKey, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(redisTemplate.opsForValue().get(redisKey));</span><br><span class="line">        System.out.println(redisTemplate.opsForValue().increment(redisKey));</span><br><span class="line">        System.out.println(redisTemplate.opsForValue().decrement(redisKey));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testHash</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">// 测试Hash类型</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">redisKey</span> <span class="operator">=</span> <span class="string">&quot;test:hash&quot;</span>;</span><br><span class="line">        redisTemplate.opsForHash().put(redisKey, <span class="string">&quot;id&quot;</span>, <span class="number">101</span>);</span><br><span class="line">        redisTemplate.opsForHash().put(redisKey, <span class="string">&quot;username&quot;</span>, <span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(redisTemplate.opsForHash().get(redisKey, <span class="string">&quot;id&quot;</span>));</span><br><span class="line">        System.out.println(redisTemplate.opsForHash().get(redisKey, <span class="string">&quot;username&quot;</span>));</span><br><span class="line"></span><br><span class="line">        redisTemplate.expire(<span class="string">&quot;test:hash&quot;</span>, <span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这个 BoundValueOperations 就是绑定 redisKey 的对象，利用该对象来进行一系列操作</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testBoundOperations</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">redisKey</span> <span class="operator">=</span> <span class="string">&quot;test:count&quot;</span>;</span><br><span class="line">        <span class="type">BoundValueOperations</span> <span class="variable">operations</span> <span class="operator">=</span> redisTemplate.boundValueOps(redisKey);</span><br><span class="line">        operations.increment();</span><br><span class="line">        operations.increment();</span><br><span class="line">        operations.increment();</span><br><span class="line">        operations.increment();</span><br><span class="line">        System.out.println(operations.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="三、创建生成Redis-key值类"><a href="#三、创建生成Redis-key值类" class="headerlink" title="三、创建生成Redis-key值类"></a>三、创建生成Redis-key值类</h1><ul>
+<li><p>由于该系统需要需要频繁用到redis并且需要多种类型key值，所以需要创建一个工具类用于生成key值</p>
+</li>
+<li><p><code>Util</code>包下创建<code>RedisKeyUtil.java</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisKeyUtil</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SPLIT</span> <span class="operator">=</span> <span class="string">&quot;:&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="三、点赞功能模块"><a href="#三、点赞功能模块" class="headerlink" title="三、点赞功能模块"></a>三、点赞功能模块</h1><blockquote>
+<p>该网站中用户可以对一篇帖子点赞，也可以对帖子中的任一条评论点赞或取消点赞</p>
+</blockquote>
+<h2 id="3-1-功能分析"><a href="#3-1-功能分析" class="headerlink" title="3.1 功能分析"></a>3.1 功能分析</h2><ol>
+<li>需求分析：</li>
+</ol>
+<ul>
+<li>用户对某实体进行点赞、取消点赞</li>
+<li>统计某实体点赞数（帖子、评论）</li>
+<li>显示某用户对某实体的点赞状态</li>
+<li>统计某个用户的点赞数</li>
+</ul>
+<ol start="2">
+<li><strong>所需数据结构：</strong></li>
+</ol>
+<ul>
+<li><strong>Set集合</strong>：存储<strong>userId的集合</strong>  &#x3D;&gt; 存储哪些用户点赞了该实体<ul>
+<li><strong>key</strong>：<code>entityType:entityId</code> &#x3D;&gt; 实体标识</li>
+<li><strong>value</strong>：user1， user2，user3  &#x3D;&gt; 用户id</li>
+<li>作用：<ul>
+<li><code>add</code>操作添加点赞用户ID，<code>remove</code>操作移除取消点赞用户ID</li>
+<li><code>size()</code> 统计某实体的被点赞数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>String字符串</strong>：存储<strong>整数类型数据</strong> &#x3D;&gt; 统计某用户的被点赞数<ul>
+<li><strong>key</strong>：userId</li>
+<li><strong>value</strong>：整数值</li>
+<li>作用：<ul>
+<li>点赞时被点赞用户对应的<code>value + 1</code></li>
+<li>取消点赞时被点赞用户对应的<code>value - 1</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><p>根据该数据结构设计Redis<strong>key值</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//RedieKeyUtil.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisKeyUtil</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SPLIT</span> <span class="operator">=</span> <span class="string">&quot;:&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_ENTITY_LIKE</span> <span class="operator">=</span> <span class="string">&quot;like:entity&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_USER_LIKE</span> <span class="operator">=</span> <span class="string">&quot;like:user&quot;</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 某个实体的赞</span></span><br><span class="line"><span class="comment">     * key：like:entity:entityType:entityId</span></span><br><span class="line"><span class="comment">     * value：set(userId)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getEntityLikeKey</span><span class="params">(<span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PREFIX_ENTITY_LIKE + SPLIT + entityType + SPLIT + entityId;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 某个用户收到的点赞</span></span><br><span class="line"><span class="comment">     * key: like:user:userId</span></span><br><span class="line"><span class="comment">     * value: value</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getUserLikeKey</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> PREFIX_USER_LIKE + SPLIT + userId;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="3-2-业务层实现-likeService"><a href="#3-2-业务层实现-likeService" class="headerlink" title="3.2 业务层实现 -likeService"></a>3.2 业务层实现 -<code>likeService</code></h2><h3 id="1-点赞-or-取消点赞：like"><a href="#1-点赞-or-取消点赞：like" class="headerlink" title="1. 点赞 or 取消点赞：like"></a>1. 点赞 <code>or</code> 取消点赞：<code>like</code></h3><blockquote>
+<p>划重点：<u>事务管理</u></p>
+</blockquote>
+<p><strong>处理逻辑：</strong></p>
+<ul>
+<li><p>判断当前user是否在Set集合中</p>
+<ul>
+<li>不存在：add操作<ul>
+<li>被点赞user的value值 + 1</li>
+</ul>
+</li>
+<li>存在：remove<ul>
+<li>被取消点赞user的value值 - 1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>该功能包含两个步骤 &#x3D;&#x3D;&gt; 涉及到<strong>redis的事务管理</strong></p>
+</li>
+<li><p>Spring Data Redis 提供的事务管理机制：<code>execute</code>方法</p>
+<ul>
+<li><p><code>&lt;T&gt; T execute(SessionCallback&lt;T&gt; session)</code>使用</p>
+<ul>
+<li>其中参数SessionCallback包含了一个回调函数<code>execute(RedisOperations operations)</code><ul>
+<li><code>operations.multi()</code>：开启事务</li>
+<li><code>operations.exec()</code>：结束事务</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>execute(SessionCallback&lt;T&gt; session)</code>实现原理：</p>
+</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; T <span class="title function_">execute</span><span class="params">(SessionCallback&lt;T&gt; session)</span> &#123;</span><br><span class="line">	Assert.isTrue(initialized, <span class="string">&quot;template not initialized; call afterPropertiesSet() before using it&quot;</span>);</span><br><span class="line">	Assert.notNull(session, <span class="string">&quot;Callback object must not be null&quot;</span>);</span><br><span class="line">    </span><br><span class="line">	<span class="type">RedisConnectionFactory</span> <span class="variable">factory</span> <span class="operator">=</span> getRequiredConnectionFactory();</span><br><span class="line">	<span class="comment">// bind connection, 绑定连接在当前进程</span></span><br><span class="line">	RedisConnectionUtils.bindConnection(factory, enableTransactionSupport);</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 确保execute方法内的操作保持在一个连接内完成</span></span><br><span class="line">		<span class="keyword">return</span> session.execute(<span class="built_in">this</span>);</span><br><span class="line">	&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">// 从当前线程解绑该链接</span></span><br><span class="line">		RedisConnectionUtils.unbindConnection(factory);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p><strong>代码实现：</strong></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 点赞</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> userId 点赞的用户</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> entityType 被点赞的实体类型</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> entityId 被点赞的实体ID</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">like</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType, <span class="type">int</span> entityId, <span class="type">int</span> entityUserId)</span>&#123;</span><br><span class="line">    <span class="comment">// 进行事务管理</span></span><br><span class="line">    redisTemplate.execute(<span class="keyword">new</span> <span class="title class_">SessionCallback</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Object <span class="title function_">execute</span><span class="params">(RedisOperations operations)</span> <span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line">            <span class="comment">// 先得到key值</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">entityKey</span> <span class="operator">=</span> RedisKeyUtil.getEntityLikeKey(entityType, entityId);</span><br><span class="line">            <span class="type">String</span> <span class="variable">userKey</span> <span class="operator">=</span> RedisKeyUtil.getUserLikeKey(entityUserId);</span><br><span class="line">            <span class="type">Boolean</span> <span class="variable">isLike</span> <span class="operator">=</span> redisTemplate.opsForSet().isMember(entityKey, userId);</span><br><span class="line">            <span class="comment">// 开启事务</span></span><br><span class="line">            operations.multi();</span><br><span class="line">            <span class="keyword">if</span>(isLike)&#123;</span><br><span class="line">                <span class="comment">// 取消点赞</span></span><br><span class="line">                operations.opsForSet().remove(entityKey, userId);</span><br><span class="line">                operations.opsForValue().decrement(userKey);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 点赞</span></span><br><span class="line">                operations.opsForSet().add(entityKey, userId);</span><br><span class="line">                operations.opsForValue().increment(userKey);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 事务结束</span></span><br><span class="line">            <span class="keyword">return</span> operations.exec();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-显示某实体的点赞数：findEntityLikeCount"><a href="#2-显示某实体的点赞数：findEntityLikeCount" class="headerlink" title="2. 显示某实体的点赞数：findEntityLikeCount()"></a>2. 显示某实体的点赞数：<code>findEntityLikeCount()</code></h3><p><strong>实现原理</strong>：使用Redis存储<strong>点赞</strong>某个实体的所有userID，这样便可以通过size()得出该实体的点赞数</p>
+<ul>
+<li>数据类型：Set</li>
+<li>key：该实体的标志（实体类型:实体ID）</li>
+<li>value：一系列用户ID</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 统计某个实体点赞数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">findEntityLikeCount</span><span class="params">(<span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getEntityLikeKey(entityType, entityId);</span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForSet().size(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-显示某用户对某实体的点赞状态-findEntityLikeStatus"><a href="#3-显示某用户对某实体的点赞状态-findEntityLikeStatus" class="headerlink" title="3. 显示某用户对某实体的点赞状态 findEntityLikeStatus()"></a>3. 显示某用户对某实体的点赞状态 <code>findEntityLikeStatus()</code></h3><p><strong>实现原理：</strong>使用Redis<strong>存储</strong>点赞某个实体的所有点赞userID，通过<code>isMember(key, value)</code>即可判断该用户是否点赞</p>
+<ul>
+<li>数据类型：Set</li>
+<li>key：该实体的标志（实体类型:实体ID）</li>
+<li>value：一系列用户ID</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询某用户对某实体是否点赞</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findEntityLikeStatus</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getEntityLikeKey(entityType, entityId);</span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForSet().isMember(key, userId) ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-显示某用户的点赞数findUserLikeCount"><a href="#4-显示某用户的点赞数findUserLikeCount" class="headerlink" title="4.显示某用户的点赞数findUserLikeCount()"></a>4.显示某用户的点赞数<code>findUserLikeCount()</code></h3><p><strong>实现原理：</strong>使用redis存储某个用户所获点赞数，点赞和取消点赞分别实现<code>+1</code> or<code> -1</code></p>
+<ul>
+<li>数据类型：String</li>
+<li>key：user:userId</li>
+<li>value：number</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询某个用户获得的赞</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findUserLikeCount</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">userKey</span> <span class="operator">=</span> RedisKeyUtil.getUserLikeKey(userId);</span><br><span class="line">    <span class="type">Integer</span> <span class="variable">count</span> <span class="operator">=</span> (Integer) redisTemplate.opsForValue().get(userKey);</span><br><span class="line">    <span class="keyword">return</span> count == <span class="literal">null</span> ? <span class="number">0</span> : count.intValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="3-3-表现层实现"><a href="#3-3-表现层实现" class="headerlink" title="3.3  表现层实现"></a>3.3  表现层实现</h2><h3 id="1-在帖子详情页对帖子或者某个评论点赞-取消点赞"><a href="#1-在帖子详情页对帖子或者某个评论点赞-取消点赞" class="headerlink" title="1. 在帖子详情页对帖子或者某个评论点赞(取消点赞)"></a>1. 在帖子详情页对帖子或者某个评论点赞(取消点赞)</h3><p><code>LikeController</code>：</p>
+<ul>
+<li><p>请求方式：POST</p>
+</li>
+<li><p>请求路径：<code>/like</code></p>
+</li>
+<li><p>请求参数：</p>
+<ul>
+<li><code>entityType</code>：被点赞的实体类型</li>
+<li><code>entityId</code>：被点赞的实体ID</li>
+<li><code>entityUserId</code>：被点赞的实体作者ID</li>
+<li><code>postId</code>：被点赞的实体所属帖子ID</li>
+</ul>
+</li>
+<li><p>响应参数：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;likeCount&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span>	<span class="comment">// 界面需要显示点赞数</span></span><br><span class="line">    <span class="attr">&quot;likeStaus&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span>		<span class="comment">// 界面需要显示点赞状态	</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码实现：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/like&quot;)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">like</span><span class="params">(<span class="type">int</span> entityType, <span class="type">int</span> entityId, <span class="type">int</span> entityUserId, <span class="type">int</span> postId)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> hostHolder.getUser();</span><br><span class="line">    <span class="comment">// 点赞 or 取消点赞</span></span><br><span class="line">    likeService.like(user.getId(), entityType, entityId, entityUserId);</span><br><span class="line">    <span class="comment">// 该实体的点赞数</span></span><br><span class="line">    <span class="type">long</span> <span class="variable">count</span> <span class="operator">=</span> likeService.findEntityLikeCount(entityType, entityId);</span><br><span class="line">    <span class="comment">// 当前用户对该实体的点赞状态</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">likeStatus</span> <span class="operator">=</span> likeService.findEntityLikeStatus(user.getId(), entityType, entityId);</span><br><span class="line">    Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    map.put(<span class="string">&quot;likeCount&quot;</span>, count);</span><br><span class="line">    map.put(<span class="string">&quot;likeStatus&quot;</span>, likeStatus);</span><br><span class="line">    <span class="comment">// 触发点赞事件：点赞时才通知</span></span><br><span class="line">    <span class="keyword">if</span>(likeStatus == <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Event</span>()</span><br><span class="line">                .setTopic(TOPIC_LIKE)</span><br><span class="line">                .setUserId(hostHolder.getUser().getId())</span><br><span class="line">                .setEntityType(entityType)</span><br><span class="line">                .setEntityId(entityId)</span><br><span class="line">                .setEntityUserId(entityUserId)</span><br><span class="line">                .setData(<span class="string">&quot;postId&quot;</span>, postId);</span><br><span class="line">        eventProducer.fireEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(ENTITY_TYPE_POST == entityType)&#123;</span><br><span class="line">        <span class="comment">// 点赞or取消点赞操作，存入缓存计算分数</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getPostScoreKey();</span><br><span class="line">        redisTemplate.opsForSet().add(key, postId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> LinBlogUtil.getJSONString(<span class="number">0</span>, <span class="literal">null</span>, map);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>该功能触发的后续处理：</strong>（后续章节实现）</p>
+<ul>
+<li>点赞时，需要通知被点赞的对象 &#x3D;&gt; <strong>Kafka</strong>实现</li>
+<li>点赞 or 取消点赞 &#x3D;&gt; 影响帖子热度 &#x3D;&gt; 存入redis等待定时任务重新计算帖子热度</li>
+</ul>
+<h3 id="2-在用户个人主页显示用户所获赞数量"><a href="#2-在用户个人主页显示用户所获赞数量" class="headerlink" title="2. 在用户个人主页显示用户所获赞数量"></a>2. 在用户个人主页显示用户所获赞数量</h3><p><code>UserController</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/profile/&#123;userId&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getProfilePage</span><span class="params">(<span class="meta">@PathVariable</span> <span class="type">int</span> userId, Model model)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userService.selectById(userId);</span><br><span class="line">    <span class="keyword">if</span>(user == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span>  <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;该用户不存在&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 用户</span></span><br><span class="line">    model.addAttribute(<span class="string">&quot;user&quot;</span>, user);</span><br><span class="line">    <span class="comment">// 用户所获点赞数</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> likeService.findUserLikeCount(userId);</span><br><span class="line">    model.addAttribute(<span class="string">&quot;likeCount&quot;</span>, count);</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;site/profile&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="四、关注功能模块"><a href="#四、关注功能模块" class="headerlink" title="四、关注功能模块"></a>四、关注功能模块</h1><h2 id="4-1-功能分析"><a href="#4-1-功能分析" class="headerlink" title="4.1 功能分析"></a>4.1 功能分析</h2><ol>
+<li><strong>需求</strong>：</li>
+</ol>
+<ul>
+<li>完成对某个用户关注、取消关注</li>
+<li>查看某个用户的关注列表</li>
+<li>查看某个用户的粉丝列表</li>
+</ul>
+<ol start="2">
+<li><strong>所需数据结构</strong>：</li>
+</ol>
+<ul>
+<li>存储某个用户的关注列表：<ul>
+<li>有序集合<code>Sorted Set</code> &#x3D;&gt; 根据关注时间来排序<ul>
+<li><strong>key</strong>：<code>followee:userID:user</code></li>
+<li><strong>value</strong>：<code>zset(userID, 时间)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>存储某个用户的粉丝列表：<ul>
+<li>有序集合<code>Sorted Set</code> &#x3D;&gt; 根据关注时间来排序</li>
+<li><strong>key</strong>：<code>follower:user:userID</code></li>
+<li><strong>value</strong>：<code>zset(userID, 时间)</code></li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>设计对应结构的key值：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_FOLLOWEE</span> <span class="operator">=</span> <span class="string">&quot;followee&quot;</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_FOLLOWER</span> <span class="operator">=</span> <span class="string">&quot;follower&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 某个用户关注的实体</span></span><br><span class="line"><span class="comment"> * key：followee:userId:entityType</span></span><br><span class="line"><span class="comment"> * value: zset(entityId, now)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getFolloweeKey</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_FOLLOWEE + SPLIT + userId + SPLIT + entityType;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 某个实体拥有的粉丝</span></span><br><span class="line"><span class="comment"> * key: follower:entityType:entityId</span></span><br><span class="line"><span class="comment"> * value: zset(userId, now)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getFollowerKey</span><span class="params">(<span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_FOLLOWER + SPLIT + entityType + SPLIT + entityId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-2-业务层实现"><a href="#4-2-业务层实现" class="headerlink" title="4.2 业务层实现"></a>4.2 业务层实现</h2><h3 id="1-用户A关注用户B"><a href="#1-用户A关注用户B" class="headerlink" title="1. 用户A关注用户B"></a>1. 用户A关注用户B</h3><ul>
+<li>处理逻辑：<ul>
+<li>用户A的关注列表添加B</li>
+<li>用户B的粉丝列表添加A</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这里也需要涉及<strong>事务管理</strong></p>
+</blockquote>
+<ul>
+<li><p>代码实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 关注</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> userId  动作执行者</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> entityType User</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> entityId 被关注用户ID</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">follow</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    redisTemplate.execute(<span class="keyword">new</span> <span class="title class_">SessionCallback</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Object <span class="title function_">execute</span><span class="params">(RedisOperations operations)</span> <span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">followeeKey</span> <span class="operator">=</span> RedisKeyUtil.getFolloweeKey(userId, entityType);</span><br><span class="line">            <span class="type">String</span> <span class="variable">followerKey</span> <span class="operator">=</span> RedisKeyUtil.getFollowerKey(entityType, entityId);</span><br><span class="line">            <span class="comment">// 开启事务</span></span><br><span class="line">            operations.multi();</span><br><span class="line">            <span class="comment">// 关注列表添加entityId</span></span><br><span class="line">            operations.opsForZSet().add(followeeKey, entityId, System.currentTimeMillis());</span><br><span class="line">            <span class="comment">// 粉丝列表添加userId</span></span><br><span class="line">            operations.opsForZSet().add(followerKey, userId, System.currentTimeMillis());</span><br><span class="line">            <span class="keyword">return</span> operations.exec();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>取消关注同理，进行<code>remove</code>操作</p>
+</blockquote>
+<h3 id="2-统计某个用户的关注数量"><a href="#2-统计某个用户的关注数量" class="headerlink" title="2. 统计某个用户的关注数量"></a>2. 统计某个用户的关注数量</h3><ul>
+<li><p>处理逻辑：</p>
+<ul>
+<li>找到该用户的关注列表，进行<code>zcard()</code>操作统计数量</li>
+</ul>
+</li>
+<li><p>代码实现：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 统计用户所关注的实体数量: 关注了多少个用户？ 关注了多少个帖子？</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">findFolloweeCount</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">followeeKey</span> <span class="operator">=</span> RedisKeyUtil.getFolloweeKey(userId, entityType);</span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForZSet().zCard(followeeKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>统计粉丝数同理</p>
+</blockquote>
+<h3 id="3-查询某用户的关注列表"><a href="#3-查询某用户的关注列表" class="headerlink" title="3. 查询某用户的关注列表"></a>3. 查询某用户的关注列表</h3><ul>
+<li><p>处理逻辑：</p>
+<ul>
+<li>从该用户的关注列表zset中提取出多个userId</li>
+<li>根据userID获取user对象，并且从zset中得到关注时间</li>
+<li>封装后一起返回</li>
+</ul>
+</li>
+<li><p>代码实现</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询某用户关注的人</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> List&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">findFollowees</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> current, <span class="type">int</span> size)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">followeeKey</span> <span class="operator">=</span> RedisKeyUtil.getFolloweeKey(userId, ENTITY_TYPE_USER);</span><br><span class="line">    <span class="type">int</span> <span class="variable">from</span> <span class="operator">=</span> (current - <span class="number">1</span>) * size;</span><br><span class="line">    <span class="type">int</span> <span class="variable">to</span> <span class="operator">=</span> from + size - <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 倒序取出数据</span></span><br><span class="line">    Set&lt;Integer&gt; targetIds = redisTemplate.opsForZSet().reverseRange(followeeKey, from, to);</span><br><span class="line">    <span class="keyword">if</span>(targetIds == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(Integer id : targetIds)&#123;</span><br><span class="line">        Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">// 得到user</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userService.selectById(id);</span><br><span class="line">        map.put(<span class="string">&quot;user&quot;</span>, user);</span><br><span class="line">        <span class="comment">// 得到时间</span></span><br><span class="line">        <span class="type">Double</span> <span class="variable">score</span> <span class="operator">=</span> redisTemplate.opsForZSet().score(followeeKey, id);</span><br><span class="line">        map.put(<span class="string">&quot;followTime&quot;</span>, <span class="keyword">new</span> <span class="title class_">Date</span>(score.longValue()));</span><br><span class="line">        list.add(map);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>获取粉丝列表同理</p>
+</blockquote>
+<h3 id="4-获取当前用户A对某用户B的关注状态"><a href="#4-获取当前用户A对某用户B的关注状态" class="headerlink" title="4. 获取当前用户A对某用户B的关注状态"></a>4. 获取当前用户A对某用户B的关注状态</h3><ul>
+<li><p>处理逻辑：</p>
+<ul>
+<li>查看A的关注列表中是否有B <code>or</code> B的粉丝列表是否有A</li>
+</ul>
+</li>
+<li><p>代码实现：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询当前用户对某实体的关注状态</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasFollowed</span><span class="params">(<span class="type">int</span> userId, <span class="type">int</span> entityType, <span class="type">int</span> entityId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">followeeKey</span> <span class="operator">=</span> RedisKeyUtil.getFolloweeKey(userId, entityType);</span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForZSet().score(followeeKey, entityId) != <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="五、Redis缓存高频访问数据"><a href="#五、Redis缓存高频访问数据" class="headerlink" title="五、Redis缓存高频访问数据"></a>五、Redis缓存高频访问数据</h1><h2 id="5-1-缓存User数据"><a href="#5-1-缓存User数据" class="headerlink" title="5.1 缓存User数据"></a>5.1 缓存User数据</h2><blockquote>
+<p>划重点：<strong>缓存与数据库的一致性问题</strong></p>
+</blockquote>
+<h3 id="1-创建redis-key值"><a href="#1-创建redis-key值" class="headerlink" title="1. 创建redis key值"></a>1. 创建redis key值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_USER</span> <span class="operator">=</span> <span class="string">&quot;user&quot;</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getUserKey</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_USER + SPLIT + userId;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>key</strong>：user:userID</li>
+<li><strong>value</strong>：user对象(json字符串格式)</li>
+</ul>
+<blockquote>
+<p>一个user对应一个key、value键值对</p>
+</blockquote>
+<h3 id="2-业务层实现"><a href="#2-业务层实现" class="headerlink" title="2. 业务层实现"></a>2. 业务层实现</h3><ul>
+<li>处理逻辑：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 优先从缓存中获取用户数据 =&gt; getCache()</span><br><span class="line">2. 取不到时初始化缓存数据 =&gt; initCache()</span><br><span class="line">3. 用户数据修改时删除缓存 =&gt; clearCache()</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>代码实现</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> User <span class="title function_">getCache</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getUserKey(userId);</span><br><span class="line">    <span class="keyword">return</span> (User) redisTemplate.opsForValue().get(key);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> User <span class="title function_">initCache</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">    <span class="comment">// 从数据库获取</span></span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userMapper.selectById(userId);</span><br><span class="line">    <span class="comment">// 同步到redis，设置过期时间</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getUserKey(userId);</span><br><span class="line">    redisTemplate.opsForValue().set(key, user, <span class="number">3600</span>, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">clearCache</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">    <span class="comment">// 当user改动时，直接从redis删除</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getUserKey(userId);</span><br><span class="line">    redisTemplate.delete(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<pre><code>- `selectById()`
+</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> User <span class="title function_">selectById</span><span class="params">(<span class="type">int</span> id)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> getCache(id);</span><br><span class="line">    <span class="keyword">if</span>(user == <span class="literal">null</span>)&#123;</span><br><span class="line">        user = initCache(id);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>UpdateHeader()</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title function_">UpdateHeader</span><span class="params">(<span class="type">int</span> userId, String headerUrl)</span>&#123;</span><br><span class="line">    UpdateWrapper&lt;User&gt; updateWrapper = <span class="keyword">new</span> <span class="title class_">UpdateWrapper</span>&lt;&gt;();</span><br><span class="line">    updateWrapper.set(<span class="string">&quot;header_url&quot;</span>, headerUrl).eq(<span class="string">&quot;id&quot;</span>, userId);</span><br><span class="line">    userMapper.update(updateWrapper);</span><br><span class="line">    <span class="comment">// 清掉该user缓存</span></span><br><span class="line">    clearCache(userId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="六、Redis缓存共享数据"><a href="#六、Redis缓存共享数据" class="headerlink" title="六、Redis缓存共享数据"></a>六、Redis缓存共享数据</h1><h2 id="6-1-缓存登陆凭证LoginTicket"><a href="#6-1-缓存登陆凭证LoginTicket" class="headerlink" title="6.1 缓存登陆凭证LoginTicket"></a>6.1 缓存登陆凭证LoginTicket</h2><h3 id="1-创建Redis-key值"><a href="#1-创建Redis-key值" class="headerlink" title="1. 创建Redis key值"></a>1. 创建Redis key值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_TICKET</span> <span class="operator">=</span> <span class="string">&quot;ticket&quot;</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 登陆凭证键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getTicketKey</span><span class="params">(String ticket)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_TICKET + SPLIT + ticket;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>数据结构：</strong></p>
+<ul>
+<li><strong>key值</strong>：ticket:ticketId（例如：ticket:59966fa3a40843b49cd54ce62cad67b1）</li>
+<li><strong>value值</strong>：loginTicket对象（序列化后的对象）</li>
+</ul>
+<h3 id="2-业务实现："><a href="#2-业务实现：" class="headerlink" title="2. 业务实现："></a>2. 业务实现：</h3><p><strong>处理逻辑：</strong></p>
+<ul>
+<li>登录方法：<ul>
+<li>创建登录凭证</li>
+<li>存储登录凭证</li>
+</ul>
+</li>
+<li>退出方法：<ul>
+<li>将凭证设置为失效</li>
+<li>更新缓存中的凭证</li>
+</ul>
+</li>
+</ul>
+<p><strong>代码实现：</strong></p>
+<ul>
+<li><code>login()</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">login</span><span class="params">(String username, String password, <span class="type">int</span> expiredSeconds)</span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="comment">// 创建凭证</span></span><br><span class="line">    <span class="type">LoginTicket</span> <span class="variable">loginTicket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LoginTicket</span>();</span><br><span class="line">    loginTicket.setUserId(u.getId());</span><br><span class="line">    loginTicket.setTicket(LinBlogUtil.generateUUID());</span><br><span class="line">    loginTicket.setStatus(<span class="number">0</span>);</span><br><span class="line">    loginTicket.setExpired(<span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + expiredSeconds * <span class="number">1000</span>));</span><br><span class="line">    <span class="comment">// 存储凭证</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getTicketKey(loginTicket.getTicket());</span><br><span class="line">    redisTemplate.opsForValue().set(key, loginTicket);</span><br><span class="line">    ......</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>logout()</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">logout</span><span class="params">(String ticket)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getTicketKey(ticket);</span><br><span class="line">    <span class="type">LoginTicket</span> <span class="variable">loginTicket</span> <span class="operator">=</span> (LoginTicket) redisTemplate.opsForValue().get(key);</span><br><span class="line">    <span class="comment">// 设置该凭证无效</span></span><br><span class="line">    loginTicket.setStatus(<span class="number">1</span>);</span><br><span class="line">    redisTemplate.opsForValue().set(key, loginTicket);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-2-缓存验证码"><a href="#6-2-缓存验证码" class="headerlink" title="6.2 缓存验证码"></a>6.2 缓存验证码</h2><p>见【03 - 2.2】</p>
+<h1 id="七、利用redis统计网站数据"><a href="#七、利用redis统计网站数据" class="headerlink" title="七、利用redis统计网站数据"></a>七、利用redis统计网站数据</h1><h2 id="7-1-功能分析"><a href="#7-1-功能分析" class="headerlink" title="7.1 功能分析"></a>7.1 功能分析</h2><ul>
+<li>统计网站<code>UV</code> 和 <code>DAU</code>：</li>
+</ul>
+<p><code>UV</code>：Unique Visitor独立访客，需通过<strong>访客用户的IP</strong>排重统计总数</p>
+<ul>
+<li>​	<strong>HyperLogLog</strong><ul>
+<li>是一种【统计基数】的数据集合类型，基于概率完成</li>
+</ul>
+</li>
+</ul>
+<p><code>DAU</code>：Daily Active User 日活跃用户，需要通过<strong>登录用户ID计算总数</strong></p>
+<ul>
+<li>​	<strong>BitMap</strong><ul>
+<li>String类型字符串，可以看成【byte数组】，通过最小的单元bit来进行0&#x2F;1的设置</li>
+<li>利用userId作为在bitmap中的下标，利用<code>0/1</code>来标识其是否访问</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-2-业务层实现"><a href="#7-2-业务层实现" class="headerlink" title="7.2 业务层实现"></a>7.2 业务层实现</h2><blockquote>
+<h5 id="完成记录和统计的逻辑"><a href="#完成记录和统计的逻辑" class="headerlink" title="完成记录和统计的逻辑"></a>完成记录和统计的逻辑</h5><ul>
+<li>利用HyperLogLog数据结构 &#x3D;&gt; 记录和统计<strong>UV</strong></li>
+<li>利用BitMap &#x3D;&gt; 记录和统计<strong>DAU</strong></li>
+</ul>
+</blockquote>
+<ol>
+<li>创建对应的Redis key值：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_UV</span> <span class="operator">=</span> <span class="string">&quot;uv&quot;</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX_DAU</span> <span class="operator">=</span> <span class="string">&quot;dau&quot;</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 单日UV键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getUVKey</span><span class="params">(String date)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_UV + SPLIT + date;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 区间UV键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getUVKey</span><span class="params">(String start, String end)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_UV + SPLIT + start + SPLIT + end;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 单日DAU键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getDAUKey</span><span class="params">(String date)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_DAU + SPLIT + date;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 区间DAU键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getDAUKey</span><span class="params">(String start, String end)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_DAU + SPLIT + start + SPLIT + end;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>记录单日UV和DAU到对应的数据结构中</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 记录UV</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">recordUV</span><span class="params">(String ip)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> RedisKeyUtil.getUVKey(dateFormat.format(<span class="keyword">new</span> <span class="title class_">Date</span>()));</span><br><span class="line">    <span class="comment">// 利用add保存用户IP方法</span></span><br><span class="line">    redisTemplate.opsForHyperLogLog().add(uvKey, ip);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 记录DAU</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">recordDAU</span><span class="params">(<span class="type">int</span> userId)</span>&#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getDAUKey(dateFormat.format(<span class="keyword">new</span> <span class="title class_">Date</span>()));</span><br><span class="line">    <span class="comment">// 在对应userId索引位置设置为1</span></span><br><span class="line">    redisTemplate.opsForValue().setBit(key, userId, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>统计一段时间内的UV和DAU</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 显示UV</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">showUV</span><span class="params">(Date start, Date end)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(start == <span class="literal">null</span> || end == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;参数不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 存储该日期范围内的key</span></span><br><span class="line">    List&lt;String&gt; keyList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="type">Calendar</span> <span class="variable">calendar</span> <span class="operator">=</span> Calendar.getInstance();</span><br><span class="line">    calendar.setTime(start);</span><br><span class="line">    <span class="keyword">while</span> (!calendar.getTime().after(end))&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getUVKey(dateFormat.format(calendar.getTime()));</span><br><span class="line">        calendar.add(Calendar.DATE, <span class="number">1</span>);</span><br><span class="line">        keyList.add(key); <span class="comment">// 添加该日期内的key值</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 存储合并数据的key值</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">redisKey</span> <span class="operator">=</span> RedisKeyUtil.getUVKey(dateFormat.format(start), dateFormat.format(end));</span><br><span class="line">    <span class="comment">// union() 合并多个key值对应的数据</span></span><br><span class="line">    redisTemplate.opsForHyperLogLog().union(redisKey, keyList.toArray());</span><br><span class="line">    <span class="comment">// size()统计去重后的结果</span></span><br><span class="line">    <span class="keyword">return</span> redisTemplate.opsForHyperLogLog().size(redisKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 展示DAU</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">long</span> <span class="title function_">showDAU</span><span class="params">(Date start, Date end)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(start == <span class="literal">null</span> || end == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;参数不能为空&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 存储该日期范围内的key</span></span><br><span class="line">    List&lt;<span class="type">byte</span>[]&gt; keyList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="type">Calendar</span> <span class="variable">calendar</span> <span class="operator">=</span> Calendar.getInstance();</span><br><span class="line">    calendar.setTime(start);</span><br><span class="line">    <span class="keyword">while</span> (!calendar.getTime().after(end))&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getDAUKey(dateFormat.format(calendar.getTime()));</span><br><span class="line">        calendar.add(Calendar.DATE, <span class="number">1</span>);</span><br><span class="line">        keyList.add(key.getBytes());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (<span class="type">long</span>) redisTemplate.execute(<span class="keyword">new</span> <span class="title class_">RedisCallback</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Object <span class="title function_">doInRedis</span><span class="params">(RedisConnection connection)</span> <span class="keyword">throws</span> DataAccessException &#123;</span><br><span class="line">            <span class="comment">// 合并数据后的key值</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">redisKey</span> <span class="operator">=</span> RedisKeyUtil.getDAUKey(dateFormat.format(start), dateFormat.format(end));</span><br><span class="line">            <span class="comment">// or运算 统计这段时间的活跃用户</span></span><br><span class="line">            connection.bitOp(RedisStringCommands.BitOperation.OR, redisKey.getBytes(), keyList.toArray(<span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">0</span>][<span class="number">0</span>]));</span><br><span class="line">            <span class="keyword">return</span> connection.bitCount(redisKey.getBytes());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-3-拦截器实现：负责记录UV和DAU"><a href="#7-3-拦截器实现：负责记录UV和DAU" class="headerlink" title="7.3 拦截器实现：负责记录UV和DAU"></a>7.3 拦截器实现：负责记录UV和DAU</h2><p>UV和DAU怎么获取？</p>
+<ul>
+<li>拦截每一次请求来记录有效的数据 &#x3D;&#x3D;&gt; 拦截器</li>
+</ul>
+<ol>
+<li>新建拦截器 <code>DataInterceptor</code>：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> DataService dataService;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> HostHolder hostHolder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 利用request获取用户IP</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">ip</span> <span class="operator">=</span> request.getRemoteHost();</span><br><span class="line">        <span class="comment">// 记录IP</span></span><br><span class="line">        dataService.recordUV(ip);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取登录用户</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> hostHolder.getUser();</span><br><span class="line">        <span class="keyword">if</span>(user != <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="comment">// 记录DAU</span></span><br><span class="line">            dataService.recordDAU(user.getId());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>注册拦截器：<code>WebMvcConfig.java</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> DataInterceptor dataInterceptor;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">    registry.addInterceptor(dataInterceptor)</span><br><span class="line">            .excludePathPatterns(<span class="string">&quot;/**/*.css&quot;</span>, <span class="string">&quot;/**/*.js&quot;</span>, <span class="string">&quot;/**/*.png&quot;</span>, <span class="string">&quot;/**/*.jpg&quot;</span>, <span class="string">&quot;/**/*.jpeg&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-4-表现层：展示数据"><a href="#7-4-表现层：展示数据" class="headerlink" title="7.4 表现层：展示数据"></a>7.4 表现层：展示数据</h2><ul>
+<li>在controller调用业务层的<code>show()</code>方法展示统计结果</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://12wj.github.io/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA04-%E2%80%94%E2%80%94-Redis%E5%BA%94%E7%94%A8/">https://12wj.github.io/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA04-%E2%80%94%E2%80%94-Redis%E5%BA%94%E7%94%A8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA05-%E2%80%94%E2%80%94-Kafak%E5%BA%94%E7%94%A8/">仿牛客社区05 —— Kafak应用</a>
+            
+            
+            <a class="next" rel="next" href="/2024/08/29/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA03-%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD/">仿牛客社区03 —— 开发核心功能</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

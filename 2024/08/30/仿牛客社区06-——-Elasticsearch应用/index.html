@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lin">
+
+
+
+
+
+<title>仿牛客社区06 —— Elasticsearch应用 | 12wj</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">仿牛客社区06 —— Elasticsearch应用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 30, 2024&nbsp;&nbsp;18:21:55</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>本章需要完成：</p>
+<ul>
+<li>利用elasticsearch实现首页帖子<strong>搜索</strong>功能。</li>
+</ul>
+</blockquote>
+<h1 id="一、Elasticsearch简介"><a href="#一、Elasticsearch简介" class="headerlink" title="一、Elasticsearch简介"></a>一、Elasticsearch简介</h1><ul>
+<li>Elasticsearch是一个分布式的、Restful风格的搜索引擎</li>
+<li>支持对各种类型数据的检索</li>
+<li>搜索速度快，可以提供实时的搜索服务</li>
+<li>便于水平扩展</li>
+</ul>
+<p>常见术语（与数据库进行对比）：</p>
+<ul>
+<li><strong>索引</strong> &#x3D;&gt; 一个索引相当于一个表</li>
+<li><del>类型 &#x3D;&gt; 一个类型相当于一个表</del></li>
+<li><strong>文档</strong> &#x3D;&gt; 一个文档相当于一行记录（每一条数据就是一个文档）</li>
+<li><strong>字段</strong> &#x3D;&gt; 一个字段相当于一列</li>
+</ul>
+<p><strong>基本概念：</strong></p>
+<ol>
+<li><p><strong>文档和字段</strong>：</p>
+<p>elasticsearch是<strong>面向文档（Document）存储的</strong>，可以是数据库中的一条商品数据，一个订单信息。文档数据会被序列化为<strong>json</strong>格式后存储在elasticsearch中：</p>
+</li>
+</ol>
+<img src="https://img2023.cnblogs.com/blog/2729274/202302/2729274-20230205171811564-2114810461.png" alt="image" style="zoom: 50%;" />
+
+<ol start="2">
+<li><p><strong>索引和映射</strong>：</p>
+<p><strong>索引（Index）</strong>，就是相同类型的文档的集合【<strong>类似mysql中的表</strong>】</p>
+<ul>
+<li>所有用户文档组成起来就是用户的索引</li>
+</ul>
+<p>数据库的表会有约束信息，用来定义表的结构、字段的名称、类型等信息。因此，索引库中就有<strong>映射（mapping）</strong>，是索引中文档的字段约束信息，类似表的结构约束。</p>
+</li>
+</ol>
+<h1 id="二、ES的安装"><a href="#二、ES的安装" class="headerlink" title="二、ES的安装"></a>二、ES的安装</h1><h2 id="2-1-安装-Elasticsearch"><a href="#2-1-安装-Elasticsearch" class="headerlink" title="2.1 安装 Elasticsearch"></a>2.1 安装 Elasticsearch</h2><blockquote>
+<p><strong>中文文档：</strong><a target="_blank" rel="noopener" href="https://elasticsearch.bookhub.tech/getting_started/install">启动并运行 Elasticsearch | Elasticsearch 中文文档 (bookhub.tech)</a></p>
+</blockquote>
+<h3 id="2-1-1-下载安装包"><a href="#2-1-1-下载安装包" class="headerlink" title="2.1.1 下载安装包"></a>2.1.1 下载安装包</h3><p>进入官网查看与springboot适配的版本<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-data/elasticsearch/reference/elasticsearch/versions.html">Versions :: Spring Data Elasticsearch</a>，下载elasticsearch-8.11.1版本</p>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822101505544.png" alt="image-20240822101505544" style="zoom:67%;" />
+
+
+
+
+
+<h3 id="2-1-2-配置文件"><a href="#2-1-2-配置文件" class="headerlink" title="2.1.2 配置文件"></a>2.1.2 配置文件</h3><p>配置文件：安装路径下的<code>elasticsearch-8.11.1/config/elasticsearch.yml</code></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ---------------------------------- Cluster -----------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Use a descriptive name for your cluster:</span></span><br><span class="line"><span class="comment"># 指定集群名称</span></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">linBlog</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># ----------------------------------- Paths ------------------------------------</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Path to directory where to store the data (separate multiple locations by comma):</span></span><br><span class="line"><span class="comment"># 索引数据存储路径</span></span><br><span class="line"><span class="attr">path.data:</span> <span class="string">d:\soft\data\elasticsearch-8.11.1\data</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Path to log files:</span></span><br><span class="line"><span class="comment"># 日志文件存储路径</span></span><br><span class="line"><span class="attr">path.logs:</span> <span class="string">d:\soft\data\elasticsearch-8.11.1\logs</span></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：elasticsearch的安全模式默认打开，请求协议为https，访问地址为<a target="_blank" rel="noopener" href="https://localhost:9200/">https://localhost:9200/</a></p>
+<ul>
+<li>修改安全模式：(改为false即可)</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Enable security features</span></span><br><span class="line"><span class="attr">xpack.security.enabled:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-1-3-配置环境变量"><a href="#2-1-3-配置环境变量" class="headerlink" title="2.1.3 配置环境变量"></a>2.1.3 配置环境变量</h3><ul>
+<li>新建path系统变量：<ul>
+<li><code>D:\soft\elasticsearch-8.11.1\bin</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="2-2-启动elasticsearch服务"><a href="#2-2-启动elasticsearch服务" class="headerlink" title="2.2  启动elasticsearch服务"></a>2.2  启动elasticsearch服务</h2><h3 id="2-2-1-命令行执行elasticsearch-bat"><a href="#2-2-1-命令行执行elasticsearch-bat" class="headerlink" title="2.2.1 命令行执行elasticsearch.bat"></a>2.2.1 命令行执行<code>elasticsearch.bat</code></h3><h4 id="执行异常情况："><a href="#执行异常情况：" class="headerlink" title="执行异常情况："></a>执行异常情况：</h4><p><strong>报错情况一：</strong></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">warning: <span class="title">ignoring</span> <span class="title">JAVA_HOME</span>=<span class="title">D</span>:\<span class="title">soft</span>\<span class="title">Java</span>\<span class="title">jdk1</span>.8; <span class="title">using</span> <span class="title">bundled</span> <span class="title">JDK</span></span></span><br><span class="line"><span class="function"><span class="title">Exception</span> <span class="title">in</span> <span class="title">thread</span> &quot;<span class="title">main</span>&quot; <span class="title">org.elasticsearch.ElasticsearchParseException</span>: <span class="title">malformed</span>, <span class="title">expected</span> <span class="title">end</span> <span class="title">of</span> <span class="title">settings</span> <span class="title">but</span> <span class="title">encountered</span> <span class="title">additional</span> <span class="title">content</span> <span class="title">starting</span> <span class="title">at</span> <span class="title">line</span> <span class="title">number</span>: [92], <span class="title">column</span> <span class="title">number</span>: [1]</span></span><br><span class="line"><span class="function">        <span class="title">at</span> <span class="title">org.elasticsearch.common.settings.Settings.fromXContent</span>(<span class="title">Settings.java</span>:749)</span></span><br><span class="line"><span class="function">		……</span></span><br><span class="line"><span class="function">		……</span></span><br><span class="line"><span class="function"><span class="title">Caused</span> <span class="title">by</span>: <span class="title">org.elasticsearch.xcontent.XContentParseException</span>: [92:1] <span class="title">expected</span> &#x27;&lt;<span class="title">document</span> <span class="title">start</span>&gt;&#x27;, <span class="title">but</span> <span class="title">found</span> &#x27;&lt;<span class="title">block</span> <span class="title">mapping</span> <span class="title">start</span>&gt;&#x27;</span></span><br><span class="line"><span class="function"> <span class="title">in</span> &#x27;<span class="title">reader</span>&#x27;, <span class="title">line</span> 92, <span class="title">column</span> 1:</span></span><br><span class="line"><span class="function">    <span class="title">xpack.security.enabled</span>: <span class="title">true</span></span></span><br><span class="line"><span class="function">    ^</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"> <span class="title">at</span> [<span class="title">Source</span>: (<span class="title">ByteArrayInputStream</span>); <span class="title">line</span>: 92, <span class="title">column</span>: 1]</span></span><br><span class="line"><span class="function">		……</span></span><br><span class="line"><span class="function">		……</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>分析</strong>：解析配置文件92行附近时出现意外</li>
+<li><strong>原因</strong>：<code>elasticsearch.yml</code>格式不对<ul>
+<li>缩进错误，再修改配置文件时不能增加额外的缩进，yaml对缩进非常敏感，会导致解析错误</li>
+</ul>
+</li>
+</ul>
+<p><strong>报错情况二：</strong></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">2024</span>-<span class="number">08</span>-<span class="number">21</span>T21:<span class="number">46</span>:<span class="number">21</span>,<span class="number">519</span>][ERROR][o.e.b.Elasticsearch      ] [LAPTOP-<span class="number">7</span>C28CL47] fatal exception while booting Elasticsearch</span><br><span class="line"><span class="function">java.nio.file.NoSuchFileException: <span class="title">D</span>:\<span class="title">soft</span>\<span class="title">Java</span>\<span class="title">jdk17</span>\<span class="title">lib</span>\<span class="title">dt.jar</span></span></span><br><span class="line"><span class="function">	<span class="title">at</span> <span class="title">sun.nio.fs.WindowsException.translateToIOException</span>(<span class="title">WindowsException.java</span>:85) ~[?:?]</span></span><br><span class="line"><span class="function">	<span class="title">at</span> </span></span><br></pre></td></tr></table></figure>
+
+<p><strong>原因</strong>：elasticsearch7.0以上都有内置的jdk，但是es默认启动时首先找系统安装的jdk，没有时再使用自带的jdk。因此当本地安装jdk时，反而会出现本地jdk与es内置jdk版本不一致问题，导致es无法启动。（嗯嗯嗯好奇怪）</p>
+<ul>
+<li>在<code>D:\soft\elasticsearch-8.11.1\bin\elasticsearch-env.bat</code>文件下找到dk的选择方法：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">if</span> <span class="string">defined</span> <span class="string">ES_JAVA_HOME</span> <span class="string">(</span></span><br><span class="line">  <span class="string">set</span> <span class="string">JAVA=&quot;%ES_JAVA_HOME%\bin\java.exe&quot;</span></span><br><span class="line">  <span class="string">set</span> <span class="string">JAVA_TYPE=ES_JAVA_HOME</span></span><br><span class="line"></span><br><span class="line">  <span class="string">if</span> <span class="string">not</span> <span class="string">exist</span> <span class="type">!JAVA</span><span class="string">!</span> <span class="string">(</span></span><br><span class="line">    <span class="string">echo</span> <span class="string">&quot;could not find java in !JAVA_TYPE! at !JAVA!&quot;</span> <span class="string">&gt;&amp;2</span></span><br><span class="line">    <span class="string">exit</span> <span class="string">/b</span> <span class="number">1</span></span><br><span class="line">  <span class="string">)</span></span><br><span class="line"></span><br><span class="line">  <span class="string">rem</span> <span class="string">check</span> <span class="string">the</span> <span class="string">user</span> <span class="string">supplied</span> <span class="string">jdk</span> <span class="string">version</span></span><br><span class="line">  <span class="type">!JAVA</span><span class="string">!</span> <span class="string">-cp</span> <span class="string">&quot;%ES_HOME%\lib\java-version-checker\*&quot;</span> <span class="string">&quot;org.elasticsearch.tools.java_version_checker.JavaVersionChecker&quot;</span> <span class="string">||</span> <span class="string">exit</span> <span class="string">/b</span> <span class="number">1</span></span><br><span class="line"><span class="string">)</span> <span class="string">else</span> <span class="string">(</span></span><br><span class="line">  <span class="string">rem</span> <span class="string">use</span> <span class="string">the</span> <span class="string">bundled</span> <span class="string">JDK</span> <span class="string">(default)</span></span><br><span class="line">  <span class="string">set</span> <span class="string">JAVA=&quot;%ES_HOME%\jdk\bin\java.exe&quot;</span></span><br><span class="line">  <span class="string">set</span> <span class="string">&quot;ES_JAVA_HOME=%ES_HOME%\jdk&quot;</span></span><br><span class="line">  <span class="string">set</span> <span class="string">JAVA_TYPE=bundled</span> <span class="string">JDK</span></span><br><span class="line"><span class="string">)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>解决方法：</strong></p>
+<ol>
+<li><p>添加<em>ES_JAVA_HOME</em>环境变量：把ES_JAVA_HOME直接<strong>指向内置的jdk路径</strong>，或者<strong>本地的jdk17路径</strong></p>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822120105020.png" alt="image-20240822120105020" style="zoom: 67%;" />
+</li>
+<li><p>把判断条件删除，直接使用ES_HOME，指定为ES的安装路径</p>
+</li>
+</ol>
+<h4 id="执行成功情况："><a href="#执行成功情况：" class="headerlink" title="执行成功情况："></a>执行成功情况：</h4><img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822120553321.png" alt="image-20240822120553321" style="zoom:67%;" />
+
+<p>访问<a target="_blank" rel="noopener" href="https://localhost:9200/%EF%BC%8C%E6%8F%90%E7%A4%BA%E8%BE%93%E5%85%A5%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81%EF%BC%88%E7%B1%BB%E4%BC%BC%E4%BA%8Emysql%E7%9A%84root%E7%94%A8%E6%88%B7%EF%BC%89">https://localhost:9200/，提示输入账号和密码（类似于mysql的root用户）</a></p>
+<p>首次启动会显示用户密码：</p>
+<p>​	user：elastic</p>
+<p>​	password：FO0F4t+9GlGWmYLhnBRi</p>
+<blockquote>
+<p>首次执行后忘记密码，可以将es的索引数据data删除（风险大），再次运行时则会初始化显示密码并提示修改密码指令。</p>
+</blockquote>
+<p>访问后成功显示：</p>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822121101217.png" alt="image-20240822121101217" style="zoom:67%;" /> 
+
+
+
+<h2 id="2-3-安装中文分词插件"><a href="#2-3-安装中文分词插件" class="headerlink" title="2.3 安装中文分词插件"></a>2.3 安装中文<strong>分词</strong>插件</h2><h3 id="2-3-1-选择ik版本"><a href="#2-3-1-选择ik版本" class="headerlink" title="2.3.1  选择ik版本"></a>2.3.1  选择ik版本</h3><p>进入<a target="_blank" rel="noopener" href="https://github.com/infinilabs/analysis-ik/releases">https://github.com/infinilabs/analysis-ik/releases</a> release查看与ES对应的ik版本，并将其安装到plugins目录下：</p>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822121355466.png" alt="image-20240822121355466" style="zoom:67%;" /> 
+
+
+
+
+
+<h1 id="三、运行Elasticsearch"><a href="#三、运行Elasticsearch" class="headerlink" title="三、运行Elasticsearch"></a>三、运行Elasticsearch</h1><h2 id="3-1-采用cURL命令与ES交互"><a href="#3-1-采用cURL命令与ES交互" class="headerlink" title="3.1 采用cURL命令与ES交互"></a>3.1 采用cURL命令与ES交互</h2><p>从命令行对elasticsearch实例请求访问：</p>
+<p><code>curl -X&lt;VERB&gt; &#39;&lt;PROTOCOL&gt;://&lt;HOST&gt;:&lt;PORT&gt;/&lt;PATH&gt;?&lt;QUERY_STRING&gt;&#39; -d &#39;&lt;BODY&gt;&#39;</code> </p>
+<ul>
+<li><code>&lt;VERB&gt; </code> ：合适的HTTP操作，如GET、POST、PUT、DELETE</li>
+<li><code>&lt;PROTOCOL&gt;</code>：<code>http</code>或<code>https</code></li>
+<li><code>&lt;HOST&gt;</code>：es集群上的任意节点主机名，对本地机器上的节点使用localhost</li>
+<li><code>&lt;PORT&gt;</code>：端口，一般是9200</li>
+<li><code>&lt;PATH&gt;</code>：API路径</li>
+<li><code>&lt;QUERY_STRING&gt;</code>：一些可选的查询字符串参数。比如，?pretty 将打印 JSON 响应以使其更易阅读，?v显示标题。</li>
+<li><code>&lt;BODY&gt;</code>：JSON编码的请求体</li>
+</ul>
+<p>例：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 查看当前集群的健康状态</span><br><span class="line"><span class="function">C:\<span class="title">Users</span>\白桃&gt;<span class="title">curl</span> -<span class="title">X</span> <span class="title">GET</span> &quot;<span class="title">http</span>://<span class="title">localhost</span>:9200/<span class="title">_cat</span>/<span class="title">health</span>?<span class="title">v</span>&quot;  </span></span><br><span class="line"><span class="function"><span class="title">epoch</span>      <span class="title">timestamp</span> <span class="title">cluster</span> <span class="title">status</span> <span class="title">node.total</span> <span class="title">node.data</span> <span class="title">shards</span> <span class="title">pri</span> <span class="title">relo</span> <span class="title">init</span> <span class="title">unassign</span> <span class="title">pending_tasks</span> <span class="title">max_task_wait_time</span> <span class="title">active_shards_percent</span></span></span><br><span class="line"><span class="function">1724300528 04:22:08  <span class="title">linBlog</span> <span class="title">green</span>           1         1      1   1    0    0        0             0                  -                100.0%</span></span><br><span class="line"><span class="function"># 查看节点</span></span><br><span class="line"><span class="function"><span class="title">C</span>:\<span class="title">Users</span>\白桃&gt;<span class="title">curl</span> -<span class="title">X</span> <span class="title">GET</span> &quot;<span class="title">http</span>://<span class="title">localhost</span>:9200/<span class="title">_cat</span>/<span class="title">nodes</span>?<span class="title">v</span>&quot;</span></span><br><span class="line"><span class="function"><span class="title">ip</span>        <span class="title">heap.percent</span> <span class="title">ram.percent</span> <span class="title">cpu</span> <span class="title">load_1m</span> <span class="title">load_5m</span> <span class="title">load_15m</span> <span class="title">node.role</span>   <span class="title">master</span> <span class="title">name</span></span></span><br><span class="line"><span class="function">127.0.0.1            7          83  77                          <span class="title">cdfhilmrstw</span> *      <span class="title">LAPTOP</span>-7<span class="title">C28CL47</span></span></span><br><span class="line"><span class="function"># 查看索引</span></span><br><span class="line"><span class="function"><span class="title">C</span>:\<span class="title">Users</span>\白桃&gt;<span class="title">curl</span> -<span class="title">X</span> <span class="title">GET</span> &quot;<span class="title">http</span>://<span class="title">localhost</span>:9200/<span class="title">_cat</span>/<span class="title">indices</span>?<span class="title">v</span>&quot;</span></span><br><span class="line"><span class="function"><span class="title">health</span> <span class="title">status</span> <span class="title">index</span> <span class="title">uuid</span> <span class="title">pri</span> <span class="title">rep</span> <span class="title">docs.count</span> <span class="title">docs.deleted</span> <span class="title">store.size</span> <span class="title">pri.store.size</span> <span class="title">dataset.size</span></span></span><br><span class="line"><span class="function"># 新建<span class="title">test</span>索引</span></span><br><span class="line"><span class="function"><span class="title">C</span>:\<span class="title">Users</span>\白桃&gt;<span class="title">curl</span> -<span class="title">X</span> <span class="title">PUT</span> &quot;<span class="title">http</span>://<span class="title">localhost</span>:9200/<span class="title">test</span>&quot;</span></span><br><span class="line"><span class="function">&#123;&quot;<span class="title">acknowledged</span>&quot;:<span class="title">true</span>,&quot;<span class="title">shards_acknowledged</span>&quot;:<span class="title">true</span>,&quot;<span class="title">index</span>&quot;:&quot;<span class="title">test</span>&quot;&#125;</span></span><br><span class="line"><span class="function"><span class="title">C</span>:\<span class="title">Users</span>\白桃&gt;<span class="title">curl</span> -<span class="title">X</span> <span class="title">GET</span> &quot;<span class="title">http</span>://<span class="title">localhost</span>:9200/<span class="title">_cat</span>/<span class="title">indices</span>?<span class="title">v</span>&quot;</span></span><br><span class="line"><span class="function"><span class="title">health</span> <span class="title">status</span> <span class="title">index</span> <span class="title">uuid</span>                   <span class="title">pri</span> <span class="title">rep</span> <span class="title">docs.count</span> <span class="title">docs.deleted</span> <span class="title">store.size</span> <span class="title">pri.store.size</span> <span class="title">dataset.size</span></span></span><br><span class="line"><span class="function"><span class="title">yellow</span> <span class="title">open</span>   <span class="title">test</span>  <span class="title">dEUT4gt8SsuKhk7pNZ3QDQ</span>   1   1          0            0       227<span class="title">b</span>           227<span class="title">b</span>         227<span class="title">b</span></span></span><br><span class="line"><span class="function"># 删除<span class="title">test</span>节点</span></span><br><span class="line"><span class="function"><span class="title">C</span>:\<span class="title">Users</span>\白桃&gt;<span class="title">curl</span> -<span class="title">X</span> <span class="title">DELETE</span> &quot;<span class="title">http</span>://<span class="title">localhost</span>:9200/<span class="title">test</span>&quot;</span></span><br><span class="line"><span class="function">&#123;&quot;<span class="title">acknowledged</span>&quot;:<span class="title">true</span>&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-2-利用postman请求ES"><a href="#3-2-利用postman请求ES" class="headerlink" title="3.2 利用postman请求ES"></a>3.2 利用postman请求ES</h2><ol>
+<li><p>指定索引中<strong>添加</strong>文档：</p>
+<blockquote>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822155857787.png" alt="image-20240822155857787" style="zoom: 67%;" /> 
+</blockquote>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT</span><br><span class="line"><span class="function">localhost:9200/<span class="title">test</span>/<span class="title">_doc</span>/1</span></span><br><span class="line"><span class="function">&#123;</span></span><br><span class="line"><span class="function">    &quot;<span class="title">title</span>&quot;:&quot;<span class="title">hello</span>&quot;,</span></span><br><span class="line"><span class="function">    &quot;<span class="title">content</span>&quot;:&quot;<span class="title">how</span> <span class="title">are</span> <span class="title">you</span>?&quot;</span></span><br><span class="line"><span class="function">&#125; </span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>查看索引中的文档</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET</span><br><span class="line"><span class="function">localhost:9200/<span class="title">test</span>/<span class="title">_doc</span>/1</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>删除索引中的文档</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DELETE</span><br><span class="line"><span class="function">localhost:9200/<span class="title">test</span>/<span class="title">_doc</span>/1</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="3-3-利用ES实现搜索功能"><a href="#3-3-利用ES实现搜索功能" class="headerlink" title="3.3 利用ES实现搜索功能"></a>3.3 利用ES实现搜索功能</h2><blockquote>
+<p>es自动使用ik插件进行中文分词</p>
+</blockquote>
+<ul>
+<li><p>请求方式一：匹配一个字段</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET</span><br><span class="line"><span class="function">localhost:9200/<span class="title">test</span>/<span class="title">_search</span>?<span class="title">q</span>=<span class="title">content</span>:运营实习</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;took&quot;</span><span class="punctuation">:</span> <span class="number">6</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timed_out&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;_shards&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;successful&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;skipped&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;failed&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;hits&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;relation&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eq&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;max_score&quot;</span><span class="punctuation">:</span> <span class="number">2.4216063</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;hits&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;_index&quot;</span><span class="punctuation">:</span> <span class="string">&quot;test&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="number">2.4216063</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;互联网秋招&quot;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;寻找运营岗&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;_index&quot;</span><span class="punctuation">:</span> <span class="string">&quot;test&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;3&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="number">1.5713673</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;互联网校招&quot;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;寻找一名时间充裕的在校时实习生&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>请求方式二：匹配多个字段（利用json转递数据）</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET</span><br><span class="line"><span class="function">localhost:9200/<span class="title">test</span>/<span class="title">_search</span></span></span><br><span class="line"><span class="function">&#123;</span></span><br><span class="line"><span class="function">    &quot;<span class="title">query</span>&quot;:&#123;</span></span><br><span class="line"><span class="function">        &quot;<span class="title">multi_match</span>&quot;:&#123;</span></span><br><span class="line"><span class="function">            &quot;<span class="title">query</span>&quot;:&quot;互联网校招&quot;,</span></span><br><span class="line"><span class="function">            &quot;<span class="title">fields</span>&quot;:[&quot;<span class="title">title</span>&quot;, &quot;<span class="title">content</span>&quot;]      </span></span><br><span class="line"><span class="function">        &#125;</span></span><br><span class="line"><span class="function">    &#125;</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>响应：</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;took&quot;</span><span class="punctuation">:</span> <span class="number">17</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timed_out&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;_shards&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;successful&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;skipped&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;failed&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;hits&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;total&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;value&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;relation&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eq&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;max_score&quot;</span><span class="punctuation">:</span> <span class="number">1.5149547</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;hits&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;_index&quot;</span><span class="punctuation">:</span> <span class="string">&quot;test&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;3&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="number">1.5149547</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;互联网校招&quot;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;寻找一名时间充裕的在校时实习生&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;_index&quot;</span><span class="punctuation">:</span> <span class="string">&quot;test&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="number">0.53412557</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;互联网秋招&quot;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;寻找运营岗&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;_index&quot;</span><span class="punctuation">:</span> <span class="string">&quot;test&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2&quot;</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_score&quot;</span><span class="punctuation">:</span> <span class="number">0.53412557</span><span class="punctuation">,</span></span><br><span class="line">                <span class="attr">&quot;_source&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;互联网招聘&quot;</span><span class="punctuation">,</span></span><br><span class="line">                    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;寻找资深的程序员&quot;</span></span><br><span class="line">                <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="四、Spring整合Elasticsearch"><a href="#四、Spring整合Elasticsearch" class="headerlink" title="四、Spring整合Elasticsearch"></a>四、Spring整合Elasticsearch</h1><h2 id="4-1-引入依赖"><a href="#4-1-引入依赖" class="headerlink" title="4.1 引入依赖"></a>4.1 引入依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-elasticsearch<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查看父类pom指定版本为：3.3.2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">&lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;</span><br><span class="line">&lt;version&gt;3.3.2&lt;/version&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>【这里给我后面埋下了一个大坑，版本有点新，没有文档只有源码可以看，跟搜到的教程api对不上，很头疼】</p>
+<h2 id="4-2-配置Elasticsearch"><a href="#4-2-配置Elasticsearch" class="headerlink" title="4.2 配置Elasticsearch"></a>4.2 配置Elasticsearch</h2><blockquote>
+<p>application.properties</p>
+</blockquote>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># elasticsearchProperties</span></span><br><span class="line"><span class="attr">spring.elasticsearch.uris</span>=<span class="string">http://localhost:9200</span></span><br><span class="line"><span class="attr">spring.elasticsearch.username</span>=<span class="string">elastic</span></span><br><span class="line"><span class="attr">spring.elasticsearch.password</span>=<span class="string">FO0F4t+9GlGWmYLhnBRi</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-3-spring提供的Elasticsearch-API"><a href="#4-3-spring提供的Elasticsearch-API" class="headerlink" title="4.3 spring提供的Elasticsearch API"></a>4.3 spring提供的Elasticsearch API</h2><ul>
+<li>spring提供关于ES的API为<code>Spring Data Elasticsearch</code> ：<ul>
+<li><code>ElasticsearchRepository</code>接口</li>
+<li><code>ElasticsearchTemplate</code>类</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-3-1-实体类操作"><a href="#4-3-1-实体类操作" class="headerlink" title="4.3.1 实体类操作"></a>4.3.1 实体类操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@TableName(&quot;discuss_post&quot;)</span></span><br><span class="line"><span class="meta">@Document(indexName = &quot;discuss_post&quot;)</span>	<span class="comment">// 指定索引为discuss_post</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DiscussPost</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TableId(value=&quot;id&quot;, type = IdType.AUTO)</span></span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;user_id&quot;, type = FieldType.Integer)</span></span><br><span class="line">    <span class="keyword">private</span> Integer userId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(type = FieldType.Text, analyzer = &quot;ik_max_word&quot;, searchAnalyzer = &quot;ik_smart&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(type = FieldType.Text, analyzer = &quot;ik_max_word&quot;, searchAnalyzer = &quot;ik_smart&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(type = FieldType.Integer)</span></span><br><span class="line">    <span class="keyword">private</span> Integer type;   <span class="comment">// 0-普通; 1-置顶;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(type = FieldType.Integer)</span></span><br><span class="line">    <span class="keyword">private</span> Integer status; <span class="comment">// 0-正常; 1-精华; 2-拉黑;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;create_time&quot;, type = FieldType.Date)</span></span><br><span class="line">    <span class="keyword">private</span> LocalDate createTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(name = &quot;comment_count&quot;, type = FieldType.Integer)</span></span><br><span class="line">    <span class="keyword">private</span> Integer commentCount;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Field(type = FieldType.Double)</span></span><br><span class="line">    <span class="keyword">private</span> Double score;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-3-2-创建一个类继承ElasticsearchRepository接口"><a href="#4-3-2-创建一个类继承ElasticsearchRepository接口" class="headerlink" title="4.3.2 创建一个类继承ElasticsearchRepository接口"></a>4.3.2 创建一个类继承<code>ElasticsearchRepository</code>接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">DiscussPostRepository</span> <span class="keyword">extends</span> <span class="title class_">ElasticsearchRepository</span>&lt;DiscussPost, Integer&gt; &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="4-3-3-测试ES增删改查、搜索方法"><a href="#4-3-3-测试ES增删改查、搜索方法" class="headerlink" title="4.3.3  测试ES增删改查、搜索方法"></a>4.3.3  测试ES增删改查、搜索方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">elasticsearchTest</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> DiscussPostMapper discussPostMapper;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> DiscussPostRepository discussPostRepository;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> ElasticsearchTemplate elasticsearchTemplate;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testInsert</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">// 使用discussPostRepository的save()或saveAll()方法保存数据到ES服务器</span></span><br><span class="line">		<span class="comment">// discussPostRepository.save(discussPostMapper.selectById(241));</span></span><br><span class="line">        discussPostRepository.saveAll(discussPostMapper.selectList(<span class="literal">null</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testDelete</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">// 使用discussPostRepository的[deleteById]API删除ES服务器上的数据</span></span><br><span class="line">        discussPostRepository.deleteById(<span class="number">243</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testUpdate</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">DiscussPost</span> <span class="variable">discussPost</span> <span class="operator">=</span> discussPostMapper.selectById(<span class="number">243</span>);</span><br><span class="line">        discussPost.setContent(<span class="string">&quot;秋招正来临&quot;</span>);</span><br><span class="line">        <span class="comment">// 修改ES服务器上的数据 =&gt; 直接把修改后的实体重新save保存即可</span></span><br><span class="line">        discussPostRepository.save(discussPost);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>对ES服务器上的数据进行<strong>搜索</strong>操作：</p>
+<ul>
+<li>难点在于<strong>构建查询条件</strong></li>
+<li>因为版本的更新很多API对不上，只能查看源码进行操作</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSearchByRepository</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 使用QueryBuilders构建布尔查询，指定匹配title和content字段</span></span><br><span class="line">   <span class="type">Query</span> <span class="variable">query</span> <span class="operator">=</span> QueryBuilders.bool()</span><br><span class="line">            .should(QueryBuilders.match(m -&gt; m</span><br><span class="line">                    .field(<span class="string">&quot;title&quot;</span>)</span><br><span class="line">                    .query(<span class="string">&quot;互联网&quot;</span>)</span><br><span class="line">            ))</span><br><span class="line">            .should(QueryBuilders.match(m -&gt; m</span><br><span class="line">                    .field(<span class="string">&quot;content&quot;</span>)</span><br><span class="line">                    .query(<span class="string">&quot;互联网&quot;</span>)</span><br><span class="line">            )).build()._toQuery();</span><br><span class="line">    <span class="comment">// 设置高亮参数配置</span></span><br><span class="line">   <span class="type">HighlightParameters</span> <span class="variable">parameters</span> <span class="operator">=</span> HighlightParameters.builder()</span><br><span class="line">           .withPreTags(<span class="string">&quot;&lt;em&gt;&quot;</span>)</span><br><span class="line">           .withPostTags(<span class="string">&quot;&lt;/em&gt;&quot;</span>)</span><br><span class="line">           .build();</span><br><span class="line">    <span class="comment">// 创建highlight对象 指定高亮字段title和content</span></span><br><span class="line">   <span class="type">Highlight</span> <span class="variable">highlight</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Highlight</span>(parameters, List.of(</span><br><span class="line">           <span class="keyword">new</span> <span class="title class_">HighlightField</span>(<span class="string">&quot;title&quot;</span>),</span><br><span class="line">           <span class="keyword">new</span> <span class="title class_">HighlightField</span>(<span class="string">&quot;content&quot;</span>)</span><br><span class="line">   ));</span><br><span class="line">    <span class="comment">// 构建查询，添加query和highlight，并设置排序条件</span></span><br><span class="line">    <span class="type">NativeQuery</span> <span class="variable">nativeQuery</span> <span class="operator">=</span> NativeQuery.builder()</span><br><span class="line">            .withQuery(query)</span><br><span class="line">            .withSort(Sort.by(Sort.Order.desc(<span class="string">&quot;type&quot;</span>)))</span><br><span class="line">            .withSort(Sort.by(Sort.Order.desc(<span class="string">&quot;score&quot;</span>)))</span><br><span class="line">            .withSort(Sort.by(Sort.Order.desc(<span class="string">&quot;create_time&quot;</span>)))</span><br><span class="line">            .withPageable(PageRequest.of(<span class="number">1</span>, <span class="number">10</span>))</span><br><span class="line">            .withHighlightQuery(<span class="keyword">new</span> <span class="title class_">HighlightQuery</span>(highlight, DiscussPost.class))</span><br><span class="line">            .build();</span><br><span class="line">    <span class="comment">// 使用elasticsearchTemplate的search()API进行查询</span></span><br><span class="line">    SearchHits&lt;DiscussPost&gt; search = elasticsearchTemplate.search(nativeQuery, DiscussPost.class);</span><br><span class="line">    List&lt;DiscussPost&gt; postList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (SearchHit&lt;DiscussPost&gt; hit : search.getSearchHits()) &#123;</span><br><span class="line">        <span class="type">DiscussPost</span> <span class="variable">post</span> <span class="operator">=</span> hit.getContent();</span><br><span class="line">        <span class="comment">// 添加高亮设置</span></span><br><span class="line">        Map&lt;String, List&lt;String&gt;&gt; highlightFields = hit.getHighlightFields();</span><br><span class="line">        <span class="keyword">if</span>(hit.getHighlightFields().containsKey(<span class="string">&quot;title&quot;</span>))&#123;</span><br><span class="line">            post.setTitle(hit.getHighlightFields().get(<span class="string">&quot;title&quot;</span>).get(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(hit.getHighlightFields().containsKey(<span class="string">&quot;content&quot;</span>))&#123;</span><br><span class="line">            post.setContent(hit.getHighlightFields().get(<span class="string">&quot;content&quot;</span>).get(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        postList.add(post);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="五、开发社区搜索功能"><a href="#五、开发社区搜索功能" class="headerlink" title="五、开发社区搜索功能"></a>五、开发社区搜索功能</h1><ul>
+<li>实现<strong>搜索</strong>功能：<ul>
+<li>将数据库的所有post数据保存至ES服务器</li>
+<li>从ES服务器搜索帖子</li>
+</ul>
+</li>
+<li>ES服务器与数据库服务器的同步：<ul>
+<li>发布帖子：将贴子异步提交到ES服务器</li>
+<li>增加评论：修改帖子commentCount后异步提交到ES服务器</li>
+</ul>
+</li>
+<li><strong>谁来提交数据</strong>？ &#x3D;&#x3D;&gt; <strong>kafka</strong>消息队列<ul>
+<li>利用<strong>消费者</strong>来完成帖子同步</li>
+<li>生产者：构建event对象保存需提交的postID数据，并调用send方法</li>
+<li>消费者：监听该主题，有消息时获取event将该数据提交到es服务器</li>
+</ul>
+</li>
+</ul>
+<p><strong>需求一：搜索功能</strong></p>
+<ul>
+<li>业务层：<code>ElasticsearchService.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 搜索ES中的某个帖子(复用上述方法)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> IPage&lt;DiscussPost&gt; <span class="title function_">searchDiscussPost</span><span class="params">(String input, <span class="type">int</span> current, <span class="type">int</span> size)</span>&#123;</span><br><span class="line">    <span class="type">Pageable</span> <span class="variable">pageable</span> <span class="operator">=</span> PageRequest.of(current-<span class="number">1</span>, size);</span><br><span class="line">    <span class="type">Query</span> <span class="variable">query</span> <span class="operator">=</span> QueryBuilders.bool()</span><br><span class="line">            .should(QueryBuilders.match(m -&gt; m</span><br><span class="line">                    .field(<span class="string">&quot;title&quot;</span>)</span><br><span class="line">                    .query(input)</span><br><span class="line">            ))</span><br><span class="line">            .should(QueryBuilders.match(m -&gt; m</span><br><span class="line">                    .field(<span class="string">&quot;content&quot;</span>)</span><br><span class="line">                    .query(input)</span><br><span class="line">            )).build()._toQuery();</span><br><span class="line">    <span class="type">HighlightParameters</span> <span class="variable">parameters</span> <span class="operator">=</span> HighlightParameters.builder()</span><br><span class="line">            .withPreTags(<span class="string">&quot;&lt;em&gt;&quot;</span>)</span><br><span class="line">            .withPostTags(<span class="string">&quot;&lt;/em&gt;&quot;</span>)</span><br><span class="line">            .build();</span><br><span class="line">    <span class="type">Highlight</span> <span class="variable">highlight</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Highlight</span>(parameters, List.of(</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HighlightField</span>(<span class="string">&quot;title&quot;</span>),</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HighlightField</span>(<span class="string">&quot;content&quot;</span>)</span><br><span class="line">    ));</span><br><span class="line">    <span class="type">NativeQuery</span> <span class="variable">nativeQuery</span> <span class="operator">=</span> NativeQuery.builder()</span><br><span class="line">            .withQuery(query)</span><br><span class="line">            .withSort(Sort.by(Sort.Order.desc(<span class="string">&quot;type&quot;</span>)))</span><br><span class="line">            .withSort(Sort.by(Sort.Order.desc(<span class="string">&quot;score&quot;</span>)))</span><br><span class="line">            .withSort(Sort.by(Sort.Order.desc(<span class="string">&quot;create_time&quot;</span>)))</span><br><span class="line">            .withPageable(pageable)</span><br><span class="line">            .withHighlightQuery(<span class="keyword">new</span> <span class="title class_">HighlightQuery</span>(highlight, DiscussPost.class))</span><br><span class="line">            .build();</span><br><span class="line">    </span><br><span class="line">    SearchHits&lt;DiscussPost&gt; search = elasticsearchTemplate.search(nativeQuery, DiscussPost.class);</span><br><span class="line">    <span class="keyword">if</span>(search.getTotalHits() &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 转换成list对象</span></span><br><span class="line">    List&lt;DiscussPost&gt; postList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (SearchHit&lt;DiscussPost&gt; hit : search.getSearchHits()) &#123;</span><br><span class="line">        <span class="type">DiscussPost</span> <span class="variable">post</span> <span class="operator">=</span> hit.getContent();</span><br><span class="line">        <span class="keyword">if</span>(hit.getHighlightFields().containsKey(<span class="string">&quot;title&quot;</span>))&#123;</span><br><span class="line">            post.setTitle(hit.getHighlightFields().get(<span class="string">&quot;title&quot;</span>).get(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(hit.getHighlightFields().containsKey(<span class="string">&quot;content&quot;</span>))&#123;</span><br><span class="line">            post.setContent(hit.getHighlightFields().get(<span class="string">&quot;content&quot;</span>).get(<span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        postList.add(post);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回page对象</span></span><br><span class="line">    Page&lt;DiscussPost&gt; postPage = <span class="keyword">new</span> <span class="title class_">Page</span>&lt;&gt;(current, size, search.getTotalHits());</span><br><span class="line">    postPage.setRecords(postList);</span><br><span class="line">    <span class="keyword">return</span> postPage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>表现层：<code>SearchController.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/search&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">search</span><span class="params">(String input, MyPage&lt;Map&lt;String, Object&gt;&gt; myPage, Model model)</span>&#123;</span><br><span class="line">    myPage.setPath(<span class="string">&quot;/search?input=&quot;</span> + input);</span><br><span class="line">    myPage.setSize(<span class="number">10</span>);</span><br><span class="line">    <span class="comment">// 调用业务层方法</span></span><br><span class="line">    IPage&lt;DiscussPost&gt; postPage = elasticsearchService.searchDiscussPost(input, (<span class="type">int</span>) myPage.getCurrent(), (<span class="type">int</span>) myPage.getSize());</span><br><span class="line">    <span class="comment">// 封装界面显示数据到discussPostMap</span></span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; discussPostMap = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(postPage != <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(DiscussPost post : postPage.getRecords())&#123;</span><br><span class="line">            Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            map.put(<span class="string">&quot;post&quot;</span>, post);</span><br><span class="line">            map.put(<span class="string">&quot;user&quot;</span>, userService.selectById(post.getUserId()));</span><br><span class="line">            map.put(<span class="string">&quot;likeCount&quot;</span>, likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId()));</span><br><span class="line">            discussPostMap.add(map);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    model.addAttribute(<span class="string">&quot;input&quot;</span>, input);</span><br><span class="line">    myPage.setRecords(discussPostMap);</span><br><span class="line">    myPage.setTotal(postPage != <span class="literal">null</span> ? postPage.getTotal() : <span class="number">0</span>);</span><br><span class="line">    myPage.setPages(postPage != <span class="literal">null</span> ? postPage.getPages() : <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;site/search&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>需求二：同步数据</strong></p>
+<ul>
+<li>业务层<code>ElasticsearchService.java</code>：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 保存帖子到ES服务器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">saveDiscussPost</span><span class="params">(DiscussPost discussPost)</span>&#123;</span><br><span class="line">    postRepository.save(discussPost);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>表现层：</p>
+<ul>
+<li>发帖时同步：<code>DiscussPostController.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/add&quot;)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">addDiscussPost</span><span class="params">(String title, String content)</span>&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> hostHolder.getUser();</span><br><span class="line">    <span class="keyword">if</span>(user == <span class="literal">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> LinBlogUtil.getJSONString(<span class="number">403</span>, <span class="string">&quot;您还未登录&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">DiscussPost</span> <span class="variable">discussPost</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DiscussPost</span>();</span><br><span class="line">    discussPost.setUserId(user.getId());</span><br><span class="line">    discussPost.setTitle(title);</span><br><span class="line">    discussPost.setContent(content);</span><br><span class="line">    discussPost.setCreateTime(LocalDate.now());</span><br><span class="line">    discussPostService.addDiscussPost(discussPost);</span><br><span class="line">    <span class="comment">// 触发事件 =&gt; 消费者提交数据</span></span><br><span class="line">    <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Event</span>()</span><br><span class="line">            .setTopic(TOPIC_PUBLISH) <span class="comment">//主题</span></span><br><span class="line">            .setUserId(user.getId()) </span><br><span class="line">            .setEntityType(ENTITY_TYPE_POST)</span><br><span class="line">            .setEntityId(discussPost.getId());</span><br><span class="line">    eventProducer.fireEvent(event); <span class="comment">// 发送事件</span></span><br><span class="line">    <span class="keyword">return</span> LinBlogUtil.getJSONString(<span class="number">0</span>, <span class="string">&quot;发布成功&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>增加评论时同步：<code>CommentController.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 添加评论</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@PostMapping(&quot;/insert/&#123;discussPostId&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">insertComment</span><span class="params">(<span class="meta">@PathVariable</span> <span class="type">int</span> discussPostId, Comment comment)</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 评论帖子 =&gt; 触发 =&gt; ES 中帖子修改事件</span></span><br><span class="line">    <span class="keyword">if</span>(comment.getEntityType() == ENTITY_TYPE_POST)&#123;</span><br><span class="line">        event = <span class="keyword">new</span> <span class="title class_">Event</span>()</span><br><span class="line">                .setTopic(TOPIC_PUBLISH)</span><br><span class="line">                .setUserId(comment.getUserId())</span><br><span class="line">                .setEntityType(ENTITY_TYPE_POST)</span><br><span class="line">                .setEntityId(discussPostId);</span><br><span class="line">        eventProducer.fireEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>消费者处理事件：<code>EventConsumer.java</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 消费发帖事件：同步数据</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@KafkaListener(topics = &#123;TOPIC_PUBLISH&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handlePublishMessage</span><span class="params">(ConsumerRecord record)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(record == <span class="literal">null</span> || record.value() == <span class="literal">null</span>)&#123;</span><br><span class="line">        logger.error(<span class="string">&quot;消息内容为空！&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//把消息通知转换为event对象</span></span><br><span class="line">    <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> JSONObject.parseObject(record.value().toString(), Event.class);</span><br><span class="line">    <span class="keyword">if</span>(event == <span class="literal">null</span>)&#123;</span><br><span class="line">        logger.error(<span class="string">&quot;消息格式错误！&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">DiscussPost</span> <span class="variable">post</span> <span class="operator">=</span> discussPostService.selectPostById(event.getEntityId());</span><br><span class="line">    <span class="comment">//保存数据到ES服务器</span></span><br><span class="line">    elasticsearchService.saveDiscussPost(post);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://12wj.github.io/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA06-%E2%80%94%E2%80%94-Elasticsearch%E5%BA%94%E7%94%A8/">https://12wj.github.io/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA06-%E2%80%94%E2%80%94-Elasticsearch%E5%BA%94%E7%94%A8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA05-%E2%80%94%E2%80%94-Kafak%E5%BA%94%E7%94%A8/">仿牛客社区05 —— Kafak应用</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -127,6 +127,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -144,12 +209,281 @@
                         </span>
                     
                     
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
                 </div>
             
         </header>
 
         <div class="post-content">
-            
+            <blockquote>
+<p>本章需求：</p>
+<ul>
+<li>利用<strong>spring定时任务</strong>完成对数据库中<strong>文章的热度计算</strong></li>
+</ul>
+</blockquote>
+<ul>
+<li><p><strong>为什么要用线程池？</strong></p>
+<p>假设一个服务器完成一项任务所需时间为：T1创建线程时间，T2在线程中执行任务的时间，T3销毁线程时间。 如果：T1 + T3 远大于 T2，则可以采用线程池，以提高服务器性能。利用线程池时，当请求到达，<strong>线程已经存在，响应延迟低，多个任务复用线程</strong>，避免了线程的重复创建和销毁，并且可以规定线程数目，请求数目超过阈值时强制其等待直到有空闲线程。</p>
+</li>
+</ul>
+<h1 id="一、JDK线程池"><a href="#一、JDK线程池" class="headerlink" title="一、JDK线程池"></a>一、JDK线程池</h1><h2 id="1-1ExecutorService"><a href="#1-1ExecutorService" class="headerlink" title="1.1ExecutorService"></a>1.1<code>ExecutorService</code></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ExecutorService</span> <span class="keyword">extends</span> <span class="title class_">Executor</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>ExecutorService</code>线程池的创建：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建固定线程数量的线程池：线程数为5</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span> Executors.newFixedThreadPool(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>测试代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testExecutorService</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Runnable</span> <span class="variable">task</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;正在执行ExecutorService&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 向线程池提交任务</span></span><br><span class="line">        executorService.submit(task);</span><br><span class="line">    &#125;</span><br><span class="line">    sleep(<span class="number">10000</span>);	<span class="comment">// 主线程阻塞，等待线程池中的线程运行完毕</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="1-2ScheduledExecutorService"><a href="#1-2ScheduledExecutorService" class="headerlink" title="1.2ScheduledExecutorService"></a>1.2<code>ScheduledExecutorService</code></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ScheduledExecutorService</span> <span class="keyword">extends</span> <span class="title class_">ExecutorService</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p><strong>测试代码：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建线程池</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">ScheduledExecutorService</span> <span class="variable">scheduledExecutorService</span> <span class="operator">=</span> Executors.newScheduledThreadPool(<span class="number">5</span>);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JDK定时任务线程池</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testScheduledExecutorService</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Runnable</span> <span class="variable">task</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;正在执行ScheduledExecutorService&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    scheduledExecutorService.scheduleAtFixedRate(task, <span class="number">10000</span>, <span class="number">1000</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">    <span class="comment">// 30s后结束主进程</span></span><br><span class="line">    sleep(<span class="number">30000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>执行定时任务方法详解：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 提交一个Runnable任务延迟了initialDelay时间后，开始周期性的执行该任务，每period时间执行一次</span></span><br><span class="line"><span class="comment">     * 如果任务异常则退出。如果取消任务或者关闭线程池，任务也会退出。</span></span><br><span class="line"><span class="comment">     * 如果任务执行一次的时间大于周期时间，则任务执行将会延后执行，而不会并发执行</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"><span class="keyword">public</span> ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command,</span><br><span class="line">                                                  <span class="type">long</span> initialDelay,</span><br><span class="line">                                                  <span class="type">long</span> period,</span><br><span class="line">                                                  TimeUnit unit);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="二、Spring-线程池"><a href="#二、Spring-线程池" class="headerlink" title="二、Spring 线程池"></a>二、Spring 线程池</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># ????????</span><br><span class="line">spring.task.execution.pool.core-size=5</span><br><span class="line"># ???????????????</span><br><span class="line">spring.task.execution.pool.max-size=15</span><br><span class="line"># ???????????????</span><br><span class="line">spring.task.execution.pool.queue-capacity=100</span><br><span class="line"></span><br><span class="line"># TaskSchedulingProperties</span><br><span class="line">spring.task.scheduling.pool.size=5</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="2-1-ThreadPoolTaskExecutor"><a href="#2-1-ThreadPoolTaskExecutor" class="headerlink" title="2.1 ThreadPoolTaskExecutor"></a>2.1 <code>ThreadPoolTaskExecutor</code></h2><ul>
+<li>使用注解spring自动注入一个默认值的 <code>ThreadPoolTaskExecutor</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> ThreadPoolTaskExecutor taskExecutor;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>使用该线程池：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * spring普通线程池</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testThreadPoolTaskExecutor</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Runnable</span> <span class="variable">task</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;正在执行ThreadPoolTaskExecutor&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        taskExecutor.submit(task);</span><br><span class="line">    &#125;</span><br><span class="line">    sleep(<span class="number">100000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>怎么进行简化？ &#x3D;&#x3D;&gt; 即将<strong>需要执行的任务</strong>单独定义</p>
+<ul>
+<li><code>testService.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Async</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute1</span><span class="params">()</span>&#123;</span><br><span class="line">    logger.info(<span class="string">&quot;execute1&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>@Async</code>表示开启异步，使得该方法可以在多线程环境下被<strong>异步调用</strong>，也就是<strong>作为主线程之外的线程与主线程同步运行</strong></p>
+<ul>
+<li>利用注解将普通方法转换为线程体</li>
+</ul>
+</blockquote>
+</li>
+<li><p>测试方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSimpleThreadPoolTaskExecutor</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 直接调用任务</span></span><br><span class="line">        testService.execute1();</span><br><span class="line">    &#125;</span><br><span class="line">    sleep(<span class="number">10000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2-2-ThreadPoolTaskScheduler"><a href="#2-2-ThreadPoolTaskScheduler" class="headerlink" title="2.2 ThreadPoolTaskScheduler"></a>2.2 <code>ThreadPoolTaskScheduler</code></h2><ul>
+<li>使用注解spring自动注入一个默认值的 <code>ThreadPoolTaskScheduler</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> ThreadPoolTaskScheduler taskScheduler;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>测试方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testThreadPoolTaskScheduler</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Runnable</span> <span class="variable">task</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            logger.info(<span class="string">&quot;正在执行ThreadPoolTaskExecutor&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">Date</span> <span class="variable">startTime</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + <span class="number">10000</span>);</span><br><span class="line">    taskScheduler.scheduleAtFixedRate(task, startTime, <span class="number">1000</span>);</span><br><span class="line">    sleep(<span class="number">30000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>执行定时任务方法<code>scheduleAtFixedRate</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// task 任务</span></span><br><span class="line"><span class="comment">// startTime 开始执行时间</span></span><br><span class="line"><span class="comment">// period 多久执行一次</span></span><br><span class="line"><span class="keyword">default</span> ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable task, Date startTime, <span class="type">long</span> period) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.scheduleAtFixedRate(task, startTime.toInstant(), Duration.ofMillis(period));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>将任务方法解耦：</strong></p>
+<ul>
+<li><code>testService.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// @Scheduled注解控制该方法的定时执行</span></span><br><span class="line"><span class="meta">@Scheduled(initialDelay = 10000, fixedRate = 1000)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute2</span><span class="params">()</span>&#123;</span><br><span class="line">    logger.info(<span class="string">&quot;execute2&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>测试方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSimpleThreadPoolTaskScheduler</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        testService.execute2();</span><br><span class="line">    &#125;</span><br><span class="line">    sleep(<span class="number">30000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="三、Spring-Quartz"><a href="#三、Spring-Quartz" class="headerlink" title="三、Spring Quartz"></a>三、Spring Quartz</h1><blockquote>
+<p>Quartz是一套轻量级的任务调度框架</p>
+</blockquote>
+<h2 id="3-1-quartz的几个核心概念："><a href="#3-1-quartz的几个核心概念：" class="headerlink" title="3.1 quartz的几个核心概念："></a>3.1 <strong>quartz的几个核心概念：</strong></h2><blockquote>
+<ul>
+<li><p>scheduler</p>
+</li>
+<li><p>Job</p>
+</li>
+<li><p>JobDetail</p>
+</li>
+<li><p>Trigger</p>
+</li>
+</ul>
+</blockquote>
+<img src="https://segmentfault.com/img/remote/1460000042250874/view" alt="preview" style="zoom:67%;" />
+
+
+
+<h3 id="3-1-1-Scheduler调度器"><a href="#3-1-1-Scheduler调度器" class="headerlink" title="3.1.1 Scheduler调度器"></a>3.1.1 <code>Scheduler</code>调度器</h3><p><strong>一个调度器</strong>中可以注册<strong>多个JobDetail和Trigger</strong>，当<u>Trigger与JobDeatil组合</u>，就可以被<strong>Scheduler容器</strong>调度了</p>
+<h3 id="3-1-2-Job"><a href="#3-1-2-Job" class="headerlink" title="3.1.2  Job"></a>3.1.2  <code>Job</code></h3><ul>
+<li><p>job表示一个工作，包含要执行的<strong>具体内容</strong></p>
+</li>
+<li><p><code>Job</code>接口定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.quartz;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Job</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(JobExecutionContext var1)</span> <span class="keyword">throws</span> JobExecutionException;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>创建<strong>定时任务</strong>时需要重新**<code>Job</code>接口**的方法：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestJob</span> <span class="keyword">implements</span> <span class="title class_">Job</span> &#123;</span><br><span class="line">    <span class="comment">// 此接口只有一个execute方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(JobExecutionContext jobExecutionContext)</span> <span class="keyword">throws</span> JobExecutionException &#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot;: execute a quartz job&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-1-3-JobDetail："><a href="#3-1-3-JobDetail：" class="headerlink" title="3.1.3 JobDetail："></a>3.1.3 <code>JobDetail</code>：</h3><ul>
+<li>表示一个具体的可执行的调度程序，<strong>Job</strong>是该调度程序中<strong>所要执行的内容</strong>，<strong>jobdetail</strong>则包含了这个<strong>任务的调度方法和策略</strong></li>
+<li>创建配置类<code>QuartzConfig.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在配置类中配置 job 的相关信息</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> JobDetailFactoryBean <span class="title function_">testJobDetail</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">JobDetailFactoryBean</span> <span class="variable">factoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JobDetailFactoryBean</span>();</span><br><span class="line">    factoryBean.setJobClass(TestJob.class);	</span><br><span class="line">    factoryBean.setName(<span class="string">&quot;testJob&quot;</span>);		<span class="comment">// job的名字</span></span><br><span class="line">    factoryBean.setGroup(<span class="string">&quot;testJobGroup&quot;</span>);	<span class="comment">// job的groupname</span></span><br><span class="line">    factoryBean.setDurability(<span class="literal">true</span>);	<span class="comment">// 该任务是否可持久</span></span><br><span class="line">    factoryBean.setRequestsRecovery(<span class="literal">true</span>);	<span class="comment">// 任务中断时是否可恢复</span></span><br><span class="line">    <span class="keyword">return</span> factoryBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-1-4-Trigger"><a href="#3-1-4-Trigger" class="headerlink" title="3.1.4 Trigger"></a>3.1.4 <code>Trigger</code></h3><ul>
+<li><p>代表一个<strong>调度参数</strong>的配置，什么时候去调，延迟多久（即定义一个<strong>job的执行计划</strong>）</p>
+</li>
+<li><p>trigger的两种类型：</p>
+<ul>
+<li><strong>simpleTrigger</strong></li>
+<li><strong>cronTrigger</strong></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同样在配置类中配置 trigger 的相关信息</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> SimpleTriggerFactoryBean <span class="title function_">trigger</span><span class="params">(JobDetail testJobDetail)</span>&#123;</span><br><span class="line">    <span class="type">SimpleTriggerFactoryBean</span> <span class="variable">factoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleTriggerFactoryBean</span>();</span><br><span class="line">    factoryBean.setJobDetail(testJobDetail);</span><br><span class="line">    factoryBean.setName(<span class="string">&quot;testTrigger&quot;</span>);		<span class="comment">// name</span></span><br><span class="line">    factoryBean.setGroup(<span class="string">&quot;testTriggerGroup&quot;</span>);	<span class="comment">// group</span></span><br><span class="line">    factoryBean.setRepeatInterval(<span class="number">3000</span>);    <span class="comment">// 每个3秒执行一次</span></span><br><span class="line">    factoryBean.setJobDataMap(<span class="keyword">new</span> <span class="title class_">JobDataMap</span>());</span><br><span class="line">    <span class="keyword">return</span> factoryBean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-2-Spring-配置-Quartz"><a href="#3-2-Spring-配置-Quartz" class="headerlink" title="3.2 Spring 配置 Quartz"></a>3.2 Spring 配置 Quartz</h2><h3 id="3-2-1-引入依赖"><a href="#3-2-1-引入依赖" class="headerlink" title="3.2.1  引入依赖"></a>3.2.1  引入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-quartz<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-2-配置Quartz"><a href="#3-2-2-配置Quartz" class="headerlink" title="3.2.2 配置Quartz"></a>3.2.2 配置Quartz</h3><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Quartz Properties</span></span><br><span class="line"><span class="comment"># 存储方式</span></span><br><span class="line"><span class="attr">spring.quartz.job-store-type</span>=<span class="string">jdbc</span></span><br><span class="line"><span class="comment"># 调度器的名字</span></span><br><span class="line"><span class="attr">spring.quartz.scheduler-name</span>=<span class="string">linBlogScheduler</span></span><br><span class="line"><span class="comment"># 调度器id自动生成</span></span><br><span class="line"><span class="attr">spring.quartz.properties.org.quartz.scheduler.instanceId</span>=<span class="string">AUTO</span></span><br><span class="line"><span class="comment"># 选择JDBC的存储方式</span></span><br><span class="line"><span class="attr">spring.quartz.properties.org.quartz.jobStore.class</span>=<span class="string">org.springframework.scheduling.quartz.LocalDataSourceJobStore</span></span><br><span class="line"><span class="comment"># 驱动</span></span><br><span class="line"><span class="attr">spring.quartz.properties.org.quartz.jobStore.driverDelegateClass</span> = <span class="string">org.quartz.impl.jdbcjobstore.StdJDBCDelegate</span></span><br><span class="line"><span class="comment"># 是否集群</span></span><br><span class="line"><span class="attr">spring.quartz.properties.org.quartz.jobStore.isClustered</span>=<span class="string">true</span></span><br><span class="line"><span class="comment"># 线程池的实例类</span></span><br><span class="line"><span class="attr">spring.quartz.properties.org.quartz.threadPool.class</span>=<span class="string">org.quartz.simpl.SimpleThreadPool</span></span><br><span class="line"><span class="comment"># 线程数量</span></span><br><span class="line"><span class="attr">spring.quartz.properties.org.quartz.threadPool.threadCount</span>=<span class="string">5</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-3-开发流程"><a href="#3-2-3-开发流程" class="headerlink" title="3.2.3 开发流程"></a>3.2.3 开发流程</h3><ol>
+<li><p><strong>导入数据库脚本</strong>（实现分布式的关键）</p>
+</li>
+<li><p>定义<strong>一个Job的实例类</strong>：包含需要执行的任务逻辑  <code>TestJob.java</code></p>
+</li>
+<li><p>定义<strong>一个QuartConfig类</strong>：quart配置类，包含对应任务的jobdetail和trigger   <code>QuartzConfig.java</code></p>
+</li>
+</ol>
+<ul>
+<li><p>项目启动时：</p>
+<ul>
+<li><p>服务启动时，Quartz配置文件被自动加载，quartz根据配置文件的内容往数据库插入数据。同时该定时任务也<strong>自动运行</strong>。</p>
+</li>
+<li><p>数据库有数据之后，quartz底层的调度器<strong>scheduler</strong>根据数据库中的内容<strong>定时执行任务程序</strong></p>
+<blockquote>
+<p>后续再调用服务后，quartz不会再访问配置类，而是直接访问数据库获取任务信息。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<hr/>执行后的数据库内容
+
+<ul>
+<li><code>qartz_job_detail</code></li>
+</ul>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240827155119401.png" alt="image-20240827155119401" style="zoom:67%;" />
+
+<ul>
+<li><code>qartz_simple_trigger</code></li>
+</ul>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240827155237401.png" alt="image-20240827155237401" style="zoom:67%;" /> 
+
+<hr/>
+
+<ul>
+<li><p>如何删除定时任务？</p>
+<ul>
+<li>测试方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">QuartzTest</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> Scheduler scheduler;  <span class="comment">// 注入调度器</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testDeleteJob</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 传入job名称和group名称</span></span><br><span class="line">            <span class="comment">// 删除任务后数据库信息对应被删除</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">b</span> <span class="operator">=</span> scheduler.deleteJob(<span class="keyword">new</span> <span class="title class_">JobKey</span>(<span class="string">&quot;testJob&quot;</span>, <span class="string">&quot;testJobGroup&quot;</span>));</span><br><span class="line">            System.out.println(b);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SchedulerException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="四、开发项目中的热帖排行"><a href="#四、开发项目中的热帖排行" class="headerlink" title="四、开发项目中的热帖排行"></a>四、开发项目中的热帖排行</h1><blockquote>
+<p>热度怎么计算？ &#x3D;&#x3D;&gt; score</p>
+<ul>
+<li>score &#x3D; log(精华分 + 评论数×10 + 点赞数×2 + 收藏数 × 2) + （发布时间 - 网站纪元）</li>
+</ul>
+<p>热度什么时候算？</p>
+<ul>
+<li>将需要计算热度的帖子存储到<strong>缓存</strong>中，利用<strong>定时任务获取缓存数据来计算热度</strong></li>
+</ul>
+</blockquote>
+<p><strong>开发流程：</strong></p>
+<h2 id="4-1-在执行影响热度操作时把【帖子ID】存入缓存"><a href="#4-1-在执行影响热度操作时把【帖子ID】存入缓存" class="headerlink" title="4.1 在执行影响热度操作时把【帖子ID】存入缓存"></a>4.1 在执行影响热度操作时把【帖子ID】存入缓存</h2><ul>
+<li>创建Redis <code>key</code>值：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 存储需要计算分数的帖子ID的键值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getPostScoreKey</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> PREFIX_POST + SPLIT + <span class="string">&quot;score&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>执行<code>点赞</code>或<code>取消点赞</code>帖子时：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// likeController.java =&gt; like()</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">like</span><span class="params">(<span class="type">int</span> entityType, <span class="type">int</span> entityId, <span class="type">int</span> entityUserId, <span class="type">int</span> postId)</span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">if</span>(ENTITY_TYPE_POST == entityType)&#123;</span><br><span class="line">        <span class="comment">// 点赞or取消点赞操作，存入缓存计算分数</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getPostScoreKey();</span><br><span class="line">        <span class="comment">// 往Set集合中添加ID（注意是不能重复元素的set集合）</span></span><br><span class="line">        redisTemplate.opsForSet().add(key, postId);</span><br><span class="line">	&#125;    </span><br><span class="line">       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>评论、加精操作同理。</li>
+</ul>
+<h2 id="4-2-创建定时任务-获取缓存数据重新计算热度"><a href="#4-2-创建定时任务-获取缓存数据重新计算热度" class="headerlink" title="4.2 创建定时任务 &#x3D;&gt; 获取缓存数据重新计算热度"></a>4.2 创建定时任务 &#x3D;&gt; 获取缓存数据重新计算热度</h2><ul>
+<li><p>新增<code>PostScoreRefreshJob.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PostScoreRefreshJob</span> <span class="keyword">implements</span> <span class="title class_">Job</span>, LinBlogConstant &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(PostScoreRefreshJob.class);</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> DiscussPostService discussPostService;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> LikeService likeService;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> ElasticsearchService elasticsearchService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Date epoch;</span><br><span class="line">	<span class="comment">// 初始化时间纪元</span></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            epoch = <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>).parse(<span class="string">&quot;2024-08-01 00:00:00&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (ParseException e)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;初始化牛客纪元失败！&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 重写Job接口方法execute</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">execute</span><span class="params">(JobExecutionContext jobExecutionContext)</span> <span class="keyword">throws</span> JobExecutionException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> RedisKeyUtil.getPostScoreKey();</span><br><span class="line">        <span class="type">BoundSetOperations</span> <span class="variable">operations</span> <span class="operator">=</span> redisTemplate.boundSetOps(key);</span><br><span class="line">		<span class="comment">// 没有需要刷新热度的帖子</span></span><br><span class="line">        <span class="keyword">if</span>(operations.size() == <span class="number">0</span>)&#123;</span><br><span class="line">            logger.info(<span class="string">&quot;任务取消！没有需要刷新的帖子&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        logger.info(<span class="string">&quot;任务开始，正在执行刷新帖子分数：&quot;</span> + operations.size());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (operations.size() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="comment">// 调用刷新方法</span></span><br><span class="line">            <span class="built_in">this</span>.refresh((Integer) operations.pop());</span><br><span class="line">        &#125;</span><br><span class="line">        logger.info(<span class="string">&quot;任务执行完毕！&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">refresh</span><span class="params">(<span class="type">int</span> id)</span>&#123;</span><br><span class="line">        <span class="type">DiscussPost</span> <span class="variable">post</span> <span class="operator">=</span> discussPostService.selectPostById(id);</span><br><span class="line">        <span class="keyword">if</span>(post == <span class="literal">null</span>)&#123;</span><br><span class="line">            logger.error(<span class="string">&quot;该贴子不存在!&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 是否加精</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">wonderful</span> <span class="operator">=</span> post.getStatus() == <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 评论数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">commentCount</span> <span class="operator">=</span> post.getCommentCount();</span><br><span class="line">        <span class="comment">// 点赞数</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">likeCount</span> <span class="operator">=</span> (<span class="type">int</span>) likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算权重</span></span><br><span class="line">        <span class="type">double</span> <span class="variable">w</span> <span class="operator">=</span> (wonderful ? <span class="number">75</span> : <span class="number">0</span>) + commentCount * <span class="number">10</span> + likeCount * <span class="number">2</span>;</span><br><span class="line">        <span class="comment">// 计算分数</span></span><br><span class="line">        <span class="type">double</span> <span class="variable">score</span> <span class="operator">=</span> Math.log10(Math.max(w, <span class="number">1</span>)) + post.getCreateTime().until(epoch.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), ChronoUnit.DAYS);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 数据库更新</span></span><br><span class="line">        discussPostService.updateScore(post.getId(), score);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// elasticsearch服务器数据更新</span></span><br><span class="line">        post.setScore(score);</span><br><span class="line">        elasticsearchService.saveDiscussPost(post);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="4-3-配置定时任务"><a href="#4-3-配置定时任务" class="headerlink" title="4.3 配置定时任务"></a>4.3 配置定时任务</h2><ul>
+<li><code>QuartzConfig.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">QuartzConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ！注意！【BeanFactory】是bean的顶级容器</span></span><br><span class="line"><span class="comment">     * ! FactoryBean !可简化bean的实例化过程：</span></span><br><span class="line"><span class="comment">     * 1. 通过FactoryBean封装bean的实例化过程.</span></span><br><span class="line"><span class="comment">     * 2. 将FactoryBean装配到Spring容器里.</span></span><br><span class="line"><span class="comment">     * 3. 将FactoryBean注入给其他的bean ==&gt; JobDetailFactoryBean jobDetail</span></span><br><span class="line"><span class="comment">     * 4. 该bean得到的是FactoryBean所管理的对象实例. 此时的jobDetail即为JobDetail的实例</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 计算帖子分数job配置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> JobDetailFactoryBean <span class="title function_">postScoreRefreshJobDetail</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">JobDetailFactoryBean</span> <span class="variable">factoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JobDetailFactoryBean</span>();</span><br><span class="line">        factoryBean.setJobClass(PostScoreRefreshJob.class);</span><br><span class="line">        factoryBean.setName(<span class="string">&quot;postScoreRefreshJob&quot;</span>);</span><br><span class="line">        factoryBean.setGroup(<span class="string">&quot;linBlogJobGroup&quot;</span>);</span><br><span class="line">        factoryBean.setDurability(<span class="literal">true</span>);</span><br><span class="line">        factoryBean.setRequestsRecovery(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> factoryBean;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 配置Trigger</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SimpleTriggerFactoryBean <span class="title function_">postScoreRefreshTrigger</span><span class="params">(JobDetail postScoreRefreshJobDetail)</span>&#123;</span><br><span class="line">        <span class="type">SimpleTriggerFactoryBean</span> <span class="variable">factoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleTriggerFactoryBean</span>();</span><br><span class="line">        factoryBean.setJobDetail(postScoreRefreshJobDetail);</span><br><span class="line">        factoryBean.setName(<span class="string">&quot;postScoreRefreshJobDetailTrigger&quot;</span>);</span><br><span class="line">        factoryBean.setGroup(<span class="string">&quot;LinBlogTriggerGroup&quot;</span>);</span><br><span class="line">        factoryBean.setRepeatInterval(<span class="number">1000</span>*<span class="number">60</span>*<span class="number">5</span>);    <span class="comment">// 每个3秒执行一次</span></span><br><span class="line">        factoryBean.setJobDataMap(<span class="keyword">new</span> <span class="title class_">JobDataMap</span>());</span><br><span class="line">        <span class="keyword">return</span> factoryBean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="4-4-配置最热帖子榜单路径"><a href="#4-4-配置最热帖子榜单路径" class="headerlink" title="4.4 配置最热帖子榜单路径"></a>4.4 配置最热帖子榜单路径</h2><ul>
+<li>控制层所需干的事情</li>
+</ul>
+
         </div>
 
         

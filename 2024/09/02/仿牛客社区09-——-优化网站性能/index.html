@@ -127,6 +127,71 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
@@ -156,7 +221,90 @@
         </header>
 
         <div class="post-content">
-            
+            <blockquote>
+<p>本章需求：</p>
+<ul>
+<li>优化网站性能，实现数据本地缓存，减少数据库重复读写。</li>
+</ul>
+</blockquote>
+<h1 id="一、Caffeine概述"><a href="#一、Caffeine概述" class="headerlink" title="一、Caffeine概述"></a>一、Caffeine概述</h1><p>Caffeine是一个开源的Java缓存库，具有高效的读写操作。特点如下：</p>
+<p>1.限制缓存大小</p>
+<p>2.通过异步自动加载实体到缓存中</p>
+<p>3.基于大小的回收策略</p>
+<p>4.基于时间的回收策略</p>
+<p>5.基于引用的回收策略</p>
+<p>6.当向缓存中一个已经过时的元素进行访问的时候将会进行异步刷新</p>
+<p>7.key自动封装虚引用</p>
+<p>8.value自动封装弱引用或软引用</p>
+<p>9.实体过期或被删除的通知</p>
+<p>10.写入通知，可以将其传播到其他数据源中</p>
+<p>11.统计累计访问缓存</p>
+<h1 id="二、Caffeine使用"><a href="#二、Caffeine使用" class="headerlink" title="二、Caffeine使用"></a>二、Caffeine使用</h1><h2 id="2-1-引入依赖"><a href="#2-1-引入依赖" class="headerlink" title="2.1 引入依赖"></a>2.1 引入依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.ben-manes.caffeine<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>caffeine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-2-配置Caffeine"><a href="#2-2-配置Caffeine" class="headerlink" title="2.2 配置Caffeine"></a>2.2 配置Caffeine</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># caffeine Properties</span></span><br><span class="line"><span class="comment"># 缓存最大容量</span></span><br><span class="line"><span class="attr">caffeine.posts.maxsize</span>=<span class="string">15	</span></span><br><span class="line"><span class="comment"># 缓存过期时间</span></span><br><span class="line"><span class="attr">caffeine.posts.expire-seconds</span>=<span class="string">180</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-3-缓存添加"><a href="#2-3-缓存添加" class="headerlink" title="2.3 缓存添加"></a>2.3 缓存添加</h2><p>Caffeine提供了四种缓存添加策略：手动加载，<strong>自动加载</strong>，手动异步加载和自动异步加载。</p>
+<ul>
+<li>本项目中使用<strong>自动加载</strong>进行添加</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> LoadingCache&lt;String, List&lt;DiscussPost&gt;&gt; postListCache;</span><br><span class="line">postListCache = Caffeine.newBuilder()</span><br><span class="line">        .maximumSize(maxSize)   <span class="comment">//缓存区的最大容量</span></span><br><span class="line">        .expireAfterWrite(expireSeconds, TimeUnit.SECONDS)  <span class="comment">// 缓存数据过期时间</span></span><br><span class="line">        .build(<span class="keyword">new</span> <span class="title class_">CacheLoader</span>&lt;String, List&lt;DiscussPost&gt;&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="meta">@Nullable</span> List&lt;DiscussPost&gt; <span class="title function_">load</span><span class="params">(String s)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                <span class="comment">// 缓存区为空时从DB获取数据的方法：</span></span><br><span class="line">                <span class="keyword">if</span>(s == <span class="literal">null</span> || s.length() == <span class="number">0</span>)&#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;参数不能为空&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                String[] params = s.split(<span class="string">&quot;:&quot;</span>);</span><br><span class="line">                <span class="keyword">if</span>(params == <span class="literal">null</span> || params.length != <span class="number">2</span>)&#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;参数不正确&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="type">int</span> <span class="variable">current</span> <span class="operator">=</span> Integer.parseInt(params[<span class="number">0</span>]);</span><br><span class="line">                <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> Integer.parseInt(params[<span class="number">1</span>]);</span><br><span class="line">                logger.info(<span class="string">&quot;load post list from DB.&quot;</span>);</span><br><span class="line">                QueryWrapper&lt;DiscussPost&gt; queryWrapper = <span class="keyword">new</span> <span class="title class_">QueryWrapper</span>&lt;&gt;();</span><br><span class="line">                queryWrapper.ne(<span class="string">&quot;status&quot;</span>, <span class="number">2</span>);</span><br><span class="line">                queryWrapper.orderByDesc(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;score&quot;</span>, <span class="string">&quot;create_time&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> discussPostMapper.selectList(<span class="keyword">new</span> <span class="title class_">MyPage</span>&lt;&gt;(current, size), queryWrapper);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>查找缓存方法</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;DiscussPost&gt; discussPostList = postListCache.get(page.getCurrent() + <span class="string">&quot;:&quot;</span> + page.getSize());</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>工作流程</strong>：</p>
+<ol>
+<li>首先创建一个自动加载的缓存<code>LoadingCache</code>类型的<code>postListCache</code>对象，用来缓存热帖榜中的帖子数据</li>
+</ol>
+<blockquote>
+<p>这里注意，要选择<strong>变化少的数据</strong>进行缓存，以减少缓存的修改</p>
+</blockquote>
+<ol start="2">
+<li><p>接着，创建缓存的加载策略，补充<code>CacheLoader.load()</code>方法<strong>供缓存缺失时自动加载。</strong></p>
+</li>
+<li><p>调用<strong>get()<strong>方法时，会从缓存中获取数据。当</strong>缓存不存在&#x2F;缓存已过期</strong>时，会自动调用<code>CacheLoader.load()</code>方法加载最新值。调用<code>getAll()</code>方法将遍历所有的key调用<code>get()</code>，除非实现了<code>CacheLoader.loadAll()</code>方法。</p>
+</li>
+</ol>
+<h1 id="三、使用JMeter进行性能测试"><a href="#三、使用JMeter进行性能测试" class="headerlink" title="三、使用JMeter进行性能测试"></a>三、使用JMeter进行性能测试</h1><h2 id="3-1-测试计划"><a href="#3-1-测试计划" class="headerlink" title="3.1  测试计划"></a>3.1  测试计划</h2><img src="https://pic.imgdb.cn/item/66d57e1fd9c307b7e9d6ea4a.png" style="zoom: 67%;" />
+
+<ol>
+<li>创建线程组：<ul>
+<li>指定线程数</li>
+<li>利用调度器指定<strong>请求执行时间</strong>（60s）</li>
+</ul>
+</li>
+</ol>
+<img src="https://pic.imgdb.cn/item/66d57e3cd9c307b7e9d6fbe5.png" style="zoom:67%;" /> 
+
+<ol start="2">
+<li>设置HTTP请求：<ul>
+<li>指定请求协议，服务器名称，端口</li>
+<li>指定请求路径</li>
+</ul>
+</li>
+</ol>
+<img src="https://pic.imgdb.cn/item/66d57e4fd9c307b7e9d70663.png" style="zoom:67%;" /> 
+
+<ol start="3">
+<li>创建统一随机定时器：<ul>
+<li>设置请求执行的随机延迟时间（避免请求不间断执行导致系统崩溃）</li>
+</ul>
+</li>
+</ol>
+<img src="https://pic.imgdb.cn/item/66d57e61d9c307b7e9d7116d.png" alt="image-20240902165359068" style="zoom:67%;" /> 
+
+<ol start="4">
+<li>创建聚合报告：查看设置缓存前后的吞吐量对比</li>
+</ol>
+
         </div>
 
         

@@ -246,7 +246,7 @@
 <p>elasticsearch是<strong>面向文档（Document）存储的</strong>，可以是数据库中的一条商品数据，一个订单信息。文档数据会被序列化为<strong>json</strong>格式后存储在elasticsearch中：</p>
 </li>
 </ol>
-<img src="https://img2023.cnblogs.com/blog/2729274/202302/2729274-20230205171811564-2114810461.png" alt="image" style="zoom: 50%;" />
+<img src="https://pic.imgdb.cn/item/66d57fe1d9c307b7e9dbe746.png" alt="image" style="zoom: 50%;" />
 
 <ol start="2">
 <li><p><strong>索引和映射</strong>：</p>
@@ -261,7 +261,7 @@
 <p><strong>中文文档：</strong><a target="_blank" rel="noopener" href="https://elasticsearch.bookhub.tech/getting_started/install">启动并运行 Elasticsearch | Elasticsearch 中文文档 (bookhub.tech)</a></p>
 </blockquote>
 <h3 id="2-1-1-下载安装包"><a href="#2-1-1-下载安装包" class="headerlink" title="2.1.1 下载安装包"></a>2.1.1 下载安装包</h3><p>进入官网查看与springboot适配的版本<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-data/elasticsearch/reference/elasticsearch/versions.html">Versions :: Spring Data Elasticsearch</a>，下载elasticsearch-8.11.1版本</p>
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822101505544.png" alt="image-20240822101505544" style="zoom:67%;" />
+<img src="https://pic.imgdb.cn/item/66d57ffed9c307b7e9dc4539.png" alt="image-20240822101505544" style="zoom:67%;" />
 
 
 
@@ -308,12 +308,12 @@
 <p><strong>解决方法：</strong></p>
 <ol>
 <li><p>添加<em>ES_JAVA_HOME</em>环境变量：把ES_JAVA_HOME直接<strong>指向内置的jdk路径</strong>，或者<strong>本地的jdk17路径</strong></p>
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822120105020.png" alt="image-20240822120105020" style="zoom: 67%;" />
+<img src="https://pic.imgdb.cn/item/66d58015d9c307b7e9dc9447.png" alt="image-20240822120105020" style="zoom: 67%;" />
 </li>
 <li><p>把判断条件删除，直接使用ES_HOME，指定为ES的安装路径</p>
 </li>
 </ol>
-<h4 id="执行成功情况："><a href="#执行成功情况：" class="headerlink" title="执行成功情况："></a>执行成功情况：</h4><img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822120553321.png" alt="image-20240822120553321" style="zoom:67%;" />
+<h4 id="执行成功情况："><a href="#执行成功情况：" class="headerlink" title="执行成功情况："></a>执行成功情况：</h4><img src="https://pic.imgdb.cn/item/66d58029d9c307b7e9dcda2d.png" alt="image-20240822120553321" style="zoom:67%;" />
 
 <p>访问<a target="_blank" rel="noopener" href="https://localhost:9200/%EF%BC%8C%E6%8F%90%E7%A4%BA%E8%BE%93%E5%85%A5%E8%B4%A6%E5%8F%B7%E5%92%8C%E5%AF%86%E7%A0%81%EF%BC%88%E7%B1%BB%E4%BC%BC%E4%BA%8Emysql%E7%9A%84root%E7%94%A8%E6%88%B7%EF%BC%89">https://localhost:9200/，提示输入账号和密码（类似于mysql的root用户）</a></p>
 <p>首次启动会显示用户密码：</p>
@@ -323,12 +323,12 @@
 <p>首次执行后忘记密码，可以将es的索引数据data删除（风险大），再次运行时则会初始化显示密码并提示修改密码指令。</p>
 </blockquote>
 <p>访问后成功显示：</p>
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822121101217.png" alt="image-20240822121101217" style="zoom:67%;" /> 
+<img src="https://pic.imgdb.cn/item/66d5803cd9c307b7e9dd2534.png" alt="image-20240822121101217" style="zoom:67%;" /> 
 
 
 
 <h2 id="2-3-安装中文分词插件"><a href="#2-3-安装中文分词插件" class="headerlink" title="2.3 安装中文分词插件"></a>2.3 安装中文<strong>分词</strong>插件</h2><h3 id="2-3-1-选择ik版本"><a href="#2-3-1-选择ik版本" class="headerlink" title="2.3.1  选择ik版本"></a>2.3.1  选择ik版本</h3><p>进入<a target="_blank" rel="noopener" href="https://github.com/infinilabs/analysis-ik/releases">https://github.com/infinilabs/analysis-ik/releases</a> release查看与ES对应的ik版本，并将其安装到plugins目录下：</p>
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822121355466.png" alt="image-20240822121355466" style="zoom:67%;" /> 
+<img src="https://pic.imgdb.cn/item/66d5804cd9c307b7e9dd54e2.png" alt="image-20240822121355466" style="zoom:67%;" /> 
 
 
 
@@ -353,7 +353,7 @@
 <h2 id="3-2-利用postman请求ES"><a href="#3-2-利用postman请求ES" class="headerlink" title="3.2 利用postman请求ES"></a>3.2 利用postman请求ES</h2><ol>
 <li><p>指定索引中<strong>添加</strong>文档：</p>
 <blockquote>
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240822155857787.png" alt="image-20240822155857787" style="zoom: 67%;" /> 
+<img src="https://pic.imgdb.cn/item/66d58082d9c307b7e9de0b71.png" alt="image-20240822155857787" style="zoom: 67%;" /> 
 </blockquote>
 <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT</span><br><span class="line"><span class="function">localhost:9200/<span class="title">test</span>/<span class="title">_doc</span>/1</span></span><br><span class="line"><span class="function">&#123;</span></span><br><span class="line"><span class="function">    &quot;<span class="title">title</span>&quot;:&quot;<span class="title">hello</span>&quot;,</span></span><br><span class="line"><span class="function">    &quot;<span class="title">content</span>&quot;:&quot;<span class="title">how</span> <span class="title">are</span> <span class="title">you</span>?&quot;</span></span><br><span class="line"><span class="function">&#125; </span></span><br></pre></td></tr></table></figure>
 

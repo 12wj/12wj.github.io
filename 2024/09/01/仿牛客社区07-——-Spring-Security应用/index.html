@@ -264,7 +264,7 @@
 <h3 id="2-2-Security核心组件"><a href="#2-2-Security核心组件" class="headerlink" title="2.2 Security核心组件"></a>2.2 Security核心组件</h3><ul>
 <li>Spring Security的原理主要是基于<strong>过滤器链</strong>，当一个请求到达Spring应用时，它首先会经过一系列的过滤器，这些过滤器负责身份验证、授权以及其他安全相关的任务。</li>
 </ul>
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901171436106.png" alt="image-20240901171436106" style="zoom:50%;" />
+<img src="https://pic.imgdb.cn/item/66d57f52d9c307b7e9d9d173.png" alt="image-20240901171436106" style="zoom:50%;" />
 
 <ul>
 <li><p>注意<strong>过滤器的执行要早于拦截器</strong>！</p>
@@ -276,7 +276,7 @@
 
 
 
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901172809731.png" alt="image-20240901172809731" style="zoom: 67%;" />
+<img src="https://pic.imgdb.cn/item/66d57f66d9c307b7e9da1578.png" alt="image-20240901172809731" style="zoom: 67%;" />
 
 <ul>
 <li><code>SecurityContextHolder</code>： </li>
@@ -295,7 +295,7 @@
 </ul>
 <hr/>
 
-<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901173617047.png" alt="image-20240901173617047" style="zoom:67%;" />
+<img src="https://pic.imgdb.cn/item/66d57f7fd9c307b7e9da67e2.png" alt="image-20240901173617047" style="zoom:67%;" />
 
 <ul>
 <li><p><code>ProviderManager</code>：AuthenticationManager接口的一个实现类，<strong>管理认证过程的入口</strong>，接收认证请求并委托给相应的 <strong>AuthenticationProvider</strong> 进行处理。</p>

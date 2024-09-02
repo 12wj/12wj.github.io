@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Lin">
+
+
+
+
+
+<title>仿牛客社区07 —— Spring Security应用 | 12wj</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Lin&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Lin&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">仿牛客社区07 —— Spring Security应用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Lin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 1, 2024&nbsp;&nbsp;16:03:08</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/">开发笔记</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="一、Spring-Security简介"><a href="#一、Spring-Security简介" class="headerlink" title="一、Spring Security简介"></a>一、Spring Security简介</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://springdoc.cn/spring-security/index.html">Spring Security 中文文档 :: Spring Security Reference (springdoc.cn)</a></p>
+</blockquote>
+<p>​		Spring Security是一个Java框架，用于保护应用程序的安全性。它提供了一套全面的安全解决方案，包括<strong>身份验证</strong>、<strong>授权</strong>、防止攻击等功能。Spring Security基于<strong>过滤器链</strong>的概念，可以轻松地集成到任何基于Spring的应用程序中。</p>
+<ul>
+<li><p><strong>特点：</strong></p>
+<ul>
+<li>对身份的认证和授权提供全面的、可<strong>扩展</strong>的支持</li>
+<li><strong>防止各种攻击</strong>，如会话固定攻击、点击劫持、<strong>csrf攻击</strong>等</li>
+<li>支持与多种web技术如Spring MVC、Servlet API集成</li>
+</ul>
+</li>
+<li><p><strong>核心功能：</strong></p>
+<ul>
+<li>用户<strong>认证</strong>：<ul>
+<li>用于验证某个用户是否为系统中的合法主体，即用户能否访问该系统，通常要求用户提供用户名和密码，系统通过校验这些信息来完成认证过程。</li>
+</ul>
+</li>
+<li>用户<strong>授权</strong>：<ul>
+<li>用于验证某个用户是否有权限执行某个操作，不同用户在系统中可能拥有不同的权限。系统通常会为不同的用户分配不同的角色，每个角色对应一系列的权限。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>CSRF攻击：</p>
+<ul>
+<li><p>security为防止csrf攻击所做的事情：</p>
+<ul>
+<li>在表单上生成一个隐藏的input，为客户端保存一个唯一的value值</li>
+<li><code>&lt;input type=&quot;hidden&quot; name=&quot;_csrf&quot; value=&quot;bBDvPR-eU8fExhFT-te5_8MUPC44FnYiNKyep69-KWGQm-q1WnWKXCb7MPbppCIwyPqNnPFyERdZdUYPUc39xcpPGFfyrNyE&quot;/&gt;</code></li>
+</ul>
+</li>
+<li><p>局限之处：表单是异步请求时，无法自动生成csrf令牌</p>
+</li>
+</ul>
+<h1 id="二、Spring-Security的使用"><a href="#二、Spring-Security的使用" class="headerlink" title="二、Spring Security的使用"></a>二、Spring Security的使用</h1><h3 id="2-1-引入依赖"><a href="#2-1-引入依赖" class="headerlink" title="2.1 引入依赖"></a>2.1 引入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-security<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-2-Security核心组件"><a href="#2-2-Security核心组件" class="headerlink" title="2.2 Security核心组件"></a>2.2 Security核心组件</h3><ul>
+<li>Spring Security的原理主要是基于<strong>过滤器链</strong>，当一个请求到达Spring应用时，它首先会经过一系列的过滤器，这些过滤器负责身份验证、授权以及其他安全相关的任务。</li>
+</ul>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901171436106.png" alt="image-20240901171436106" style="zoom:50%;" />
+
+<ul>
+<li><p>注意<strong>过滤器的执行要早于拦截器</strong>！</p>
+</li>
+<li><p>一旦依赖引入之后，spring security就会开启用户认证和授权，</p>
+</li>
+</ul>
+<hr/>
+
+
+
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901172809731.png" alt="image-20240901172809731" style="zoom: 67%;" />
+
+<ul>
+<li><code>SecurityContextHolder</code>： </li>
+<li>是存储<strong>安全上下文的容器</strong>，包含<u>当前应用程序的安全信息</u>，如已认证用户的详细信息和权限。它通常使用线程本地变量（ThreadLocal）来存储，以确保每个线程都有独立的安全上下文。</li>
+<li><code>SecurityContext</code>包含一个 Authentication（认证）对象，代表当前用户的安全信息。</li>
+<li><code>Authentication</code>接口：<ul>
+<li>代表<strong>用户的认证信息</strong>，包含用户名、密码和权限等。在用户成功登录后，Authentication 对象会被存储在 SecurityContextHolder 中，以供后续授权决策使用.</li>
+<li>常见实现类<code>UsernamePasswordAuthenticationToken</code>，包含了：<ul>
+<li>principal：识别用户，通常是UserDetails的一个实例。</li>
+<li>credentials：密码</li>
+<li>authorities：用户权限</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr/>
+
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901173617047.png" alt="image-20240901173617047" style="zoom:67%;" />
+
+<ul>
+<li><p><code>ProviderManager</code>：AuthenticationManager接口的一个实现类，<strong>管理认证过程的入口</strong>，接收认证请求并委托给相应的 <strong>AuthenticationProvider</strong> 进行处理。</p>
+</li>
+<li><p><code>AuthenticationProvider</code>：每一个<strong>AuthenticationProvider负责一种认证规则</strong>，例如：基于用户名密码、基于JWT令牌。你可以在ProviderManager中注入多个AuthenticationProvider实例。</p>
+</li>
+<li><p>AuthenticationEntryPoint：用于发送一个要求客户端提供凭证的HTTP响应，只有当客户端向他们未被授权访问的资源发出未经认证的请求时，AuthenticationEntryPoint的实现才被用来请求客户端。</p>
+</li>
+</ul>
+<hr/>
+
+<ul>
+<li><code>Security Filter Chain</code>（<strong>安全过滤器链</strong>）：</li>
+</ul>
+<img src="https://springdoc.cn/spring-security/_images/servlet/architecture/securityfilterchain.png" alt="securityfilterchain" style="zoom: 50%;" />
+
+<ul>
+<li>Spring Security 通过一系列过滤器（Filters）来拦截和处理 HTTP 请求，这些过滤器按照<strong>特定的顺序</strong>组成过滤器链（Filter Chain）</li>
+<li>常见过滤器：<ul>
+<li><code>UsernamePasswordAuthenticationFilter</code>：处理基于用户名和密码的认证</li>
+<li><code>ExceptionTranslationFilter</code>：处理认证和授权过程中抛出的异常。</li>
+<li><code>FilterSecurityInterceptor</code>：执行授权决策</li>
+</ul>
+</li>
+<li>过滤器的<strong>调用顺序</strong>：<ul>
+<li>一般来说，执行<strong>认证</strong>的过滤器要在执行<strong>授权</strong>的过滤器前调用。</li>
+<li>首先，<code>CsrfFilter</code>csrf攻击过滤器</li>
+<li>其次，<code>UsernamePasswordAuthenticationFilter</code> 认证过滤器</li>
+<li>第三，<code>AuthorizationFilter</code>授权过滤器</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-3-Spring-Security工作流程"><a href="#2-3-Spring-Security工作流程" class="headerlink" title="2.3 Spring Security工作流程"></a>2.3 Spring Security工作流程</h3><ol>
+<li><p><strong>首先，spring security在检测到未经认证的请求时，都会将其重定向至登陆表单</strong></p>
+<ul>
+<li>实现原理：</li>
+</ul>
+<img src="C:\Users\白桃\AppData\Roaming\Typora\typora-user-images\image-20240901181004101.png" alt="image-20240901181004101" style="zoom:50%;" />
+
+<p>上图建立在 SecurityFilterChain 图上。</p>
+<ul>
+<li><p>首先，一个用户向其未被授权的资源（&#x2F;private）发出一个<strong>未经认证</strong>的请求。</p>
+</li>
+<li><p>Spring Security 的 AuthorizationFilter(授权过滤器) 通过抛出一个 AccessDeniedException 来表明未经认证的请求被拒绝了。</p>
+</li>
+<li><p>由于用户没有被认证，ExceptionTranslationFilter（处理异常过滤器）启动了 Start Authentication，并发送一个重定向到配置的 AuthenticationEntryPoint 的登录页面。在大多数情况下， <code>AuthenticationEntryPoint</code> 是 LoginUrlAuthenticationEntryPoint 的一个实例。</p>
+</li>
+<li><p>浏览器请求进入其被重定向的登录页面。</p>
+</li>
+<li><p>渲染登录页面</p>
+</li>
+</ul>
+</li>
+<li><p><strong>接着，用户提交登陆表单后：</strong></p>
+</li>
+</ol>
+<img src="https://springdoc.cn/spring-security/_images/servlet/authentication/unpwd/usernamepasswordauthenticationfilter.png" alt="usernamepasswordauthenticationfilter" style="zoom:50%;" />
+
+<ul>
+<li><p>首先，<code>UsernamePasswordAuthenticationFilter</code>（认证过滤器）通过从 HttpServletRequest 实例中提取用户名和密码，创建一个<code>UsernamePasswordAuthenticationToken</code>，这是一种 Authentication 类型。</p>
+</li>
+<li><p>接下来，UsernamePasswordAuthenticationToken 被传入 <code>AuthenticationManager</code> 实例，以进行认证。</p>
+</li>
+<li><p>认证失败：</p>
+<ul>
+<li><code>SecurityContextHolder</code>被清空</li>
+</ul>
+</li>
+<li><p>认证成功：</p>
+<ul>
+<li><code>Authentication</code> 被设置在 <code>SecurityContextHolder</code> 上</li>
+</ul>
+</li>
+<li><p>再进行授权过滤器检查</p>
+</li>
+</ul>
+<h1 id="三、Spring-Security配置"><a href="#三、Spring-Security配置" class="headerlink" title="三、Spring Security配置"></a>三、Spring Security配置</h1><blockquote>
+<p>项目中的<code>SecurityConfig</code>配置规则：配置过滤器链</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecurityConfig</span> <span class="keyword">implements</span> <span class="title class_">LinBlogConstant</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SecurityFilterChain <span class="title function_">securityFilterChain</span><span class="params">(HttpSecurity http, AuthenticationFilter authenticationFilter)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)</span><br><span class="line">            	<span class="comment">// 配置授权规则</span></span><br><span class="line">                .authorizeHttpRequests( authorizeRequest -&gt; authorizeRequest</span><br><span class="line">                        .requestMatchers(<span class="string">&quot;/resources/**&quot;</span>).permitAll()</span><br><span class="line">                        .requestMatchers(</span><br><span class="line">                                <span class="string">&quot;/user/setting&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/user/upload&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/user/changePassword&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/comment/insert/**&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/letter/**&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/notice/**&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/like&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/follow&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/unfollow&quot;</span></span><br><span class="line">                        )</span><br><span class="line">                        .hasAnyAuthority(</span><br><span class="line">                                AUTHORITY_ADMIN,</span><br><span class="line">                                AUTHORITY_USER,</span><br><span class="line">                                AUTHORITY_MODERATOR</span><br><span class="line">                        )</span><br><span class="line">                        .requestMatchers(</span><br><span class="line">                                <span class="string">&quot;/discuss/top&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/discuss/wonderful&quot;</span></span><br><span class="line">                        )</span><br><span class="line">                        .hasAnyAuthority(</span><br><span class="line">                                AUTHORITY_MODERATOR</span><br><span class="line">                        )</span><br><span class="line">                        .requestMatchers(</span><br><span class="line">                                <span class="string">&quot;/discuss/delete&quot;</span>,</span><br><span class="line">                                <span class="string">&quot;/data/**&quot;</span></span><br><span class="line">                        )</span><br><span class="line">                        .hasAnyAuthority(</span><br><span class="line">                                AUTHORITY_ADMIN</span><br><span class="line">                        )</span><br><span class="line">                        .anyRequest().permitAll()</span><br><span class="line">                ).exceptionHandling(exceptionHandling -&gt; exceptionHandling</span><br><span class="line">                        .authenticationEntryPoint(<span class="keyword">new</span> <span class="title class_">AuthenticationEntryPoint</span>() &#123;</span><br><span class="line">                            <span class="comment">// 未经认证</span></span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">commence</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">                                <span class="type">String</span> <span class="variable">header</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;x-requested-with&quot;</span>);</span><br><span class="line">                                <span class="keyword">if</span>(<span class="string">&quot;XMLHttpRequest&quot;</span>.equals(header))&#123;</span><br><span class="line">                                    response.setContentType(<span class="string">&quot;application/plain;charset=utf-8&quot;</span>);</span><br><span class="line">                                    <span class="type">PrintWriter</span> <span class="variable">writer</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">                                    writer.write(LinBlogUtil.getJSONString(<span class="number">403</span>, <span class="string">&quot;您还未登录&quot;</span>));</span><br><span class="line">                                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                                    response.sendRedirect(request.getContextPath() + <span class="string">&quot;/login&quot;</span>);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;)</span><br><span class="line">                        .accessDeniedHandler(<span class="keyword">new</span> <span class="title class_">AccessDeniedHandler</span>() &#123;</span><br><span class="line">                            <span class="comment">// 未被授权</span></span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">                                <span class="type">String</span> <span class="variable">header</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;x-requested-with&quot;</span>);</span><br><span class="line">                                <span class="keyword">if</span>(<span class="string">&quot;XMLHttpRequest&quot;</span>.equals(header))&#123;</span><br><span class="line">                                    response.setContentType(<span class="string">&quot;application/plain;charset=utf-8&quot;</span>);</span><br><span class="line">                                    <span class="type">PrintWriter</span> <span class="variable">writer</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">                                    writer.write(LinBlogUtil.getJSONString(<span class="number">403</span>, <span class="string">&quot;您没有访问该功能的权限&quot;</span>));</span><br><span class="line">                                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                                    response.sendRedirect(request.getContextPath() + <span class="string">&quot;/denied&quot;</span>);</span><br><span class="line">                                &#125;</span><br><span class="line"></span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;)</span><br><span class="line">                ).formLogin(login -&gt; login.disable())</span><br><span class="line">                <span class="comment">// security底层会默认拦截/logout请求，进行退出处理</span></span><br><span class="line">                <span class="comment">// 为了覆盖默认逻辑，使用自定义的退出方法 ==&gt; 可以使用一个虚假路径来欺骗她</span></span><br><span class="line">                .logout(logout -&gt; logout.logoutUrl(<span class="string">&quot;/securityLogout&quot;</span>))</span><br><span class="line">                .csrf(csrf -&gt; csrf.disable());</span><br><span class="line">        <span class="keyword">return</span> http.build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>配置类解析：</p>
+<h3 id="3-1-配置授权规则"><a href="#3-1-配置授权规则" class="headerlink" title="3.1 配置授权规则"></a>3.1 配置授权规则</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .authorizeHttpRequests表示开始配置http请求的规则</span></span><br><span class="line">.authorizeHttpRequests(authorizeRequest -&gt; authorizeRequest</span><br><span class="line">    <span class="comment">// 表示静态资源对所有用户开放</span></span><br><span class="line">    .requestMatchers(<span class="string">&quot;/resources/**&quot;</span>).permitAll()</span><br><span class="line">    .requestMatchers(</span><br><span class="line">            <span class="string">&quot;/user/setting&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/user/upload&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/user/changePassword&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/comment/insert/**&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/letter/**&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/notice/**&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/like&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/follow&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/unfollow&quot;</span></span><br><span class="line">    )</span><br><span class="line">    .hasAnyAuthority(	<span class="comment">// 以上路径只有以下三个身份之一的权限才能访问</span></span><br><span class="line">            AUTHORITY_ADMIN,</span><br><span class="line">            AUTHORITY_USER,</span><br><span class="line">            AUTHORITY_MODERATOR</span><br><span class="line">    )</span><br><span class="line">    .requestMatchers(</span><br><span class="line">            <span class="string">&quot;/discuss/top&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/discuss/wonderful&quot;</span></span><br><span class="line">    )</span><br><span class="line">    .hasAnyAuthority(</span><br><span class="line">             AUTHORITY_MODERATOR <span class="comment">// 以上路径只有MODERATOR才能访问</span></span><br><span class="line">    )</span><br><span class="line">    .requestMatchers(</span><br><span class="line">            <span class="string">&quot;/discuss/delete&quot;</span>,</span><br><span class="line">            <span class="string">&quot;/data/**&quot;</span></span><br><span class="line">    )</span><br><span class="line">    .hasAnyAuthority(</span><br><span class="line">            AUTHORITY_ADMIN <span class="comment">// 以上路径只有admin才能访问</span></span><br><span class="line">    )</span><br><span class="line">    .anyRequest().permitAll() <span class="comment">// 剩余其他请求都可以访问</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-配置异常处理"><a href="#3-2-配置异常处理" class="headerlink" title="3.2 配置异常处理"></a>3.2 配置异常处理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 异常处理方法</span></span><br><span class="line">.exceptionHandling(exceptionHandling -&gt; exceptionHandling</span><br><span class="line">    <span class="comment">// 未经认证</span></span><br><span class="line">    .authenticationEntryPoint(<span class="keyword">new</span> <span class="title class_">AuthenticationEntryPoint</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">commence</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">header</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;x-requested-with&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">&quot;XMLHttpRequest&quot;</span>.equals(header))&#123;</span><br><span class="line">                <span class="comment">// ajax请求时 返回提示信息</span></span><br><span class="line">                response.setContentType(<span class="string">&quot;application/plain;charset=utf-8&quot;</span>);</span><br><span class="line">                <span class="type">PrintWriter</span> <span class="variable">writer</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">                writer.write(LinBlogUtil.getJSONString(<span class="number">403</span>, <span class="string">&quot;您还未登录&quot;</span>));</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 否则跳转登陆页面</span></span><br><span class="line">                response.sendRedirect(request.getContextPath() + <span class="string">&quot;/login&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">// 未经授权</span></span><br><span class="line">    .accessDeniedHandler(<span class="keyword">new</span> <span class="title class_">AccessDeniedHandler</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">header</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;x-requested-with&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span>(<span class="string">&quot;XMLHttpRequest&quot;</span>.equals(header))&#123;</span><br><span class="line">                <span class="comment">// ajax请求，返回提示信息</span></span><br><span class="line">                response.setContentType(<span class="string">&quot;application/plain;charset=utf-8&quot;</span>);</span><br><span class="line">                <span class="type">PrintWriter</span> <span class="variable">writer</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">                writer.write(LinBlogUtil.getJSONString(<span class="number">403</span>, <span class="string">&quot;您没有访问该功能的权限&quot;</span>));</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 否则跳转错误提示页</span></span><br><span class="line">                response.sendRedirect(request.getContextPath() + <span class="string">&quot;/denied&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-3-禁用默认表单登录"><a href="#3-3-禁用默认表单登录" class="headerlink" title="3.3 禁用默认表单登录"></a>3.3 禁用默认表单登录</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.formLogin(login -&gt; login.disable())</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-4-配置退出行为"><a href="#3-4-配置退出行为" class="headerlink" title="3.4 配置退出行为"></a>3.4 配置退出行为</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// security底层会默认拦截/logout请求，进行退出处理</span></span><br><span class="line"><span class="comment">// 为了覆盖默认逻辑，使用自定义的退出方法 ==&gt; 可以使用一个虚假路径来欺骗她</span></span><br><span class="line">.logout(logout -&gt; logout.logoutUrl(<span class="string">&quot;/securityLogout&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>自定义退出逻辑：<code>LoginController.java</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/logout&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">logout</span><span class="params">(<span class="meta">@CookieValue(&quot;ticket&quot;)</span> String ticket)</span>&#123;</span><br><span class="line">    userService.logout(ticket);</span><br><span class="line">    <span class="comment">// 清空SecurityContextHolder，完善security逻辑</span></span><br><span class="line">    SecurityContextHolder.clearContext();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;redirect:/login&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-5-禁用csrf配置"><a href="#3-5-禁用csrf配置" class="headerlink" title="3.5 禁用csrf配置"></a>3.5 禁用csrf配置</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.csrf(csrf -&gt; csrf.disable());</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-6-添加自定义过滤器"><a href="#3-6-添加自定义过滤器" class="headerlink" title="3.6 添加自定义过滤器"></a>3.6 添加自定义过滤器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>表示在<code>UsernamePasswordAuthenticationFilter</code>认证过滤器前添加该自定义过滤器</p>
+</li>
+<li><p><code>authenticationFilter</code>自定义的认证过滤器：</p>
+<ul>
+<li>用于<strong>从请求中提取和验证用户身份</strong></li>
+</ul>
+</li>
+<li><p><code>AuthenticationFilter</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthenticationFilter</span> <span class="keyword">extends</span> <span class="title class_">OncePerRequestFilter</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> HostHolder hostHolder;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doFilterInternal</span><span class="params">(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">ticket</span> <span class="operator">=</span> CookieUtil.getValue(request, <span class="string">&quot;ticket&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(ticket != <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="comment">// 获取认证信息</span></span><br><span class="line">            <span class="type">LoginTicket</span> <span class="variable">loginTicket</span> <span class="operator">=</span> userService.getLoginTicket(ticket);</span><br><span class="line">            <span class="keyword">if</span>( loginTicket!= <span class="literal">null</span> &amp;&amp; loginTicket.getStatus() == <span class="number">0</span> &amp;&amp; loginTicket.getExpired().after(<span class="keyword">new</span> <span class="title class_">Date</span>()))&#123;</span><br><span class="line">                <span class="comment">// 根据凭证查询用户</span></span><br><span class="line">                <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userService.selectById(loginTicket.getUserId());</span><br><span class="line">                <span class="keyword">if</span>(user != <span class="literal">null</span> &amp;&amp; SecurityContextHolder.getContext().getAuthentication() == <span class="literal">null</span>)&#123;</span><br><span class="line">                     <span class="comment">// 构建 Authentication 对象并设置到 SecurityContextHolder</span></span><br><span class="line">                    <span class="type">UsernamePasswordAuthenticationToken</span> <span class="variable">authentication</span> <span class="operator">=</span></span><br><span class="line">                            <span class="keyword">new</span> <span class="title class_">UsernamePasswordAuthenticationToken</span>(user, user.getPassword(), userService.getAuthorities(user.getId()));</span><br><span class="line">                    authentication.setDetails(<span class="keyword">new</span> <span class="title class_">WebAuthenticationDetailsSource</span>().buildDetails(request));</span><br><span class="line">                    SecurityContextHolder.getContext().setAuthentication(authentication);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        filterChain.doFilter(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><code>userService.getAuthorities(user.getId())</code>方法详解：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * userService: 获取用户权限</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> Collection&lt;? <span class="keyword">extends</span> <span class="title class_">GrantedAuthority</span>&gt; getAuthorities(<span class="type">int</span> userId)&#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="built_in">this</span>.selectById(userId);</span><br><span class="line">    List&lt;GrantedAuthority&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    list.add(<span class="keyword">new</span> <span class="title class_">GrantedAuthority</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">getAuthority</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">switch</span> (user.getType()) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">1</span> -&gt; AUTHORITY_ADMIN;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">2</span> -&gt; AUTHORITY_MODERATOR;</span><br><span class="line">                <span class="keyword">default</span> -&gt; AUTHORITY_USER;</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>问题：<strong>为什么不把这个代码放到拦截器中？</strong><ul>
+<li>因为Spring Security的Filter chain的执行会早于拦截器，一旦将<code>setContextHolder</code>的代码放到拦截器，会导致在认证请求时<code>SecurityContextHolder</code>为空，直接跳转到登陆页面。</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Lin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="https://12wj.github.io/2024/09/01/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA07-%E2%80%94%E2%80%94-Spring-Security%E5%BA%94%E7%94%A8/">https://12wj.github.io/2024/09/01/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA07-%E2%80%94%E2%80%94-Spring-Security%E5%BA%94%E7%94%A8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/09/02/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA08-%E2%80%94%E2%80%94-%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%92%8C%E8%B0%83%E5%BA%A6/">仿牛客社区08 —— 任务执行和调度</a>
+            
+            
+            <a class="next" rel="next" href="/2024/08/30/%E4%BB%BF%E7%89%9B%E5%AE%A2%E7%A4%BE%E5%8C%BA06-%E2%80%94%E2%80%94-Elasticsearch%E5%BA%94%E7%94%A8/">仿牛客社区06 —— Elasticsearch应用</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Lin | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
